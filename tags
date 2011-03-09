@@ -1,0 +1,364 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+B	tracking.h	/^		Bfield *B;$/;"	m	class:Tracking
+B0	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+B000	bfield.h	/^		double B000,I,h2;$/;"	m	class:Bfield
+B1	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+B1_g	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+B1_g_half	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+BFIELD_H	bfield.h	2;"	d
+Bfield	bfield.cpp	/^Bfield::Bfield(string Bfilename,const Parameters &theParameters)$/;"	f	class:Bfield
+Bfield	bfield.h	/^class Bfield$/;"	c
+Br	bfield.cpp	/^double Bfield::Br(double r, double z)$/;"	f	class:Bfield
+Brotationtimes	bfield.h	/^		double *Brotationtimes;$/;"	m	class:Bfield
+Bz	bfield.cpp	/^double Bfield::Bz(double r, double z)$/;"	f	class:Bfield
+CXX	Makefile	/^CXX=g++$/;"	m
+CXXFLAGS	Makefile	/^CXXFLAGS=-Wall -g -march=native -fopenmp$/;"	m
+DERIVATIVES_H	derivatives.h	2;"	d
+DOPR5_H	dopr5.h	2;"	d
+Derivatives	derivatives.cpp	/^Derivatives::Derivatives(Tracking* TR)$/;"	f	class:Derivatives
+Derivatives	derivatives.h	/^class Derivatives$/;"	c
+Distribution	output/Pend/Distribution.C	/^void Distribution(string filename)$/;"	f
+Dopr	dopr.cpp	/^Dopr::Dopr(double firsthtry, int dimension, double* initialY, double* initialDYDX, double initialT, Derivatives *DERI, double atoll, double rtoll, bool dens)$/;"	f	class:Dopr
+Dopr	dopr.h	/^class Dopr$/;"	c
+Dopr5	dopr5.cpp	/^Dopr5::Dopr5(double firsthtry, unsigned int dimension, double* initialY, double* initialDYDX, double initialT, Derivatives *DERI, double atoll, double rtoll, bool dens)$/;"	f	class:Dopr5
+Dopr5	dopr5.h	/^class Dopr5$/;"	c
+E0	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+EPS	dopr.h	/^		double atol, rtol, EPS, errold;$/;"	m	class:Dopr
+EPS	dopr5.h	/^		double atol, rtol, EPS, errold;$/;"	m	class:Dopr5
+FieldsRotatingWithLarmorfreq	bfield.cpp	/^void Bfield::FieldsRotatingWithLarmorfreq(double &t, double *xyz, double *B, double &co, double &si)$/;"	f	class:Bfield
+GLOBALS_H	globals.h	2;"	d
+GetGsl_Rng	random.cpp	/^gsl_rng* Random::GetGsl_Rng()$/;"	f	class:Random
+I	bfield.h	/^		double B000,I,h2;$/;"	m	class:Bfield
+LIBS	Makefile	/^LIBS=-lgsl -lgslcblas -lm$/;"	m
+NBrottimes	bfield.h	/^		int NBrottimes;$/;"	m	class:Bfield
+NonrotatingFields	bfield.cpp	/^void Bfield::NonrotatingFields(double *xyz, double *B, double &co, double &si)$/;"	f	class:Bfield
+OBJS	Makefile	/^OBJS=main.o bfield.o random.o tracking.o spintracking.o dopr.o derivatives.o parameters.o$/;"	m
+P	spintracking.h	/^		double* P;$/;"	m	class:Spintracking
+PARAMETERS_H	parameters.h	2;"	d
+PRECES_N	globals.h	/^static const double PRECES_N = -7.3997e7;$/;"	v
+Parameters	parameters.cpp	/^Parameters::Parameters()$/;"	f	class:Parameters
+Parameters	parameters.h	/^class Parameters$/;"	c
+Pos	tracking.h	/^		double *Pos, *xyz1, *xyz2, *dir1, *dir2, *posxyz;$/;"	m	class:Tracking
+R	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+R	tracking.h	/^		double sqrt2D, lambda, Rsquare, R, scaling, t;$/;"	m	class:Tracking
+RANDOM_H	random.h	2;"	d
+Random	random.cpp	/^Random::Random(unsigned long int seed)$/;"	f	class:Random
+Random	random.h	/^class Random$/;"	c
+Rsquare	tracking.h	/^		double sqrt2D, lambda, Rsquare, R, scaling, t;$/;"	m	class:Tracking
+SPINTRACKING_H	spintracking.h	2;"	d
+Spintracking	spintracking.cpp	/^Spintracking::Spintracking(double* PolVec, double initialT, double error, double firsthtry, Derivatives *DERI, bool dens)$/;"	f	class:Spintracking
+Spintracking	spintracking.h	/^class Spintracking$/;"	c
+T	random.h	/^		const gsl_rng_type* T;$/;"	m	class:Random
+TRACKING2_H	tracking.h	2;"	d
+Tracking	tracking.cpp	/^Tracking::Tracking(Random *ran, Bfield* BF, Parameters& theParameters)$/;"	f	class:Tracking
+Tracking	tracking.h	/^class Tracking$/;"	c
+a101	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a104	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a105	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a106	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a107	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a108	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a109	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a111	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a1110	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a114	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a115	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a116	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a117	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a118	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a119	dopr.h	/^		const double a106,a107,a108,a109,a111,a114,a115,a116,a117,a118,a119,a1110;$/;"	m	class:Dopr
+a121	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a1210	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a1211	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a124	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a125	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a126	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a127	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a128	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a129	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a141	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a1410	dopr.h	/^		const double a149,a1410,a1411,a1412,a1413,a151,a156,a157,a158,a1511,a1512;$/;"	m	class:Dopr
+a1411	dopr.h	/^		const double a149,a1410,a1411,a1412,a1413,a151,a156,a157,a158,a1511,a1512;$/;"	m	class:Dopr
+a1412	dopr.h	/^		const double a149,a1410,a1411,a1412,a1413,a151,a156,a157,a158,a1511,a1512;$/;"	m	class:Dopr
+a1413	dopr.h	/^		const double a149,a1410,a1411,a1412,a1413,a151,a156,a157,a158,a1511,a1512;$/;"	m	class:Dopr
+a147	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a148	dopr.h	/^		const double a121,a124,a125,a126,a127,a128,a129,a1210,a1211,a141,a147,a148;$/;"	m	class:Dopr
+a149	dopr.h	/^		const double a149,a1410,a1411,a1412,a1413,a151,a156,a157,a158,a1511,a1512;$/;"	m	class:Dopr
+a151	dopr.h	/^		const double a149,a1410,a1411,a1412,a1413,a151,a156,a157,a158,a1511,a1512;$/;"	m	class:Dopr
+a1511	dopr.h	/^		const double a149,a1410,a1411,a1412,a1413,a151,a156,a157,a158,a1511,a1512;$/;"	m	class:Dopr
+a1512	dopr.h	/^		const double a149,a1410,a1411,a1412,a1413,a151,a156,a157,a158,a1511,a1512;$/;"	m	class:Dopr
+a1513	dopr.h	/^		const double a1513,a1514,a161,a166,a167,a168,a169,a1613,a1614,a1615;$/;"	m	class:Dopr
+a1514	dopr.h	/^		const double a1513,a1514,a161,a166,a167,a168,a169,a1613,a1614,a1615;$/;"	m	class:Dopr
+a156	dopr.h	/^		const double a149,a1410,a1411,a1412,a1413,a151,a156,a157,a158,a1511,a1512;$/;"	m	class:Dopr
+a157	dopr.h	/^		const double a149,a1410,a1411,a1412,a1413,a151,a156,a157,a158,a1511,a1512;$/;"	m	class:Dopr
+a158	dopr.h	/^		const double a149,a1410,a1411,a1412,a1413,a151,a156,a157,a158,a1511,a1512;$/;"	m	class:Dopr
+a161	dopr.h	/^		const double a1513,a1514,a161,a166,a167,a168,a169,a1613,a1614,a1615;$/;"	m	class:Dopr
+a1613	dopr.h	/^		const double a1513,a1514,a161,a166,a167,a168,a169,a1613,a1614,a1615;$/;"	m	class:Dopr
+a1614	dopr.h	/^		const double a1513,a1514,a161,a166,a167,a168,a169,a1613,a1614,a1615;$/;"	m	class:Dopr
+a1615	dopr.h	/^		const double a1513,a1514,a161,a166,a167,a168,a169,a1613,a1614,a1615;$/;"	m	class:Dopr
+a166	dopr.h	/^		const double a1513,a1514,a161,a166,a167,a168,a169,a1613,a1614,a1615;$/;"	m	class:Dopr
+a167	dopr.h	/^		const double a1513,a1514,a161,a166,a167,a168,a169,a1613,a1614,a1615;$/;"	m	class:Dopr
+a168	dopr.h	/^		const double a1513,a1514,a161,a166,a167,a168,a169,a1613,a1614,a1615;$/;"	m	class:Dopr
+a169	dopr.h	/^		const double a1513,a1514,a161,a166,a167,a168,a169,a1613,a1614,a1615;$/;"	m	class:Dopr
+a21	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a31	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a32	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a41	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a43	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a51	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a53	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a54	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a61	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a64	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a65	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a71	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a74	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a75	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a76	dopr.h	/^		const double a21,a31,a32,a41,a43,a51,a53,a54,a61,a64,a65,a71,a74,a75,a76;$/;"	m	class:Dopr
+a81	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a84	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a85	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a86	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a87	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a91	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a94	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a95	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a96	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a97	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+a98	dopr.h	/^		const double a81,a84,a85,a86,a87,a91,a94,a95,a96,a97,a98,a101,a104,a105;$/;"	m	class:Dopr
+add	parameters.cpp	/^void Parameters::add(std::string name, double value)$/;"	f	class:Parameters
+add	parameters.cpp	/^void Parameters::add(std::string name, int value)$/;"	f	class:Parameters
+atol	dopr.h	/^		double atol, rtol, EPS, errold;$/;"	m	class:Dopr
+atol	dopr5.h	/^		double atol, rtol, EPS, errold;$/;"	m	class:Dopr5
+b1	dopr.h	/^		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;$/;"	m	class:Dopr
+b10	dopr.h	/^		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;$/;"	m	class:Dopr
+b11	dopr.h	/^		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;$/;"	m	class:Dopr
+b12	dopr.h	/^		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;$/;"	m	class:Dopr
+b6	dopr.h	/^		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;$/;"	m	class:Dopr
+b7	dopr.h	/^		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;$/;"	m	class:Dopr
+b8	dopr.h	/^		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;$/;"	m	class:Dopr
+b9	dopr.h	/^		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;$/;"	m	class:Dopr
+bhh1	dopr.h	/^		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;$/;"	m	class:Dopr
+bhh2	dopr.h	/^		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;$/;"	m	class:Dopr
+bhh3	dopr.h	/^		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;$/;"	m	class:Dopr
+c10	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c11	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c14	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c15	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c16	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c2	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c3	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c4	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c5	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c6	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c7	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c8	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+c9	dopr.h	/^		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;$/;"	m	class:Dopr
+cel	bfield.cpp	/^double Bfield::cel(double qqc, double pp, double aa, double bb)$/;"	f	class:Bfield
+d41	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d410	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d411	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d412	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d413	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d414	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d415	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d416	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d46	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d47	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d48	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d49	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d51	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d510	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d511	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d512	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d513	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d514	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d515	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d516	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d56	dopr.h	/^		const double d41,d46,d47,d48,d49,d410,d411,d412,d413,d414,d415,d416,d51,d56;$/;"	m	class:Dopr
+d57	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d58	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d59	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d61	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d610	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d611	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d612	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d613	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d614	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d615	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d616	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d66	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d67	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d68	dopr.h	/^		const double d57,d58,d59,d510,d511,d512,d513,d514,d515,d516,d61,d66,d67,d68;$/;"	m	class:Dopr
+d69	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d71	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d710	dopr.h	/^		const double d710,d711,d712,d713,d714,d715,d716;$/;"	m	class:Dopr
+d711	dopr.h	/^		const double d710,d711,d712,d713,d714,d715,d716;$/;"	m	class:Dopr
+d712	dopr.h	/^		const double d710,d711,d712,d713,d714,d715,d716;$/;"	m	class:Dopr
+d713	dopr.h	/^		const double d710,d711,d712,d713,d714,d715,d716;$/;"	m	class:Dopr
+d714	dopr.h	/^		const double d710,d711,d712,d713,d714,d715,d716;$/;"	m	class:Dopr
+d715	dopr.h	/^		const double d710,d711,d712,d713,d714,d715,d716;$/;"	m	class:Dopr
+d716	dopr.h	/^		const double d710,d711,d712,d713,d714,d715,d716;$/;"	m	class:Dopr
+d76	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d77	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d78	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+d79	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
+dPdt	spintracking.h	/^		double* dPdt;$/;"	m	class:Spintracking
+dense	dopr.h	/^		bool dense;$/;"	m	class:Dopr
+dense	dopr5.h	/^		bool dense;$/;"	m	class:Dopr5
+dense	spintracking.h	/^		bool dense;$/;"	m	class:Spintracking
+dense_out	dopr.cpp	/^double Dopr::dense_out(const int i,const double time,const double h)$/;"	f	class:Dopr
+dense_out	dopr5.cpp	/^double Dopr5::dense_out(const int i,const double t,const double h)$/;"	f	class:Dopr5
+dense_out	spintracking.cpp	/^double Spintracking::dense_out(const int i,const double t,const double h)$/;"	f	class:Spintracking
+derivatives	dopr.h	/^		Derivatives *derivatives;$/;"	m	class:Dopr
+derivatives	dopr5.h	/^		Derivatives *derivatives;$/;"	m	class:Dopr5
+derivatives	spintracking.h	/^		Derivatives *derivatives;$/;"	m	class:Spintracking
+dir1	tracking.h	/^		double *Pos, *xyz1, *xyz2, *dir1, *dir2, *posxyz;$/;"	m	class:Tracking
+dir2	tracking.h	/^		double *Pos, *xyz1, *xyz2, *dir1, *dir2, *posxyz;$/;"	m	class:Tracking
+dy	dopr.cpp	/^void Dopr::dy(const double h) {$/;"	f	class:Dopr
+dy	dopr5.cpp	/^void Dopr5::dy(const double h)$/;"	f	class:Dopr5
+dydx	dopr.h	/^		double *y, *yout, *dydx, *yerr, *yerr2;$/;"	m	class:Dopr
+dydx	dopr5.h	/^		double *y, *yout, *dydx, *yerr;$/;"	m	class:Dopr5
+dydxnew	dopr5.h	/^		double *dydxnew;$/;"	m	class:Dopr5
+eps	spintracking.h	/^		double eps;$/;"	m	class:Spintracking
+er1	dopr.h	/^		const double er1,er6,er7,er8,er9,er10,er11,er12;$/;"	m	class:Dopr
+er10	dopr.h	/^		const double er1,er6,er7,er8,er9,er10,er11,er12;$/;"	m	class:Dopr
+er11	dopr.h	/^		const double er1,er6,er7,er8,er9,er10,er11,er12;$/;"	m	class:Dopr
+er12	dopr.h	/^		const double er1,er6,er7,er8,er9,er10,er11,er12;$/;"	m	class:Dopr
+er6	dopr.h	/^		const double er1,er6,er7,er8,er9,er10,er11,er12;$/;"	m	class:Dopr
+er7	dopr.h	/^		const double er1,er6,er7,er8,er9,er10,er11,er12;$/;"	m	class:Dopr
+er8	dopr.h	/^		const double er1,er6,er7,er8,er9,er10,er11,er12;$/;"	m	class:Dopr
+er9	dopr.h	/^		const double er1,er6,er7,er8,er9,er10,er11,er12;$/;"	m	class:Dopr
+errold	dopr.h	/^		double atol, rtol, EPS, errold;$/;"	m	class:Dopr
+errold	dopr5.h	/^		double atol, rtol, EPS, errold;$/;"	m	class:Dopr5
+error	dopr.cpp	/^double Dopr::error(const double h)$/;"	f	class:Dopr
+error	dopr5.cpp	/^double Dopr5::error()$/;"	f	class:Dopr5
+eval	bfield.cpp	/^void Bfield::eval(double t, double *xyz, double* B)$/;"	f	class:Bfield
+eval	derivatives.cpp	/^void Derivatives::eval(const double factor, const double y[], double derivs[])$/;"	f	class:Derivatives
+evalInitial	derivatives.cpp	/^void Derivatives::evalInitial(const double t, const double y[], double derivs[])$/;"	f	class:Derivatives
+fDoubles	parameters.h	/^	std::map<std::string,double> fDoubles;$/;"	m	class:Parameters
+fInts	parameters.h	/^	std::map<std::string,int> fInts;$/;"	m	class:Parameters
+factor	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+flipangle	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+g	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+gaussian	random.cpp	/^double Random::gaussian(const double sigma)$/;"	f	class:Random
+getB	tracking.cpp	/^void Tracking::getB(double factor, double *Bvec)$/;"	f	class:Tracking
+getDoubleParam	parameters.cpp	/^double Parameters::getDoubleParam(std::string name) const$/;"	f	class:Parameters
+getHdid	dopr.h	/^		inline double getHdid(){return hdid;};$/;"	f	class:Dopr
+getHdid	dopr5.h	/^		inline double getHdid(){return hdid;};$/;"	f	class:Dopr5
+getHdid	spintracking.cpp	/^double Spintracking::getHdid()$/;"	f	class:Spintracking
+getInitialB	tracking.cpp	/^void Tracking::getInitialB(double t, double* Bvec)$/;"	f	class:Tracking
+getIntParam	parameters.cpp	/^int Parameters::getIntParam(std::string name) const$/;"	f	class:Parameters
+getLastPos	tracking.cpp	/^double *Tracking::getLastPos()$/;"	f	class:Tracking
+getSize	parameters.cpp	/^int Parameters::getSize() const$/;"	f	class:Parameters
+getStepperTime	spintracking.cpp	/^double Spintracking::getStepperTime()$/;"	f	class:Spintracking
+getStepsnottaken	dopr.h	/^		inline int getStepsnottaken() {return stepsnottaken;};$/;"	f	class:Dopr
+getStepsnottaken	spintracking.h	/^		inline int getStepsnottaken() {return stepper->getStepsnottaken();};$/;"	f	class:Spintracking
+getT	dopr.h	/^		inline double getT(){return t;};$/;"	f	class:Dopr
+getT	dopr5.h	/^		inline double getT(){return t;};$/;"	f	class:Dopr5
+getTracker	derivatives.h	/^		inline Tracking *getTracker(){return tracker;};$/;"	f	class:Derivatives
+ghalf	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+gyroelect	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+h2	bfield.h	/^		double B000,I,h2;$/;"	m	class:Bfield
+hdid	dopr.h	/^		double told, hdid, htry, hnext;$/;"	m	class:Dopr
+hdid	dopr5.h	/^		double told, hdid, htry, hnext;$/;"	m	class:Dopr5
+hmax	dopr.h	/^		const double hmax;$/;"	m	class:Dopr
+hnext	dopr.h	/^		double told, hdid, htry, hnext;$/;"	m	class:Dopr
+hnext	dopr5.h	/^		double told, hdid, htry, hnext;$/;"	m	class:Dopr5
+htry	dopr.h	/^		double told, hdid, htry, hnext;$/;"	m	class:Dopr
+htry	dopr5.h	/^		double told, hdid, htry, hnext;$/;"	m	class:Dopr5
+htry	tracking.h	/^		double htry;$/;"	m	class:Tracking
+initialize	tracking.cpp	/^void Tracking::initialize()$/;"	f	class:Tracking
+k10	dopr.h	/^		double *k2,*k3,*k4,*k5,*k6,*k7,*k8,*k9,*k10;$/;"	m	class:Dopr
+k2	dopr.h	/^		double *k2,*k3,*k4,*k5,*k6,*k7,*k8,*k9,*k10;$/;"	m	class:Dopr
+k2	dopr5.h	/^		double *k2,*k3,*k4,*k5,*k6;$/;"	m	class:Dopr5
+k3	dopr.h	/^		double *k2,*k3,*k4,*k5,*k6,*k7,*k8,*k9,*k10;$/;"	m	class:Dopr
+k3	dopr5.h	/^		double *k2,*k3,*k4,*k5,*k6;$/;"	m	class:Dopr5
+k4	dopr.h	/^		double *k2,*k3,*k4,*k5,*k6,*k7,*k8,*k9,*k10;$/;"	m	class:Dopr
+k4	dopr5.h	/^		double *k2,*k3,*k4,*k5,*k6;$/;"	m	class:Dopr5
+k5	dopr.h	/^		double *k2,*k3,*k4,*k5,*k6,*k7,*k8,*k9,*k10;$/;"	m	class:Dopr
+k5	dopr5.h	/^		double *k2,*k3,*k4,*k5,*k6;$/;"	m	class:Dopr5
+k6	dopr.h	/^		double *k2,*k3,*k4,*k5,*k6,*k7,*k8,*k9,*k10;$/;"	m	class:Dopr
+k6	dopr5.h	/^		double *k2,*k3,*k4,*k5,*k6;$/;"	m	class:Dopr5
+k7	dopr.h	/^		double *k2,*k3,*k4,*k5,*k6,*k7,*k8,*k9,*k10;$/;"	m	class:Dopr
+k8	dopr.h	/^		double *k2,*k3,*k4,*k5,*k6,*k7,*k8,*k9,*k10;$/;"	m	class:Dopr
+k9	dopr.h	/^		double *k2,*k3,*k4,*k5,*k6,*k7,*k8,*k9,*k10;$/;"	m	class:Dopr
+lambda	tracking.h	/^		double sqrt2D, lambda, Rsquare, R, scaling, t;$/;"	m	class:Tracking
+main	distributiontest.cpp	/^int main()$/;"	f
+main	main.cpp	/^int main(int nargs, char** argv)$/;"	f
+makeTrack	tracking.cpp	/^void Tracking::makeTrack(double &time, double &ht)$/;"	f	class:Tracking
+mu0	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+n	dopr.h	/^		const int n;$/;"	m	class:Dopr
+n	dopr5.h	/^		const unsigned int n;$/;"	m	class:Dopr5
+omegaEDM	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+omegalarmor	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;$/;"	m	class:Bfield
+operator ()	bfield.cpp	/^void Bfield::operator()(double t, double *xyz, double *B)$/;"	f	class:Bfield
+operator ()	derivatives.cpp	/^void Derivatives::operator()(const double t, const double y[], double derivs[])$/;"	f	class:Derivatives
+posxyz	tracking.h	/^		double *Pos, *xyz1, *xyz2, *dir1, *dir2, *posxyz;$/;"	m	class:Tracking
+precess	spintracking.cpp	/^void Spintracking::precess()$/;"	f	class:Spintracking
+prepare_dense	dopr.cpp	/^void Dopr::prepare_dense(const double h, double *dydxnew)$/;"	f	class:Dopr
+prepare_dense	dopr5.cpp	/^void Dopr5::prepare_dense(const double h)$/;"	f	class:Dopr5
+r	random.h	/^		gsl_rng* r;$/;"	m	class:Random
+rand	tracking.h	/^		Random *rand;$/;"	m	class:Tracking
+rcont1	dopr.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5, *rcont6, *rcont7, *rcont8;$/;"	m	class:Dopr
+rcont1	dopr5.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5;$/;"	m	class:Dopr5
+rcont2	dopr.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5, *rcont6, *rcont7, *rcont8;$/;"	m	class:Dopr
+rcont2	dopr5.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5;$/;"	m	class:Dopr5
+rcont3	dopr.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5, *rcont6, *rcont7, *rcont8;$/;"	m	class:Dopr
+rcont3	dopr5.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5;$/;"	m	class:Dopr5
+rcont4	dopr.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5, *rcont6, *rcont7, *rcont8;$/;"	m	class:Dopr
+rcont4	dopr5.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5;$/;"	m	class:Dopr5
+rcont5	dopr.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5, *rcont6, *rcont7, *rcont8;$/;"	m	class:Dopr
+rcont5	dopr5.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5;$/;"	m	class:Dopr5
+rcont6	dopr.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5, *rcont6, *rcont7, *rcont8;$/;"	m	class:Dopr
+rcont7	dopr.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5, *rcont6, *rcont7, *rcont8;$/;"	m	class:Dopr
+rcont8	dopr.h	/^		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5, *rcont6, *rcont7, *rcont8;$/;"	m	class:Dopr
+reject	dopr.h	/^		bool reject;$/;"	m	class:Dopr
+reject	dopr5.h	/^		bool reject;$/;"	m	class:Dopr5
+reset	dopr.cpp	/^void Dopr::reset(double firsthtry, double* initialY, double* initialDYDX, double initialT)$/;"	f	class:Dopr
+reset	dopr5.cpp	/^void Dopr5::reset(double firsthtry, double* initialY, double* initialDYDX, double initialT)$/;"	f	class:Dopr5
+reset	spintracking.cpp	/^void Spintracking::reset(double* PolVec, double initialT, double firsthtry)$/;"	f	class:Spintracking
+rtol	dopr.h	/^		double atol, rtol, EPS, errold;$/;"	m	class:Dopr
+rtol	dopr5.h	/^		double atol, rtol, EPS, errold;$/;"	m	class:Dopr5
+scaling	tracking.h	/^		double sqrt2D, lambda, Rsquare, R, scaling, t;$/;"	m	class:Tracking
+setScaling	tracking.cpp	/^void Tracking::setScaling(double scal)$/;"	f	class:Tracking
+sqrt2D	tracking.h	/^		double sqrt2D, lambda, Rsquare, R, scaling, t;$/;"	m	class:Tracking
+step	dopr.cpp	/^void Dopr::step()$/;"	f	class:Dopr
+step	dopr5.cpp	/^void Dopr5::step()$/;"	f	class:Dopr5
+stepDone	tracking.cpp	/^void Tracking::stepDone()$/;"	f	class:Tracking
+stepper	spintracking.h	/^		Dopr *stepper;$/;"	m	class:Spintracking
+stepsnottaken	dopr.h	/^		int stepsnottaken;$/;"	m	class:Dopr
+success	dopr.cpp	/^bool Dopr::success(const double err, double &h)$/;"	f	class:Dopr
+success	dopr5.cpp	/^bool Dopr5::success(const double err,double &h)$/;"	f	class:Dopr5
+t	dopr.h	/^		double t;$/;"	m	class:Dopr
+t	dopr5.h	/^		double t;$/;"	m	class:Dopr5
+t	tracking.h	/^		double sqrt2D, lambda, Rsquare, R, scaling, t;$/;"	m	class:Tracking
+told	dopr.h	/^		double told, hdid, htry, hnext;$/;"	m	class:Dopr
+told	dopr5.h	/^		double told, hdid, htry, hnext;$/;"	m	class:Dopr5
+tracker	derivatives.h	/^		Tracking *tracker;$/;"	m	class:Derivatives
+tracker	dopr.h	/^		Tracking *tracker;$/;"	m	class:Dopr
+tracker	dopr5.h	/^		Tracking *tracker;$/;"	m	class:Dopr5
+uniform	random.cpp	/^double Random::uniform()$/;"	f	class:Random
+usetwopoints	tracking.h	/^		bool usetwopoints;$/;"	m	class:Tracking
+xyz0	bfield.h	/^		double xyz0[3];$/;"	m	class:Bfield
+xyz1	tracking.h	/^		double *Pos, *xyz1, *xyz2, *dir1, *dir2, *posxyz;$/;"	m	class:Tracking
+xyz2	tracking.h	/^		double *Pos, *xyz1, *xyz2, *dir1, *dir2, *posxyz;$/;"	m	class:Tracking
+y	dopr.h	/^		double *y, *yout, *dydx, *yerr, *yerr2;$/;"	m	class:Dopr
+y	dopr5.h	/^		double *y, *yout, *dydx, *yerr;$/;"	m	class:Dopr5
+yerr	dopr.h	/^		double *y, *yout, *dydx, *yerr, *yerr2;$/;"	m	class:Dopr
+yerr	dopr5.h	/^		double *y, *yout, *dydx, *yerr;$/;"	m	class:Dopr5
+yerr2	dopr.h	/^		double *y, *yout, *dydx, *yerr, *yerr2;$/;"	m	class:Dopr
+yout	dopr.h	/^		double *y, *yout, *dydx, *yerr, *yerr2;$/;"	m	class:Dopr
+yout	dopr5.h	/^		double *y, *yout, *dydx, *yerr;$/;"	m	class:Dopr5
+~Bfield	bfield.cpp	/^Bfield::~Bfield()$/;"	f	class:Bfield
+~Dopr	dopr.cpp	/^Dopr::~Dopr()$/;"	f	class:Dopr
+~Dopr5	dopr5.cpp	/^Dopr5::~Dopr5()$/;"	f	class:Dopr5
+~Parameters	parameters.cpp	/^Parameters::~Parameters()$/;"	f	class:Parameters
+~Random	random.cpp	/^Random::~Random()$/;"	f	class:Random
+~Spintracking	spintracking.cpp	/^Spintracking::~Spintracking()$/;"	f	class:Spintracking
+~Tracking	tracking.cpp	/^Tracking::~Tracking()$/;"	f	class:Tracking
