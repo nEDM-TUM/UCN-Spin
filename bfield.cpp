@@ -4,16 +4,26 @@
 #include <math.h>
 #include <cstdlib>
 
-Bfield::Bfield(string Bfilename, string Crossfilename, string Crosslocfilename, const double B0_value, const double B1_value,
-			   const double I_value, const double R_value, const double h_value, const double E0_value, const double g_value, 
-			   const double *xyz0_value, const double B1_g_value, const double gyroelect_value, const double flipangle_value, 
-			   bool rotatedipole_value)
-: B0(B0_value), B1(B1_value), mu0(1.2566371e-6), R(R_value), E0(E0_value), g(g_value), ghalf(g_value/2.), B1_g(B1_g_value),
-  B1_g_half(B1_g_value/2.0), gyroelect(gyroelect_value), omegaEDM(gyroelect*E0_value), flipangle(flipangle_value), 
-  omegalarmor(-PRECES_N*B0_value), factor(-3.9293341e-34*1.5e18), xyz0(xyz0_value), B000(0.0), I(I_value), h2(h_value/2.), 
-  r0_mag(0.0), Brotationtimes(NULL), Crosstalkrotationtimes(NULL), r0(NULL), NBrottimes(0), NCrossrottimes(0), 
-  rotatedipole(rotatedipole_value)
+Bfield::Bfield(string Bfilename,const Parameters &theParameters)
+: B0(0.0), B1(0.0), mu0(1.2566371e-6), R(0.0), E0(0.0), g(0.0), ghalf(0.0), B1_g(0.0),
+  B1_g_half(0.0), gyroelect(0.0), omegaEDM(0.0), flipangle(0.0), 
+  omegalarmor(0.0), factor(-3.9293341e-34*1.5e18), B000(0.0), I(0.0), h2(0.0),
+  Brotationtimes(NULL), NBrottimes(0)
 {
+	B0 = theParameters.getDoubleParam("B0");
+	B1 = theParameters.getDoubleParam("B1");
+	E0 = theParameters.getDoubleParam("EfieldMag");
+	g = theParameters.getDoubleParam("B0Gradient");
+	ghalf = g/2.0;
+	B1_g = theParameters.getDoubleParam("B1Gradient");
+	B1_g_half = B1_g/2.0;
+	gyroelect = theParameters.getDoubleParam("GyroelectricRatio");
+	omegaEDM = gyroelect*E0;
+	flipangle = theParameters.getDoubleParam("Flipangle")/180.0*M_PI;
+	omegalarmor = -PRECES_N*B0;
+	xyz0[0] = theParameters.getDoubleParam("GradientOffsetX");
+	xyz0[2] = theParameters.getDoubleParam("GradientOffsetZ");
+	B000 = I*mu0/M_PI/h2/2.;
 	#pragma omp master
 	{
 		cout << "The B0-field = " << B0 << " T" << endl;
@@ -27,7 +37,6 @@ Bfield::Bfield(string Bfilename, string Crossfilename, string Crosslocfilename, 
 		cout << "The gyroelectric Ratio = " << gyroelect << " m/(V s)" << endl;
 		cout << "The flipangle = " << flipangle << " rad = " << flipangle/M_PI*180 << "deg" << endl;
 	}
-	B000 = I*mu0/M_PI/h2/2.;
 	ifstream Binputfile;
 	Binputfile.open(Bfilename.c_str());
 	if(!Binputfile)
@@ -56,54 +65,11 @@ Bfield::Bfield(string Bfilename, string Crossfilename, string Crosslocfilename, 
 		Binputfile2 >> Brotationtimes[i];
 	}
 	Binputfile2.close();
-	
-	ifstream Crossinputfile;
-	Crossinputfile.open(Crossfilename.c_str());
-	if(!Crossinputfile)
-	{
-		cerr << "Error: file could not be opened" << endl;
-		exit(1);
-	}
-	dummy=0.0;
-	Crossinputfile >> dummy;
-	while(!(Crossinputfile.eof()))	
-	{
-		NCrossrottimes++;
-		Crossinputfile >> dummy;
-	}
-	if(NCrossrottimes%2)
-	{
-		cerr << "Error: File " << Crossfilename << " must contain a number of values that is divisible by 2!" << endl;
-		exit(1);
-	}
-	Crossinputfile.close();
-	ifstream Crossinputfile2(Crossfilename.c_str());
-	Crosstalkrotationtimes = new double[NCrossrottimes];
-	i=0;
-	for(i=0; i<NCrossrottimes; i++)
-	{
-		Crossinputfile2 >> Crosstalkrotationtimes[i];
-	}
-	Crossinputfile2.close();
-	
-	r0 = new double[3];
-	ifstream Crosslocations;
-	Crosslocations.open(Crosslocfilename.c_str());
-	for(i=0; i<3; i++)
-	{
-		Crosslocations >> r0[i];
-		r0_mag += r0[i]*r0[i];
-	}
-	r0_mag = sqrt(r0_mag);
-	cout << "r0_mag: " << r0_mag << endl;
-	Crosslocations.close();
 }
 
 Bfield::~Bfield()
 {
 	delete[] Brotationtimes;
-	delete[] Crosstalkrotationtimes;
-	delete[] r0;
 }
 
 void Bfield::operator()(double t, double *xyz, double *B)
@@ -169,38 +135,7 @@ void Bfield::FieldsRotatingWithLarmorfreq(double &t, double *xyz, double *B, dou
 			}
 		}
 	}
-	if(r0_mag)
-	{
-		if(t <= Crosstalkrotationtimes[NCrossrottimes-1])
-		{
-			int i=0;
-			while(t>Crosstalkrotationtimes[i+1] && i<NCrossrottimes-1)
-			{
-				i += 2;
-			}
-			if((t<Crosstalkrotationtimes[i+1]) && (t>Crosstalkrotationtimes[i]))
-			{
-				double angle = flipangle;
-				if(rotatedipole)
-				{
-					angle += omegaEDM*t;
-				}
-				double P[3] = {0.0,sin(-angle),cos(angle)};
-				double r[3] = {xyz[0]-r0[0],xyz[1]-r0[1],xyz[2]-r0[2]};
-				double rrotated[2] = {co*r[0]+si*r[1],-si*r[0]+co*r[1]};
-				double r_mag = sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2]);
-				rrotated[0] /= r_mag;
-				rrotated[1] /= r_mag;
-				r[2] /= r_mag;
-				double DistFact = factor/(r_mag*r_mag*r_mag);
-				double ScalProd = 3*(P[0]*rrotated[0]+P[1]*rrotated[1]+P[2]*r[2]);
-				B[0] += DistFact*(ScalProd*rrotated[0]-P[0]);
-				B[1] += DistFact*(ScalProd*rrotated[1]-P[1]);
-				B[2] += DistFact*(ScalProd*r[2]-P[2]);
-			}
-		}
-	}
-	if(E0 && gyroelect && !(rotatedipole))
+	if(E0 && gyroelect)
 	{
 		B[0] += fabs(gyroelect/PRECES_N)*E0;
 	}

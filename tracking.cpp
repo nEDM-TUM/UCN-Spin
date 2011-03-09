@@ -7,10 +7,12 @@
 using namespace std;
 
 
-Tracking::Tracking(Random *ran, Bfield* BF, double D, double Radius)
-: B(BF), rand(ran), Pos(NULL), xyz1(NULL), xyz2(NULL), dir1(NULL), dir2(NULL), posxyz(NULL), sqrt2D(sqrt(2*D)), 
-  lambda(0.0), Rsquare(Radius*Radius), R(Radius), scaling(1.), t(0.0), usetwopoints(false), htry(0.0)
+Tracking::Tracking(Random *ran, Bfield* BF, Parameters& theParameters)
+: B(BF), rand(ran), Pos(NULL), xyz1(NULL), xyz2(NULL), dir1(NULL), dir2(NULL), posxyz(NULL), sqrt2D(0.00025), 
+  lambda(0.0), Rsquare(0.0), R(0.0), scaling(1.), t(0.0), usetwopoints(false), htry(0.0)
 {
+	R = theParameters.getDoubleParam("Radius");
+	Rsquare = R*R;
 	Pos = new double[3];
 	xyz1 = new double[3];
 	xyz2 = new double[3];

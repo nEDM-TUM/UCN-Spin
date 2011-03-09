@@ -3,11 +3,12 @@
 
 #include "random.h"
 #include "bfield.h"
+#include "parameters.h"
 
 class Tracking
 {
 	public:
-		Tracking(Random*, Bfield*, double, double);
+		Tracking(Random*, Bfield*, Parameters&);
 		~Tracking();
 		void initialize();
 		void getB(double, double*);

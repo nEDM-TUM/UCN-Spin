@@ -1,16 +1,19 @@
 CXX=g++
-CXXFLAGS=-Wall -O2 -march=native -fopenmp
+CXXFLAGS=-Wall -O3 -march=native -fopenmp
 LIBS=-lgsl -lgslcblas -lm
-OBJS=main.o bfield.o random.o tracking.o spintracking.o dopr.o derivatives.o dipolefield.o
+OBJS=main.o bfield.o random.o tracking.o spintracking.o dopr.o derivatives.o parameters.o
 
 cylindric : $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) $(LIBS) -o cylindric
 
-main.o : main.cpp globals.h bfield.h random.h tracking.h spintracking.h derivatives.h
+main.o : main.cpp globals.h bfield.h random.h tracking.h spintracking.h derivatives.h parameters.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
 
-bfield.o : bfield.cpp bfield.h
+bfield.o : bfield.cpp bfield.h parameters.h
 	$(CXX) $(CXXFLAGS) -c bfield.cpp
+
+parameters.o : parameters.cpp parameters.h
+	$(CXX) $(CXXFLAGS) -c parameters.cpp
 
 random.o : random.cpp random.h
 	$(CXX) $(CXXFLAGS) -c random.cpp
@@ -26,9 +29,6 @@ dopr.o : dopr.cpp dopr.h derivatives.h tracking.h
 
 derivatives.o : derivatives.cpp derivatives.h tracking.h globals.h
 	$(CXX) $(CXXFLAGS) -c derivatives.cpp
-
-dipolefield.o : dipolefield.cpp dipolefield.h
-	$(CXX) $(CXXFLAGS) -c dipolefield.cpp
 
 clean : 
 	rm -f $(OBJS)
