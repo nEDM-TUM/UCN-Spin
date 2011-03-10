@@ -18,8 +18,6 @@ using namespace std;
 
 int main(int nargs, char** argv)
 {
-	const double hbar = 1.054571682364455e-34;
-	const double elementarycharge = 1.60218e-19;
 	double savetimediff = 2e-2, firsthtry = 1e-6;
 	int iP=0;
 	double *TP_shared = NULL, *P_end = NULL;
