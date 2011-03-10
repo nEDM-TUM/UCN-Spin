@@ -21,7 +21,7 @@ class Tracking
 		Bfield *B;
 		Random *rand;
 		double *Pos, *xyz1, *xyz2, *dir1, *dir2, *posxyz;
-		double sqrt2D, lambda, Rsquare, R, scaling, t;
+		double sqrt2D, lambda, Rsquare, R, H, scaling, t;
 		bool usetwopoints;
 		double htry;
 };

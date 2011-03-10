@@ -57,7 +57,8 @@ int main(int nargs, char** argv)
 	}
 
 	theParameters.add("GyroelectricRatio",theParameters.getDoubleParam("EDM")*0.01*elementarycharge/hbar);
-	theParameters.add("Radius",3.0e-4);
+	theParameters.add("CylinderRadius",3.0e-4);
+	theParameters.add("CylinderHeight",0.12);
 	theParameters.add("B0",1.0e-6);
 	theParameters.add("B1",1.0e-9);
 
