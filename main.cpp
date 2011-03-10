@@ -11,7 +11,7 @@ using namespace std;
 #include "bfield.h"
 #include "random.h"
 #include "tracking.h"
-#include "spintracking.h"
+#include "dopr.h"
 #include "derivatives.h"
 #include "parameters.h"
 
@@ -86,6 +86,7 @@ int main(int nargs, char** argv)
 		double Told = 0.0;
 		double flipangle = theParameters.getDoubleParam("Flipangle");
 		double P[3] = {0.0,sin(-flipangle/180*M_PI),cos(-flipangle/180*M_PI)};	//the polarization-vector
+		double dPdt[3] = {0.0};
 		double hdid = 0.0;
 		int savetime = 0;
 		double *tempTP = new double[J];
@@ -111,7 +112,16 @@ int main(int nargs, char** argv)
 						 theParameters);
 
 		Derivatives * derivatives = new Derivatives(tracker);
-		Spintracking *spintracker = new Spintracking(P, T, theParameters.getDoubleParam("ErrorGoal"), firsthtry, derivatives, true);
+		double errorgoal = theParameters.getDoubleParam("ErrorGoal");
+		Dopr *stepper = new Dopr(firsthtry,	//initial stepsize guess 
+					 3,		//dimension of ODE sytem
+					 P,
+					 dPdt,
+					 T,
+					 derivatives,
+					 errorgoal,	//relative error tolerance
+					 errorgoal,	//absolute error tolerance
+					 true);		//dense output?
 		
 		#pragma omp for
 			for(i=0; i<N_particles; i++)
@@ -124,7 +134,7 @@ int main(int nargs, char** argv)
 				P[1] = sin(-flipangle/180*M_PI);
 				P[2] = cos(-flipangle/180*M_PI);
 				tracker->initialize();
-				spintracker->reset(P, T, firsthtry);
+				stepper->reset(firsthtry, P, dPdt, T);
 				savetime = 0;
 				j = 0;
 				int lifetime1 = theParameters.getDoubleParam("Lifetime");
@@ -132,7 +142,7 @@ int main(int nargs, char** argv)
 				{
 					try
 					{
-						spintracker->precess();
+						stepper->step();
 						Nsteps++;
 					}
 					catch(char const* error)
@@ -141,14 +151,14 @@ int main(int nargs, char** argv)
 						exit(1);
 					}
 					Told = T;
-					T = spintracker->getStepperTime();			
-					hdid = spintracker->getHdid();
+					T = stepper->getT();			
+					hdid = stepper->getHdid();
 					double st = 0.0;
 					while(T >= (st = savetime*savetimediff))
 					{
-						Pol[0] = spintracker->dense_out(0,st,hdid);
-						Pol[1] = spintracker->dense_out(1,st,hdid);
-						Pol[2] = spintracker->dense_out(2,st,hdid);
+						Pol[0] = stepper->dense_out(0,st,hdid);
+						Pol[1] = stepper->dense_out(1,st,hdid);
+						Pol[2] = stepper->dense_out(2,st,hdid);
 						tempTP[4*j] = st;
 						tempTP[4*j+1] = Pol[0];
 						tempTP[4*j+2] = Pol[1];
@@ -159,16 +169,16 @@ int main(int nargs, char** argv)
 				}
 				#pragma omp critical
 				{
-					P_end[3*iP]   = spintracker->dense_out(0,lifetime1,hdid);
-					P_end[3*iP+1] = spintracker->dense_out(1,lifetime1,hdid);
-					P_end[3*iP+2] = spintracker->dense_out(2,lifetime1,hdid);
+					P_end[3*iP]   = stepper->dense_out(0,lifetime1,hdid);
+					P_end[3*iP+1] = stepper->dense_out(1,lifetime1,hdid);
+					P_end[3*iP+2] = stepper->dense_out(2,lifetime1,hdid);
 					iP++;
 				}
 				for(int z=0; z<J; z++)
 				{
 					TP[z] += tempTP[z];
 				}
-				cout << Nsteps << " steps successful, " << spintracker->getStepsnottaken() << " steps not taken!" << endl;
+				cout << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
 			}
 		#pragma omp critical
 		{
@@ -178,7 +188,7 @@ int main(int nargs, char** argv)
 			}
 		}
 		
-		delete spintracker; spintracker = NULL;
+		delete stepper; stepper = NULL;
 		delete derivatives; derivatives = NULL;
 		delete tracker; tracker = NULL;
 		delete bfield; bfield = NULL;

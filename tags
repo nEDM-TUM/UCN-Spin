@@ -17,12 +17,11 @@ Br	bfield.cpp	/^double Bfield::Br(double r, double z)$/;"	f	class:Bfield
 Brotationtimes	bfield.h	/^		double *Brotationtimes;$/;"	m	class:Bfield
 Bz	bfield.cpp	/^double Bfield::Bz(double r, double z)$/;"	f	class:Bfield
 CXX	Makefile	/^CXX=g++$/;"	m
-CXXFLAGS	Makefile	/^CXXFLAGS=-Wall -g -march=native -fopenmp$/;"	m
+CXXFLAGS	Makefile	/^CXXFLAGS=-Wall -O3 -march=native -fopenmp$/;"	m
 DERIVATIVES_H	derivatives.h	2;"	d
 DOPR5_H	dopr5.h	2;"	d
 Derivatives	derivatives.cpp	/^Derivatives::Derivatives(Tracking* TR)$/;"	f	class:Derivatives
 Derivatives	derivatives.h	/^class Derivatives$/;"	c
-Distribution	output/Pend/Distribution.C	/^void Distribution(string filename)$/;"	f
 Dopr	dopr.cpp	/^Dopr::Dopr(double firsthtry, int dimension, double* initialY, double* initialDYDX, double initialT, Derivatives *DERI, double atoll, double rtoll, bool dens)$/;"	f	class:Dopr
 Dopr	dopr.h	/^class Dopr$/;"	c
 Dopr5	dopr5.cpp	/^Dopr5::Dopr5(double firsthtry, unsigned int dimension, double* initialY, double* initialDYDX, double initialT, Derivatives *DERI, double atoll, double rtoll, bool dens)$/;"	f	class:Dopr5
@@ -37,8 +36,7 @@ I	bfield.h	/^		double B000,I,h2;$/;"	m	class:Bfield
 LIBS	Makefile	/^LIBS=-lgsl -lgslcblas -lm$/;"	m
 NBrottimes	bfield.h	/^		int NBrottimes;$/;"	m	class:Bfield
 NonrotatingFields	bfield.cpp	/^void Bfield::NonrotatingFields(double *xyz, double *B, double &co, double &si)$/;"	f	class:Bfield
-OBJS	Makefile	/^OBJS=main.o bfield.o random.o tracking.o spintracking.o dopr.o derivatives.o parameters.o$/;"	m
-P	spintracking.h	/^		double* P;$/;"	m	class:Spintracking
+OBJS	Makefile	/^OBJS=main.o bfield.o random.o tracking.o dopr.o derivatives.o parameters.o$/;"	m
 PARAMETERS_H	parameters.h	2;"	d
 PRECES_N	globals.h	/^static const double PRECES_N = -7.3997e7;$/;"	v
 Parameters	parameters.cpp	/^Parameters::Parameters()$/;"	f	class:Parameters
@@ -50,9 +48,6 @@ RANDOM_H	random.h	2;"	d
 Random	random.cpp	/^Random::Random(unsigned long int seed)$/;"	f	class:Random
 Random	random.h	/^class Random$/;"	c
 Rsquare	tracking.h	/^		double sqrt2D, lambda, Rsquare, R, scaling, t;$/;"	m	class:Tracking
-SPINTRACKING_H	spintracking.h	2;"	d
-Spintracking	spintracking.cpp	/^Spintracking::Spintracking(double* PolVec, double initialT, double error, double firsthtry, Derivatives *DERI, bool dens)$/;"	f	class:Spintracking
-Spintracking	spintracking.h	/^class Spintracking$/;"	c
 T	random.h	/^		const gsl_rng_type* T;$/;"	m	class:Random
 TRACKING2_H	tracking.h	2;"	d
 Tracking	tracking.cpp	/^Tracking::Tracking(Random *ran, Bfield* BF, Parameters& theParameters)$/;"	f	class:Tracking
@@ -208,16 +203,12 @@ d76	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d
 d77	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
 d78	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
 d79	dopr.h	/^		const double d69,d610,d611,d612,d613,d614,d615,d616,d71,d76,d77,d78,d79;$/;"	m	class:Dopr
-dPdt	spintracking.h	/^		double* dPdt;$/;"	m	class:Spintracking
 dense	dopr.h	/^		bool dense;$/;"	m	class:Dopr
 dense	dopr5.h	/^		bool dense;$/;"	m	class:Dopr5
-dense	spintracking.h	/^		bool dense;$/;"	m	class:Spintracking
 dense_out	dopr.cpp	/^double Dopr::dense_out(const int i,const double time,const double h)$/;"	f	class:Dopr
 dense_out	dopr5.cpp	/^double Dopr5::dense_out(const int i,const double t,const double h)$/;"	f	class:Dopr5
-dense_out	spintracking.cpp	/^double Spintracking::dense_out(const int i,const double t,const double h)$/;"	f	class:Spintracking
 derivatives	dopr.h	/^		Derivatives *derivatives;$/;"	m	class:Dopr
 derivatives	dopr5.h	/^		Derivatives *derivatives;$/;"	m	class:Dopr5
-derivatives	spintracking.h	/^		Derivatives *derivatives;$/;"	m	class:Spintracking
 dir1	tracking.h	/^		double *Pos, *xyz1, *xyz2, *dir1, *dir2, *posxyz;$/;"	m	class:Tracking
 dir2	tracking.h	/^		double *Pos, *xyz1, *xyz2, *dir1, *dir2, *posxyz;$/;"	m	class:Tracking
 dy	dopr.cpp	/^void Dopr::dy(const double h) {$/;"	f	class:Dopr
@@ -225,7 +216,6 @@ dy	dopr5.cpp	/^void Dopr5::dy(const double h)$/;"	f	class:Dopr5
 dydx	dopr.h	/^		double *y, *yout, *dydx, *yerr, *yerr2;$/;"	m	class:Dopr
 dydx	dopr5.h	/^		double *y, *yout, *dydx, *yerr;$/;"	m	class:Dopr5
 dydxnew	dopr5.h	/^		double *dydxnew;$/;"	m	class:Dopr5
-eps	spintracking.h	/^		double eps;$/;"	m	class:Spintracking
 er1	dopr.h	/^		const double er1,er6,er7,er8,er9,er10,er11,er12;$/;"	m	class:Dopr
 er10	dopr.h	/^		const double er1,er6,er7,er8,er9,er10,er11,er12;$/;"	m	class:Dopr
 er11	dopr.h	/^		const double er1,er6,er7,er8,er9,er10,er11,er12;$/;"	m	class:Dopr
@@ -251,14 +241,11 @@ getB	tracking.cpp	/^void Tracking::getB(double factor, double *Bvec)$/;"	f	class
 getDoubleParam	parameters.cpp	/^double Parameters::getDoubleParam(std::string name) const$/;"	f	class:Parameters
 getHdid	dopr.h	/^		inline double getHdid(){return hdid;};$/;"	f	class:Dopr
 getHdid	dopr5.h	/^		inline double getHdid(){return hdid;};$/;"	f	class:Dopr5
-getHdid	spintracking.cpp	/^double Spintracking::getHdid()$/;"	f	class:Spintracking
 getInitialB	tracking.cpp	/^void Tracking::getInitialB(double t, double* Bvec)$/;"	f	class:Tracking
 getIntParam	parameters.cpp	/^int Parameters::getIntParam(std::string name) const$/;"	f	class:Parameters
 getLastPos	tracking.cpp	/^double *Tracking::getLastPos()$/;"	f	class:Tracking
 getSize	parameters.cpp	/^int Parameters::getSize() const$/;"	f	class:Parameters
-getStepperTime	spintracking.cpp	/^double Spintracking::getStepperTime()$/;"	f	class:Spintracking
 getStepsnottaken	dopr.h	/^		inline int getStepsnottaken() {return stepsnottaken;};$/;"	f	class:Dopr
-getStepsnottaken	spintracking.h	/^		inline int getStepsnottaken() {return stepper->getStepsnottaken();};$/;"	f	class:Spintracking
 getT	dopr.h	/^		inline double getT(){return t;};$/;"	f	class:Dopr
 getT	dopr5.h	/^		inline double getT(){return t;};$/;"	f	class:Dopr5
 getTracker	derivatives.h	/^		inline Tracking *getTracker(){return tracker;};$/;"	f	class:Derivatives
@@ -300,7 +287,6 @@ omegalarmor	bfield.h	/^		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, g
 operator ()	bfield.cpp	/^void Bfield::operator()(double t, double *xyz, double *B)$/;"	f	class:Bfield
 operator ()	derivatives.cpp	/^void Derivatives::operator()(const double t, const double y[], double derivs[])$/;"	f	class:Derivatives
 posxyz	tracking.h	/^		double *Pos, *xyz1, *xyz2, *dir1, *dir2, *posxyz;$/;"	m	class:Tracking
-precess	spintracking.cpp	/^void Spintracking::precess()$/;"	f	class:Spintracking
 prepare_dense	dopr.cpp	/^void Dopr::prepare_dense(const double h, double *dydxnew)$/;"	f	class:Dopr
 prepare_dense	dopr5.cpp	/^void Dopr5::prepare_dense(const double h)$/;"	f	class:Dopr5
 r	random.h	/^		gsl_rng* r;$/;"	m	class:Random
@@ -322,7 +308,6 @@ reject	dopr.h	/^		bool reject;$/;"	m	class:Dopr
 reject	dopr5.h	/^		bool reject;$/;"	m	class:Dopr5
 reset	dopr.cpp	/^void Dopr::reset(double firsthtry, double* initialY, double* initialDYDX, double initialT)$/;"	f	class:Dopr
 reset	dopr5.cpp	/^void Dopr5::reset(double firsthtry, double* initialY, double* initialDYDX, double initialT)$/;"	f	class:Dopr5
-reset	spintracking.cpp	/^void Spintracking::reset(double* PolVec, double initialT, double firsthtry)$/;"	f	class:Spintracking
 rtol	dopr.h	/^		double atol, rtol, EPS, errold;$/;"	m	class:Dopr
 rtol	dopr5.h	/^		double atol, rtol, EPS, errold;$/;"	m	class:Dopr5
 scaling	tracking.h	/^		double sqrt2D, lambda, Rsquare, R, scaling, t;$/;"	m	class:Tracking
@@ -331,7 +316,6 @@ sqrt2D	tracking.h	/^		double sqrt2D, lambda, Rsquare, R, scaling, t;$/;"	m	class
 step	dopr.cpp	/^void Dopr::step()$/;"	f	class:Dopr
 step	dopr5.cpp	/^void Dopr5::step()$/;"	f	class:Dopr5
 stepDone	tracking.cpp	/^void Tracking::stepDone()$/;"	f	class:Tracking
-stepper	spintracking.h	/^		Dopr *stepper;$/;"	m	class:Spintracking
 stepsnottaken	dopr.h	/^		int stepsnottaken;$/;"	m	class:Dopr
 success	dopr.cpp	/^bool Dopr::success(const double err, double &h)$/;"	f	class:Dopr
 success	dopr5.cpp	/^bool Dopr5::success(const double err,double &h)$/;"	f	class:Dopr5
@@ -360,5 +344,4 @@ yout	dopr5.h	/^		double *y, *yout, *dydx, *yerr;$/;"	m	class:Dopr5
 ~Dopr5	dopr5.cpp	/^Dopr5::~Dopr5()$/;"	f	class:Dopr5
 ~Parameters	parameters.cpp	/^Parameters::~Parameters()$/;"	f	class:Parameters
 ~Random	random.cpp	/^Random::~Random()$/;"	f	class:Random
-~Spintracking	spintracking.cpp	/^Spintracking::~Spintracking()$/;"	f	class:Spintracking
 ~Tracking	tracking.cpp	/^Tracking::~Tracking()$/;"	f	class:Tracking
