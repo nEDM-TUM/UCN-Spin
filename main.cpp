@@ -23,44 +23,26 @@ int main(int nargs, char** argv)
 	double *TP_shared = NULL, *P_end = NULL;
 	
 	Parameters theParameters;
-	std::vector<std::string> parameternames;
-	parameternames.push_back("NumberOfParticles");
-	parameternames.push_back("Lifetime");
-	parameternames.push_back("ErrorGoal");
-	parameternames.push_back("EfieldMag");
-	parameternames.push_back("B0Gradient");
-	parameternames.push_back("GradientOffsetX");
-	parameternames.push_back("GradientOffsetZ");
-	parameternames.push_back("B1Gradient");
-	parameternames.push_back("EDM");
-	parameternames.push_back("Flipangle");
-	parameternames.push_back("Seed");
+	theParameters.expectInt("NumberOfParticles");
+	theParameters.expectDouble("Lifetime");
+	theParameters.expectDouble("ErrorGoal");
+	theParameters.expectDouble("EfieldMag");
+	theParameters.expectDouble("B0Gradient");
+	theParameters.expectDouble("GradientOffsetX");
+	theParameters.expectDouble("GradientOffsetZ");
+	theParameters.expectDouble("B1Gradient");
+	theParameters.expectDouble("EDM");
+	theParameters.expectDouble("Flipangle");
+	theParameters.expectInt("Seed");
+	theParameters.expectDouble("CylinderRadius");
+	theParameters.expectDouble("CylinderHeight");
+	theParameters.expectDouble("B0");
+	theParameters.expectDouble("B1");
 
-	if(nargs == parameternames.size()+1)
-	{
-		for(size_t i=1; i<= parameternames.size(); i++)
-		{
-			if(parameternames.at(i-1)=="NumberOfParticles" || parameternames.at(i-1)=="Seed")	//for integer parameters
-			{
-				theParameters.add(parameternames.at(i-1),atoi(argv[i]));
-			}
-			else
-			{
-				theParameters.add(parameternames.at(i-1),atof(argv[i]));
-			}
-		}
-	}
-	else
-	{
-		cout << "wrong number of arguments passed: " << nargs << endl;
-		exit(1);
-	}
+	theParameters.readParameters(cin);
 
+	// TODO: reorder this if possible
 	theParameters.add("GyroelectricRatio",theParameters.getDoubleParam("EDM")*0.01*elementarycharge/hbar);
-	theParameters.add("CylinderRadius",3.0e-4);
-	theParameters.add("CylinderHeight",0.12);
-	theParameters.add("B0",1.0e-6);
-	theParameters.add("B1",1.0e-9);
 
 	const int J = 4*((int)(theParameters.getDoubleParam("Lifetime")/savetimediff) + 14);
 	int N_particles = theParameters.getIntParam("NumberOfParticles");
