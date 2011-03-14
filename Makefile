@@ -31,3 +31,7 @@ clean :
 	rm -f $(OBJS)
 	rm -f cylindric
 
+doc:
+	doxygen
+
+.PHONY: clean doc
