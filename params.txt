@@ -1,0 +1,17 @@
+NumberOfParticles	10
+Lifetime			10
+ErrorGoal			1e-10
+EfieldMag			1
+B0Gradient			1
+GradientOffsetX		0
+GradientOffsetZ		0
+B1Gradient			0
+EDM					0
+Flipangle			90
+Seed				123
+#GyroelectricRatio	EDM*0.01*elementarycharge/hbar ### TODO!
+CylinderRadius		3.0e-4
+CylinderHeight		0.12
+B0					1.0e-6
+B1					1.0e-9
+
