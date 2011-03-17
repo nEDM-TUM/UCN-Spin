@@ -1,0 +1,19 @@
+#!/usr/bin/gnuplot
+set terminal postscript color eps enhanced
+
+dat = '/tmp/data'
+
+set output '/tmp/time.eps'
+set title "time dependency of x,y,z"
+set xlabel "time"
+plot dat using 1:2 with lines title "x", dat using 1:3 with lines title "y", dat using 1:4 with lines title "z"
+
+set output '/tmp/orbit.eps'
+set size square
+set title "x-y orbit" 
+set xrange [-5:5]
+set yrange [-5:5]
+set xlabel "x"
+set ylabel "y"
+
+plot dat using 2:3 with lines notitle
