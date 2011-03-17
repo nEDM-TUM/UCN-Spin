@@ -7,9 +7,9 @@ class Derivatives
 {
 	public:
 		Derivatives(Tracking*);
-		void operator()(const double, const double*, double*);
-		void eval(const double, const double*, double*);
-		void evalInitial(const double, const double*, double*);
+		void operator()(const double, const double[], double[]);
+		void eval(const double, const double[], double[]);
+		void evalInitial(const double, const double[], double[]);
 		inline Tracking *getTracker(){return tracker;};
 	private:
 		Tracking *tracker;
