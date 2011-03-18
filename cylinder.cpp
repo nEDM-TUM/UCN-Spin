@@ -136,17 +136,17 @@ void Cylinder::reflectRadius(double v[], double x[]) {
 		v_abs += v[i]*v[i];
 	}
 	v_abs = sqrt(v_abs);
-	std::clog << "# v_abs = " << v_abs << std::endl;
-	// TODO: don't div0!!!
+	if (v_abs == 0)
+		throw "Cylinder::reflectRadius called with v[0]^2 + v[1]^2 = 0";
 	vn[0] = v[0] / v_abs;
 	vn[1] = v[1] / v_abs;
 
 	// fill n
-	double x_abs_inv = 1. / sqrt(x[0]*x[0] + x[1]*x[1]);
-	// TODO: don't div0!!!
-	std::clog << "# x_abs_inv = " << x_abs_inv << std::endl;
-	n[0] = x_abs_inv * x[1];
-	n[1] = -x_abs_inv * x[0];
+	double x_abs = sqrt(x[0]*x[0] + x[1]*x[1]);
+	if (x_abs == 0)
+		throw "Cylinder::reflectRadius called with x[0]^2 + x[1]^2 = 0";
+	n[0] = x[1] / x_abs;
+	n[1] = -x[0] / x_abs;
 
 	// Calculate sp
 	for (int i = 0; i <= 1; i++) {

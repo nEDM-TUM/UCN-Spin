@@ -3,7 +3,7 @@
 
 int main() {
 	// how long the simulation should run
-	const double T = 500;
+	const double T = 300;
 	// which stepsize should be used
 	const double dt = 1e-3;
 
@@ -11,7 +11,7 @@ int main() {
 	Cylinder c(5, 2);
 
 	// Place and velocity for simple test
-	double v[3] = {1.2, .8, 1};
+	double v[3] = {2.2, .8, 1};
 	double x[3] = {1, 1, 1};
 
 	// state for reflect
