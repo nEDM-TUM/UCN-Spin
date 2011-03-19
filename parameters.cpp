@@ -152,6 +152,6 @@ void Parameters::readParameters(std::istream &in) {
 		}
 
 		// ignore garbage at end of line
-		std::cin.ignore(4192, '\n');
+		in.ignore(4192, '\n');
 	}
 }
