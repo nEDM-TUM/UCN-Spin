@@ -1,8 +1,8 @@
-NumberOfParticles	10
-Lifetime			10
-ErrorGoal			1e-10
-EfieldMag			1
-B0Gradient			1
+NumberOfParticles	100
+Lifetime			20
+ErrorGoal			1e-11
+EfieldMag			0
+B0Gradient			1e-7
 GradientOffsetX		0
 GradientOffsetZ		0
 B1Gradient			0
