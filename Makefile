@@ -1,7 +1,7 @@
 CXX=g++
 CXXFLAGS=-Wall -O3 -march=native -fopenmp
 LIBS=-lgsl -lgslcblas -lm
-OBJS=main.o bfield.o random.o tracking.o dopr.o derivatives.o parameters.o cylinder.o
+OBJS=main.o bfield.o random.o tracking.o dopr.o derivatives.o parameters.o cylinder.o threevector.o
 
 cylindric : $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) $(LIBS) -o cylindric
@@ -29,6 +29,9 @@ derivatives.o : derivatives.cpp derivatives.h tracking.h globals.h
 
 cylinder.o: cylinder.cpp cylinder.h
 	$(CXX) $(CXXFLAGS) -c cylinder.cpp
+
+threevector.o: threevector.cpp threevector.h
+	$(CXX) $(CXXFLAGS) -c threevector.cpp
 
 tests/cylinder: tests/cylinder.cpp cylinder.o
 	$(CXX) $(CXXFLAGS) $(LIBS) tests/cylinder.cpp cylinder.o -o tests/cylinder

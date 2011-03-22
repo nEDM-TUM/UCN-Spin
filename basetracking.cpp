@@ -11,9 +11,9 @@
 
 /**
  *
- * @p ran Pointer to the random generator
- * @p bf Pointer to the magnetic field object
- * @p geo Pointer to the geometry object
+ * @param ran Pointer to the random generator
+ * @param bf Pointer to the magnetic field object
+ * @param geo Pointer to the geometry object
  */
 
 Basetracking::Basetracking(Random *ran, Bfield *bf, Basegeometry *geo)

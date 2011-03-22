@@ -17,7 +17,7 @@ class Basetracking
 
 		/**
 		 * Pure virtual function
-		 * Creates a track with length @param hmax in time
+		 * Creates a track with length @p hmax in time
 		 * This method must be provided by a user tracking class
 		 */
 
