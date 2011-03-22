@@ -14,6 +14,13 @@ class Basetracking
 		
 		virtual void initialize();
 		void getB(double time, double* bvec);
+
+		/**
+		 * Pure virtual function
+		 * Creates a track with length @param hmax in time
+		 * This method must be provided by a user tracking class
+		 */
+
 		virtual void makeTrack(double hmax) = 0;
 		void reset();
 		void stepDone();

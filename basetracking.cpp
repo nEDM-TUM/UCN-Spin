@@ -1,11 +1,32 @@
 #include "basetracking.h"
 
+/**
+ * @class Basetracking
+ * Abstract base class, derive from it to create an actual user tracking class.
+ * Provides methods to initialize the starting point of a track portion,
+ * to reset the tracking, if a timestep was not accepted, 
+ * to mark the track as finished and prepare for a new one
+ * and to provide the B field along the track
+ */
+
+/**
+ *
+ * @p ran Pointer to the random generator
+ * @p bf Pointer to the magnetic field object
+ * @p geo Pointer to the geometry object
+ */
+
 Basetracking::Basetracking(Random *ran, Bfield *bf, Basegeometry *geo)
 : fBfield(bf), fRandomgenerator(ran), fGeometry(geo), fIndex(0),
   fLasttime(0), fStarttime(0), fDelta(0.0)
 {
 
 }
+
+/**
+ * Initializes the track portion. Generates a starting point and sets the
+ * starting time to zero
+ */
 
 void Basetracking::initialize()
 {
@@ -17,6 +38,12 @@ void Basetracking::initialize()
 	fTrackpositions.push_back(pos);
 	fTrackpositions.push_back(vel);
 }
+
+/**
+ * Returns the magnetic field vector at a certain time
+ * @param[in] time The time at which the magnetic field is requested
+ * @param[out] bvec Array of 3 doubles that contains the magnetic field vector at the requested time
+ */
 
 void Basetracking::getB(double time, double* bvec)
 {
@@ -40,11 +67,22 @@ void Basetracking::getB(double time, double* bvec)
 	fLasttime = time;
 }
 
+/**
+ * Resets the already constructed track portion to its starting point.
+ * This method should be called if the timestep was not accepted.
+ */
+
 void Basetracking::reset()
 {
 	fIndex = 0;
 	fLasttime = fStarttime;
 }
+
+/**
+ * Sets the endpoint and time of the last track portion as starting point and
+ * time of the next track portion and deletes the previous track portion
+ * This method should be called if the timestep was accepted.
+ */
 
 void Basetracking::stepDone()
 {
