@@ -159,7 +159,7 @@ int main(int nargs, char** argv)
 				{
 					TP[z] += tempTP[z];
 				}
-				cout << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
+				cout << "Particle " << i << ": " << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
 			}
 		#pragma omp critical
 		{

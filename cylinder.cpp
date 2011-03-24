@@ -76,6 +76,8 @@ bool Cylinder::reflect(double v[], double x[], bool state[2])
 			/// Only reflect if particle has been inside the height of the
 			/// cylinder since last reflection (so check if <tt>(state[0] ==
 			/// false)</tt>).
+
+			// TODO: Add diffusion
 			reflectHeight(v);
 			changes = true;
 		}
@@ -100,6 +102,8 @@ bool Cylinder::reflect(double v[], double x[], bool state[2])
 			/// Only reflect if particle has been inside the radius of the
 			/// cylinder since last reflection (so check if <tt>(state[1] ==
 			/// false)</tt>).
+
+			// TODO: Add diffusion
 			reflectRadius(v, x);
 			changes = true;
 		}
