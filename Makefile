@@ -33,8 +33,8 @@ cylinder.o: cylinder.cpp cylinder.h
 threevector.o: threevector.cpp threevector.h
 	$(CXX) $(CXXFLAGS) -c threevector.cpp
 
-tests/cylinder: tests/cylinder.cpp cylinder.o
-	$(CXX) $(CXXFLAGS) $(LIBS) tests/cylinder.cpp cylinder.o -o tests/cylinder
+roots.o: roots.cpp roots.h
+	$(CXX) $(CXXFLAGS) -c roots.cpp
 
 clean : 
 	rm -f $(OBJS)
