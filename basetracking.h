@@ -10,10 +10,10 @@
 class Basetracking
 {
 	public:
-		Basetracking(Random* ran, Bfield* bf, Basegeometry *geo);
+		Basetracking(Random* ran, Basegeometry *geo);
 		
 		virtual void initialize();
-		void getB(double time, double* bvec);
+		Threevector getPosition(double time);
 
 		/**
 		 * Pure virtual function
@@ -26,7 +26,6 @@ class Basetracking
 		void stepDone();
 
 	protected:
-		Bfield *fBfield;
 		Random *fRandomgenerator;
 		Basegeometry *fGeometry;
 		vector<double> fTracktimes;
