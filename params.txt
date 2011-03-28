@@ -1,4 +1,4 @@
-NumberOfParticles	100
+NumberOfParticles	1000
 Lifetime			20
 ErrorGoal			1e-11
 EfieldMag			0
