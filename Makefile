@@ -33,9 +33,6 @@ cylinder.o: cylinder.cpp cylinder.h
 threevector.o: threevector.cpp threevector.h
 	$(CXX) $(CXXFLAGS) -c threevector.cpp
 
-tests/cylinder: tests/cylinder.cpp cylinder.o
-	$(CXX) $(CXXFLAGS) $(LIBS) tests/cylinder.cpp cylinder.o -o tests/cylinder
-
 clean : 
 	rm -f $(OBJS)
 	rm -f cylindric
