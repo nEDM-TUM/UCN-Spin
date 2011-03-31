@@ -1,43 +1,34 @@
 CXX=g++
 CXXFLAGS=-Wall -O3 -march=native -fopenmp
 LIBS=-lgsl -lgslcblas -lm
-OBJS=main.o bfield.o random.o tracking.o dopr.o derivatives.o parameters.o cylinder.o threevector.o
+OBJS=main.o bfield.o random.o tracking.o dopr.o derivatives.o parameters.o cylinder.o threevector.o basetracking.o equationtracker.o gravitationtracker.o
+TAGFILES=$(shell find . -name "*.cpp" -or -name "*.h")
 
-cylindric : $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) $(LIBS) -o cylindric
+all: cylindric tags
 
-main.o : main.cpp globals.h bfield.h random.h tracking.h dopr.h derivatives.h parameters.h
-	$(CXX) $(CXXFLAGS) -c main.cpp
+# This Makefile uses dependency based make.
+#
+# If you want to compile file.cpp, simply add file.o to OBJS at the top of this
+# file.
 
-bfield.o : bfield.cpp bfield.h parameters.h
-	$(CXX) $(CXXFLAGS) -c bfield.cpp
+cylindric : $(OBJS:%.o=objs/%.o)
+	$(CXX) $(CXXFLAGS) $(OBJS:%.o=objs/%.o) $(LIBS) -o cylindric
 
-parameters.o : parameters.cpp parameters.h
-	$(CXX) $(CXXFLAGS) -c parameters.cpp
+objs/%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $*.cpp -o objs/$*.o
+	$(CXX) $(CXXFLAGS) -MM -MP -MF deps/$*.d $*.cpp
 
-random.o : random.cpp random.h
-	$(CXX) $(CXXFLAGS) -c random.cpp
-
-tracking.o : tracking.cpp tracking.h random.h bfield.h
-	$(CXX) $(CXXFLAGS) -c tracking.cpp
-
-dopr.o : dopr.cpp dopr.h derivatives.h tracking.h
-	$(CXX) $(CXXFLAGS) -c dopr.cpp
-
-derivatives.o : derivatives.cpp derivatives.h tracking.h globals.h
-	$(CXX) $(CXXFLAGS) -c derivatives.cpp
-
-cylinder.o: cylinder.cpp cylinder.h
-	$(CXX) $(CXXFLAGS) -c cylinder.cpp
-
-threevector.o: threevector.cpp threevector.h
-	$(CXX) $(CXXFLAGS) -c threevector.cpp
+-include $(OBJS:%.o=deps/%.d)
 
 clean : 
-	rm -f $(OBJS)
+	rm -f $(OBJS:%.o=deps/%.d)
+	rm -f $(OBJS:%.o=objs/%.o)
 	rm -f cylindric
 
 doc:
-	doxygen
+	doxygen > /dev/null
 
-.PHONY: clean doc
+tags: $(TAGFILES)
+	ctags $(TAGFILES)
+
+.PHONY: clean doc all

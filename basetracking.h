@@ -3,9 +3,9 @@
 
 #include <vector>
 #include "random.h"
-#include "bfield.h"
 #include "parameters.h"
 #include "basegeometry.h"
+#include "threevector.h"
 
 class Basetracking
 {
@@ -28,12 +28,11 @@ class Basetracking
 	protected:
 		Random *fRandomgenerator;
 		Basegeometry *fGeometry;
-		vector<double> fTracktimes;
-		vector<Threevector> fTrackpositions;
-		vector<Threevector> fTrackvelocities;
+		std::vector<double> fTracktimes;
+		std::vector<Threevector> fTrackpositions;
+		std::vector<Threevector> fTrackvelocities;
 		int fIndex;
 		double fLasttime;
 		double fStarttime;
-		double fDelta;
 };
 #endif 
