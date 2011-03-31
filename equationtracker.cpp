@@ -7,7 +7,7 @@
  * @param geo    geometry
  */
 EquationTracker::EquationTracker(Random *ran, Basegeometry *geo) : 
-	Basetracking(ran, geo)
+	Basetracking(ran, geo), fStepSize(0.01) // TODO: read stepsize as param
 {
 }
 
@@ -28,7 +28,7 @@ void EquationTracker::initialize() {
  * @param[in,out] x current location, will be updated to new location
  * @param[in,out] v current velocity, will be updated to new velocity
  */
-void EquationTracker::rkStep(const double h, const double t, Threevector &x, Threevector &v) {
+void EquationTracker::rkStep(const double &h, const double &t, Threevector &x, Threevector &v) {
 	static Threevector k1x, k2x, k3x, k4x;
 	static Threevector k1v, k2v, k3v, k4v;
 
@@ -44,5 +44,50 @@ void EquationTracker::rkStep(const double h, const double t, Threevector &x, Thr
 /**
  * Ensure that track was already generated.
  */
-void EquationTracker::makeTrack(const double) {
+void EquationTracker::makeTrack(const double hmax) {
+	// time until which the solution is to be calculated
+	const double goal = fTime + hmax;
+
+	// Generate track as far as necessary
+	while (fTime < goal) {
+		// Do one Runge-Kutta step
+		rkStep(fStepSize, fTime, fPos, fVel);
+
+		if (!fGeometry.contains(fPos)) {
+			// TODO: backtrack to intersection time, reset fPos and fVel and do smaller step
+			
+			// Reset fPos and fVel to values before rkStep
+			fPos = fTrackpositions.back();
+			fVel = fTrackvelocities.back();
+
+			// Find the time when the particle left the volume
+			double h = fGeometry.findIntersection(fTime, fTime + fStepSize); // TODO: add interpolated track as param
+
+			// Do smaller step and advance time
+			rkStep(h, fTime, fPos, fVel);
+			fTime += h;
+
+			// Save velocity and position before collision
+			fTracktimes.push_back(fTime);
+			fTrackpositions.push_back(fPos);
+			fTrackvelocities.push_back(fVel);
+
+			// Reflect
+			fGeometry.reflect();
+
+			// Save velocity and position after collision
+			fTracktimes.push_back(fTime);
+			fTrackpositions.push_back(fPos);
+			fTrackvelocities.push_back(fVel);
+		}
+		else {
+			// Step was still inside, just advance time
+			fTime += fStepSize;
+		}
+
+		// Save new trackpoint
+		fTracktimes.push_back(fTime);
+		fTrackpositions.push_back(fPos);
+		fTrackvelocities.push_back(fVel);
+	}
 }

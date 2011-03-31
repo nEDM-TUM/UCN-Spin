@@ -18,7 +18,13 @@ class EquationTracker : public Basetracking {
 		void initialize();
 
 	private:
-		void rkStep(const double h, const double t, Threevector &x, Threevector &v);
+		void rkStep(const double &h, const double &t, Threevector &x, Threevector &v);
+		double fStepSize; ///< stepsize of the Runge-Kutta integration
+
+		// State for makeTrack()
+		double fTime;
+		Threevector fPos;
+		Threevector fVel;
 	
 	protected:
 		/**
