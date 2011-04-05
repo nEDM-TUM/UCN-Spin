@@ -1,14 +1,16 @@
 all: cylinder roots
 
-cylinder: cylinder.cpp
-	make -C .. cylinder.o
-	$(CXX) $(CXXFLAGS) $(LIBS) cylinder.cpp ../cylinder.o -o cylinder
+cylinder: cylinder.cpp ../objs/cylinder.o
+	$(CXX) $(CXXFLAGS) $(LIBS) cylinder.cpp ../objs/cylinder.o -o cylinder
 
-roots: roots.cpp ../roots.h
-	make -C .. polynom.o
-	$(CXX) $(CXXFLAGS) $(LIBS) roots.cpp ../polynom.o -o roots
+roots: roots.cpp ../roots.h ../objs/polynom.o
+	$(CXX) $(CXXFLAGS) $(LIBS) roots.cpp ../objs/polynom.o -o roots
+
+# be careful and let make in .. decide if a prequisite should be rebuilt
+../objs/%.o: $(wildcard ../*.cpp) $(wildcard ../*.h)
+	make -C .. objs/$*.o
 
 clean:
-	rm -f cylinder
+	rm -f cylinder roots
 
-.PHONY: all clean
+.PHONY: all clean ../objs/%.o

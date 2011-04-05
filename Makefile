@@ -24,6 +24,7 @@ clean :
 	rm -f $(OBJS:%.o=deps/%.d)
 	rm -f $(OBJS:%.o=objs/%.o)
 	rm -f cylindric
+	make -C tests clean
 
 doc:
 	doxygen > /dev/null
