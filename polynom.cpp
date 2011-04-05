@@ -1,27 +1,52 @@
 #include <sstream>
 #include "polynom.h"
 
+/**
+ * @class Polynom
+ *
+ * Represents a polynomial.
+ */
+
+/**
+ * Create a Polynom object ready to take a Polynom of degree @p n without
+ * needing a resize of the internal coefficient vector.
+ */
 Polynom::Polynom(int n) :
-	coeffs(n)
+	coeffs(n+1, 0.)
 {
 }
 
-Polynom::Polynom(double a1, double a0) {
-	coeffs.push_back(a0);
-	coeffs.push_back(a1);
+/**
+ * Create Polynom <tt>f(x) = a1*x + a0</tt>
+ */
+Polynom::Polynom(double a1, double a0) :
+	coeffs(2)
+{
+	coeffs[0] = a0;
+	coeffs[1] = a1;
 }
 
-Polynom::Polynom(double a2, double a1, double a0) {
-	coeffs.push_back(a0);
-	coeffs.push_back(a1);
-	coeffs.push_back(a2);
+/**
+ * Create Polynom <tt>f(x) = a2*x^2 + a1*x + a0</tt>
+ */
+Polynom::Polynom(double a2, double a1, double a0) :
+	coeffs(3)
+{
+	coeffs[0] = a0;
+	coeffs[1] = a1;
+	coeffs[2] = a2;
 }
 
-Polynom::Polynom(double a3, double a2, double a1, double a0) {
-	coeffs.push_back(a0);
-	coeffs.push_back(a1);
-	coeffs.push_back(a2);
-	coeffs.push_back(a3);
+/**
+ * Create Polynom <tt>f(x) = a3*x^3 + a2*x^2 + a1*x + a0</tt>
+ */
+Polynom::Polynom(double a3, double a2, double a1, double a0) :
+	coeffs(4)
+{
+	coeffs[0] = a0;
+	coeffs[1] = a1;
+	coeffs[2] = a2;
+	coeffs[3] = a3;
 }
 
 /**
@@ -38,9 +63,13 @@ double Polynom::operator()(double x) {
 	return acc;
 }
 
+/**
+ * Return the degree of the polynomial.
+ * @returns the biggest n with <tt>coeffs[n] != 0</tt>.
+ */
 int Polynom::degree() const {
 	// Reduce degree if degree is smaller than size of vector
-	int deg = coeffs.size();
+	int deg = coeffs.size() - 1;
 
 	while (deg >= 0 && coeffs[deg] == 0)
 		deg--;
@@ -48,6 +77,9 @@ int Polynom::degree() const {
 	return deg;
 }
 
+/**
+ * Return the derivative.
+ */
 Polynom Polynom::derivative() {
 	const int deg = degree();
 	Polynom d(deg - 1);
@@ -58,6 +90,11 @@ Polynom Polynom::derivative() {
 	return d;
 }
 
+/**
+ * Get or set coefficients of Polynom.
+ * If @p n is greater than the current degree of the
+ * polynomial, it is resized.
+ */
 double &Polynom::operator[](unsigned int n) {
 	// Enlarge coefficient-array if necessary
 	if (n >= coeffs.size())
@@ -66,14 +103,32 @@ double &Polynom::operator[](unsigned int n) {
 	return coeffs[n];
 }
 
+/**
+ * Compare two Polynom objects for equality.
+ */
 bool operator==(const Polynom &l, const Polynom &r) {
-	return (l.coeffs == r.coeffs);
+	const int deg = l.degree();
+
+	if (deg != r.degree())
+		return false;
+
+	for (int i = deg; i >= 0; i--)
+		if (l[i] != r[i])
+			return false;
+
+	return true;
 }
 
+/**
+ * Compare two Polynom objects for inequality.
+ */
 bool operator!=(const Polynom &l, const Polynom &r) {
-	return (l.coeffs != r.coeffs);
+	return !(l == r);
 }
 
+/**
+ * Add two Polynom objects.
+ */
 Polynom operator+(const Polynom &l, const Polynom &r) {
 	const int deg = l.degree();
 	if (deg < r.degree())
@@ -87,6 +142,9 @@ Polynom operator+(const Polynom &l, const Polynom &r) {
 	return t;
 }
 
+/**
+ * Return a human-readable string representation.
+ */
 std::string Polynom::toString() {
 	bool first = true;
 	std::ostringstream o;

@@ -11,6 +11,11 @@ Random::~Random()
 	gsl_rng_free(r);
 }
 
+int Random::uniform_int(int max)
+{
+	return gsl_rng_uniform_int(r, max+1);
+}
+
 double Random::uniform()
 {
 	return gsl_rng_uniform(r);

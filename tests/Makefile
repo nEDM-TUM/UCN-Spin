@@ -13,4 +13,4 @@ roots: roots.cpp ../roots.h ../objs/polynom.o
 clean:
 	rm -f cylinder roots
 
-.PHONY: all clean ../objs/%.o
+.PHONY: all clean

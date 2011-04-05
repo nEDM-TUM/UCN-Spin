@@ -11,6 +11,7 @@ class Random
 		Random(unsigned long int);
 		~Random();
 		double uniform();
+		int uniform_int(int max);
 		double gaussian(const double);
 		gsl_rng* GetGsl_Rng();
 	private:
