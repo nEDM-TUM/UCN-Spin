@@ -1,4 +1,5 @@
 #include "../cylinder.h"
+#include "../threevector.h"
 #include <iostream>
 
 int main() {
@@ -11,8 +12,8 @@ int main() {
 	Cylinder c(5, 2);
 
 	// Place and velocity for simple test
-	double v[3] = {2.2, .8, 1};
-	double x[3] = {1, 1, 1};
+	Threevector v(2.2, .8, 1);
+	Threevector x(1, 1, 1);
 
 	// state for reflect
 	bool state[2] = {false, false};

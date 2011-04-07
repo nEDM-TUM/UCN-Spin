@@ -1,7 +1,7 @@
 all: cylinder roots
 
-cylinder: cylinder.cpp ../objs/cylinder.o
-	$(CXX) $(CXXFLAGS) $(LIBS) cylinder.cpp ../objs/cylinder.o -o cylinder
+cylinder: cylinder.cpp ../objs/cylinder.o ../objs/threevector.o
+	$(CXX) $(CXXFLAGS) $(LIBS) cylinder.cpp ../objs/cylinder.o ../objs/threevector.o -o cylinder
 
 roots: roots.cpp ../roots.h ../objs/polynom.o
 	$(CXX) $(CXXFLAGS) $(LIBS) roots.cpp ../objs/polynom.o -o roots

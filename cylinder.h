@@ -1,20 +1,22 @@
 #ifndef CYLINDER_H
 #define CYLINDER_H
 
+#include "threevector.h"
+
 class Cylinder
 {
 	public:
 		Cylinder(double radius, double height);
 		
-		bool contains(double x[]);
-		bool insideHeight(double x[]);
-		bool insideRadius(double x[]);
+		bool contains(const Threevector &x);
+		bool insideHeight(const Threevector &x);
+		bool insideRadius(const Threevector &x);
 
-		bool reflect(double v[], double x[], bool state[2]);
+		bool reflect(Threevector &v, Threevector &x, bool state[2]);
 
 	private:
-		void reflectHeight(double v[]);
-		void reflectRadius(double v[], double x[]);
+		void reflectHeight(Threevector &v);
+		void reflectRadius(Threevector &v, Threevector &x);
 
 		double fRadius; ///< radius of cylinder
 		double fRSquared; ///< squared radius of cylinder

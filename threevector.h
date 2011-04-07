@@ -16,6 +16,7 @@ class Threevector
 		double getY(){return fVec[1];};
 		double getZ(){return fVec[2];};
 		double &operator[](const int i) {return fVec[i];};
+		double operator[](const int i) const {return fVec[i];};
 		Threevector &operator=(const Threevector &v) {
 			for (int i = 0; i < 3; i++)
 				fVec[i] = v.fVec[i];

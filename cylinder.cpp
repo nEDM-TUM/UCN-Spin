@@ -23,7 +23,7 @@ Cylinder::Cylinder(double radius, double height)
 /**
  * Check if the cylinder contains the point @p x.
  */
-bool Cylinder::contains(double x[])
+bool Cylinder::contains(const Threevector &x)
 {
 	return insideRadius(x) && insideHeight(x);
 }
@@ -34,7 +34,7 @@ bool Cylinder::contains(double x[])
  * This function does not check if it is inside the radius.
  * @see Cylinder::contains(double[])
  */
-bool Cylinder::insideHeight(double x[])
+bool Cylinder::insideHeight(const Threevector &x)
 {
 	return (x[2] > 0) && (x[2] < fHeight);
 }
@@ -46,7 +46,7 @@ bool Cylinder::insideHeight(double x[])
  * This function does not check if it is inside the height.
  * @see Cylinder::contains(double[])
  */
-bool Cylinder::insideRadius(double x[])
+bool Cylinder::insideRadius(const Threevector &x)
 {
 	return (x[0]*x[0] + x[1]*x[1]) < fRSquared;
 }
@@ -64,7 +64,7 @@ bool Cylinder::insideRadius(double x[])
  *
  * @return true if @p v[] has been changed.
  */
-bool Cylinder::reflect(double v[], double x[], bool state[2])
+bool Cylinder::reflect(Threevector &v, Threevector &x, bool state[2])
 {
 	std::clog << "# inside reflect, r = " << sqrt(x[0]*x[0]+x[1]*x[1]) << ", z = " << x[2] << std::endl;
 	bool changes = false; // will be set to true if the velocity is changed
@@ -124,11 +124,11 @@ bool Cylinder::reflect(double v[], double x[], bool state[2])
 	return changes;
 }
 
-void Cylinder::reflectHeight(double v[]) {
+void Cylinder::reflectHeight(Threevector &v) {
 	v[2] = -v[2];
 }
 
-void Cylinder::reflectRadius(double v[], double x[]) {
+void Cylinder::reflectRadius(Threevector &v, Threevector &x) {
 	std::clog << "!!! Reflecting x-y, r = " << sqrt(x[0]*x[0]+x[1]*x[1]) << std::endl;
 	double n[2]; ///< unitiy vector perpendicular to x[1,2]
 	double vn[2]; ///< direction vector of v in x-y-plane
