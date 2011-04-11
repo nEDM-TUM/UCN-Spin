@@ -89,3 +89,11 @@ double Threevector::magsquare()
 	}
 	return a;
 }
+
+void Threevector::normalize()
+{
+	const double div = mag();
+
+	for(int i=0; i<3; i++)
+		fVec[i] /= div;
+}

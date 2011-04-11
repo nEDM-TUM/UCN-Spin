@@ -1,4 +1,5 @@
 #include "cylinder.h"
+#include "roots.h"
 #include <math.h>
 #include <iostream>
 
@@ -6,6 +7,7 @@
  * @class Cylinder
  * Provides methods to find out if a given vector lies inside a cylinder and
  * to reflect it at the cylinders walls.
+ * @attention This class keeps internal state, use one instance for one specific particle only!
  */
 
 /**
@@ -13,17 +15,33 @@
  * @param radius radius of the cylinder
  * @param height height of the cylinder
  */
-Cylinder::Cylinder(double radius, double height)
-	: fRadius(radius), fRSquared(radius*radius), fHeight(height)
+Cylinder::Cylinder(Random *ran, double radius, double height)
+	: Basegeometry(ran), fRadius(radius), fRSquared(radius*radius), fHeight(height), fReflectRadius(false), fReflectHeight(false)
 {
 	std::clog << "New cylinder, r = " << fRadius << ", h = " << fHeight << ", r^2 = " << fRSquared << std::endl;
+}
+
+void Cylinder::initialize(Threevector &v, Threevector &x) {
+	// initialize x[0] and x[1] to be inside of radius
+	do {
+		for (int i = 0; i <= 1; i++)
+			x[i] = (fRandom->uniform() - .5) * 2 * fRadius;
+	}
+	while (!insideRadius(x));
+	
+	// initialize x[2] to be inside of height
+	x[2] = fRandom->uniform() * fHeight;
+
+	// initialize velocity randomly TODO!!!
+	for (int i = 0; i < 3; i++)
+		v[i] = fRandom->gaussian(1); // TODO
 }
 
 
 /**
  * Check if the cylinder contains the point @p x.
  */
-bool Cylinder::contains(const Threevector &x)
+bool Cylinder::contains(const Threevector &x) const
 {
 	return insideRadius(x) && insideHeight(x);
 }
@@ -34,7 +52,7 @@ bool Cylinder::contains(const Threevector &x)
  * This function does not check if it is inside the radius.
  * @see Cylinder::contains(double[])
  */
-bool Cylinder::insideHeight(const Threevector &x)
+bool Cylinder::insideHeight(const Threevector &x) const
 {
 	return (x[2] > 0) && (x[2] < fHeight);
 }
@@ -46,89 +64,61 @@ bool Cylinder::insideHeight(const Threevector &x)
  * This function does not check if it is inside the height.
  * @see Cylinder::contains(double[])
  */
-bool Cylinder::insideRadius(const Threevector &x)
+bool Cylinder::insideRadius(const Threevector &x) const
 {
 	return (x[0]*x[0] + x[1]*x[1]) < fRSquared;
 }
 
 /**
- * Reflect v[] if it is outside the cylinder and has been inside
- * since the last reflection.
+ * Check if particle is inside of cylinder and set reflection
+ * state accordingly. Always call reflect if this method has
+ * returned true.
+ *
+ * @param x The point for which the bounds check is made
+ * @returns if the particle is outside the bounds of the geometry
+ *
+ * @see Basegeometry::boundsCheck
+ * @see reflect
+ */
+bool Cylinder::boundsCheck(const Threevector &x) {
+	/// Set reflection flag if x is outside of height or radius.
+	fReflectHeight = !insideHeight(x);
+	fReflectRadius = !insideRadius(x);
+
+	/// If any of the flags is set, return true to signal thar reflect must be called.
+	return (fReflectRadius || fReflectHeight);
+}
+
+/**
+ * Reflect v if the previous boundsCheck has returned true.
  *
  * @param[in,out] v veclocity vector, will be changed if necessary.
  * @param[in]     x position of particle, read-only
- * @param[in,out] state will be used to keep track if the particle has been
- *                inside the cylinder since the last reflection. You need to
- *                give the same state for each call of reflect for the same
- *                particle. Initialize to <tt>{false, false}</tt> for new particle!
  *
- * @return true if @p v[] has been changed.
+ * @see Basegeometry::reflect
  */
-bool Cylinder::reflect(Threevector &v, Threevector &x, bool state[2])
+void Cylinder::reflect(Threevector &v, const Threevector &x)
 {
-	std::clog << "# inside reflect, r = " << sqrt(x[0]*x[0]+x[1]*x[1]) << ", z = " << x[2] << std::endl;
-	bool changes = false; // will be set to true if the velocity is changed
+	if (fReflectHeight) {
+		reflectHeight(v);
 
-	/// Check first, if the particle is inside the height of the cylinder.
-	if (!insideHeight(x)) {
-		std::clog << "#    z outside of cylinder, state is: " << state[0] << std::endl;
-		if (!state[0]) {
-			/// Only reflect if particle has been inside the height of the
-			/// cylinder since last reflection (so check if <tt>(state[0] ==
-			/// false)</tt>).
-
-			// TODO: Add diffusion
-			reflectHeight(v);
-			changes = true;
-		}
-
-		/// Set <tt>state[0] = true</tt> to mark that the particle has been reflected in
-		/// z-direction and is not to be reflected again until it has been inside the
-		/// cylinder again.
-		state[0] = true;
-	}
-	else {
-		/// Set <tt>state[0] = false</tt> to mark hat particle has been inside the height
-		/// of the cylinder since the last reflection and must be reflected again of it
-		/// leaves it.
-		state[0] = false;
-		std::clog << "# Reset state[0] of radius" << std::endl;
+		// reset state
+		fReflectHeight = false;
 	}
 
-	/// Now check if the particle is inside the radius of the cylinder.
-	if (!insideRadius(x)) {
-		std::clog << "#    r outside of cylinder, state is: " << state[1] << std::endl;
-		if (!state[1]) {
-			/// Only reflect if particle has been inside the radius of the
-			/// cylinder since last reflection (so check if <tt>(state[1] ==
-			/// false)</tt>).
+	if (fReflectRadius) {
+		reflectRadius(v, x);
 
-			// TODO: Add diffusion
-			reflectRadius(v, x);
-			changes = true;
-		}
-
-		/// Set <tt>state[1] = true</tt> to mark that the particle has been reflected in
-		/// z-direction and is not to be reflected again until it has been inside the
-		/// cylinder again.
-		state[1] = true;
+		// reset state
+		fReflectRadius = false;
 	}
-	else {
-		/// Set <tt>state[1] = false</tt> to mark hat particle has been inside the radius
-		/// of the cylinder since the last reflection and must be reflected again of it
-		/// leaves it.
-		state[1] = false;
-		std::clog << "# Reset state[1] of z" << std::endl;
-	}
-
-	return changes;
 }
 
 void Cylinder::reflectHeight(Threevector &v) {
 	v[2] = -v[2];
 }
 
-void Cylinder::reflectRadius(Threevector &v, Threevector &x) {
+void Cylinder::reflectRadius(Threevector &v, const Threevector &x) {
 	std::clog << "!!! Reflecting x-y, r = " << sqrt(x[0]*x[0]+x[1]*x[1]) << std::endl;
 	double n[2]; ///< unitiy vector perpendicular to x[1,2]
 	double vn[2]; ///< direction vector of v in x-y-plane
@@ -161,4 +151,27 @@ void Cylinder::reflectRadius(Threevector &v, Threevector &x) {
 	for (int i = 0; i <= 1; i++) {
 		v[i] = -v[i] + 2*v_abs*n[i]*sp;
 	}
+}
+
+double Cylinder::findIntersection(const double t0, const double t1, const Polynom &px, const Polynom &py, const Polynom &pz, double eps)
+{
+	double t_height = INFINITY;
+	double t_radius = INFINITY;
+
+	if (fReflectRadius) {
+		// Polynomial for radius: r^2 = x^2 + y^2
+		Polynom rsquared(px*px + py*py);
+
+		// Find intersection time
+		t_radius = Roots::safeNewton(rsquared, rsquared.derivative(), t0, t1, eps);
+	}
+
+	if (fReflectHeight) {
+		t_height = Roots::safeNewton(pz, pz.derivative(), t0, t1, eps);
+	}
+
+	if (t_radius < t_height)
+		return t_radius;
+	else
+		return t_height;
 }

@@ -1,25 +1,34 @@
 #include "../cylinder.h"
 #include "../threevector.h"
+#include "../random.h"
 #include <iostream>
+#include <cctype>
 
-int main() {
+int main(int argc, char *argv[]) {
 	// how long the simulation should run
 	const double T = 300;
 	// which stepsize should be used
 	const double dt = 1e-3;
 
+	// seed for rng
+	int seed = 1;
+	if (argc == 2)
+		seed = atoi(argv[1]);
+
+	Random ran(seed);
+
 	// Cylinder for testing
-	Cylinder c(5, 2);
+	Cylinder c(&ran, 5, 2);
 
 	// Place and velocity for simple test
-	Threevector v(2.2, .8, 1);
-	Threevector x(1, 1, 1);
+	Threevector v(0, 0, 0);
+	Threevector x(0, 0, 0);
 
-	// state for reflect
-	bool state[2] = {false, false};
+	c.initialize(v, x);
 
 	for (int n = 0; n <= (int) (T/dt); n++) {
-		c.reflect(v, x, state);
+		if (c.boundsCheck(x))
+			c.reflect(v, x);
 		
 		for (int i = 0; i <= 2; i++)
 			x[i] += v[i]*dt;

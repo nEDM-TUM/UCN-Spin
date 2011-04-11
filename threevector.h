@@ -37,6 +37,7 @@ class Threevector
 		friend bool operator!=(const Threevector &left, const Threevector &right);
 		double mag();
 		double magsquare();
+		void normalize();
 
 	protected:
 		double fVec[3];
