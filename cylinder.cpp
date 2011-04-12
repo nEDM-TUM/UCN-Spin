@@ -114,7 +114,7 @@ bool Cylinder::reflect(Threevector &v, Threevector &x, bool state[2])
 		state[1] = true;
 	}
 	else {
-		/// Set <tt>state[1] = false</tt> to mark hat particle has been inside the radius
+		/// Set <tt>state[1] = false</tt> to mark that particle has been inside the radius
 		/// of the cylinder since the last reflection and must be reflected again of it
 		/// leaves it.
 		state[1] = false;
