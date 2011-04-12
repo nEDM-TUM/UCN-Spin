@@ -86,7 +86,7 @@ int Plotter::loadData() {
 			vertices, GL_STATIC_DRAW);
 	clog << "Copied data into buffer." << endl;
 
-	return data.size();
+	return data.size() - 1;
 }
 
 void Plotter::renderScene(void) {

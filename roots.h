@@ -7,9 +7,11 @@
  */
 namespace Roots {
 	template <class T>
-	double bisectStep(T &f, double &x1, double &x2);
+	double bisectStep(const T &f, double &x1, double &x2);
 	template <class T>
-	double safeNewton(T &f, T &d, double x1, double x2, double eps);
+	double safeNewton(const T &f, const T &d, double x1, double x2, double eps);
+
+	class NoRoot {};
 }
 
 /**
@@ -25,7 +27,7 @@ namespace Roots {
  * @returns The center of the new interval <tt>0.5*(x1+x2)</tt>
  */
 template <class T>
-double Roots::bisectStep(T &f, double &x1, double &x2) {
+double Roots::bisectStep(const T &f, double &x1, double &x2) {
 	const double y1 = f(x1);
 	const double y2 = f(x2);
 	const double xm = .5*(x1+x2);
@@ -47,7 +49,7 @@ double Roots::bisectStep(T &f, double &x1, double &x2) {
 		x2 = xm;
 	}
 	else
-		throw "no root!";
+		throw NoRoot();
 
 	return .5*(x1+x2);
 }
@@ -65,7 +67,7 @@ double Roots::bisectStep(T &f, double &x1, double &x2) {
  * @param[in] eps Accuracy goal, the algorithm will ensure <tt>|f(x_root)| < eps</tt>
  */
 template <class T>
-double Roots::safeNewton(T &f, T &d, double x1, double x2, double eps) {
+double Roots::safeNewton(const T &f, const T &d, double x1, double x2, double eps) {
 	double x = bisectStep(f, x1, x2); // Do a bisection step first to check arguments for sanity
 	double y = f(x);
 	double last_y = INFINITY;

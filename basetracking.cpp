@@ -29,6 +29,7 @@ void Basetracking::initialize()
 	fLasttime = fStarttime = 0.0;
 	Threevector pos;
 	Threevector vel;
+	// TODO: how should vel and pos be initialized???
 	fGeometry->initialize(vel, pos);
 	fTracktimes.push_back(0.0);
 	fTrackpositions.push_back(pos);

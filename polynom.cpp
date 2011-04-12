@@ -9,7 +9,8 @@
 
 /**
  * Create a Polynom object ready to take a Polynom of degree @p n without
- * needing a resize of the internal coefficient vector.
+ * needing a resize of the internal coefficient vector. The coefficients
+ * will be set to zero.
  */
 Polynom::Polynom(int n) :
 	coeffs(n+1, 0.)
@@ -52,7 +53,7 @@ Polynom::Polynom(double a3, double a2, double a1, double a0) :
 /**
  * Evaluate polynom at @p x using a horner schema.
  */
-double Polynom::operator()(double x) {
+double Polynom::operator()(double x) const {
 	double acc = 0;
 	
 	for (int i = coeffs.size(); i >= 0; i--) {
@@ -80,7 +81,7 @@ int Polynom::degree() const {
 /**
  * Return the derivative.
  */
-Polynom Polynom::derivative() {
+Polynom Polynom::derivative() const {
 	const int deg = degree();
 	Polynom d(deg - 1);
 
@@ -140,6 +141,25 @@ Polynom operator+(const Polynom &l, const Polynom &r) {
 		t[i] = l[i]+r[i];
 
 	return t;
+}
+
+/**
+ * Multiply two polynomials
+ */
+Polynom operator*(const Polynom &l, const Polynom &r) {
+	// Get degrees of polynomials
+	const int dl = l.degree();
+	const int dr = r.degree();
+
+	// Create temporary new polynomial
+	Polynom res(dl+dr);
+
+	// Multiply polynomials
+	for (int il = 0; il <= dl; il++)
+		for (int ir = 0; ir <= dr; ir++)
+			res[il+ir] += r[ir] * l[il];
+
+	return res;
 }
 
 /**
