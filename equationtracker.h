@@ -16,6 +16,7 @@ class EquationTracker : public Basetracking {
 		EquationTracker(Random *ran, Basegeometry *geo);
 		void makeTrack(double hmax);
 		void initialize();
+		Threevector getPosition(double time);
 
 	private:
 		void rkStep(const double &h, const double &t, Threevector &x, Threevector &v);

@@ -1,5 +1,7 @@
+#include "debug.h"
 #include "threevector.h"
 #include <cmath>
+#include <sstream>
 
 Threevector::Threevector(double x, double y, double z)
 {
@@ -22,6 +24,13 @@ Threevector::Threevector(double *v)
 	{
 		fVec[i] = v[i];
 	}
+}
+
+Threevector::Threevector(const Threevector &v)
+{
+	//debug << "Copy constructor called!" << std::endl;
+	for(int i=0; i<3; i++)
+		fVec[i] = v.fVec[i];
 }
 
 Threevector operator+(const Threevector &left, const Threevector &right)
@@ -96,4 +105,10 @@ void Threevector::normalize()
 
 	for(int i=0; i<3; i++)
 		fVec[i] /= div;
+}
+
+std::string Threevector::toString() const {
+	std::ostringstream o;
+	o << "(" << fVec[0] << " " << fVec[1] << " " << fVec[2] << ")";
+	return o.str();
 }

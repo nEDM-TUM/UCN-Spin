@@ -33,7 +33,7 @@ void Basetracking::initialize()
 	fGeometry->initialize(vel, pos);
 	fTracktimes.push_back(0.0);
 	fTrackpositions.push_back(pos);
-	fTrackpositions.push_back(vel);
+	fTrackvelocities.push_back(vel);
 }
 
 /**
