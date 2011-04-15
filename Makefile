@@ -1,7 +1,7 @@
 CXX=g++
-CXXFLAGS=-Wall -O3 -march=native -fopenmp
+CXXFLAGS=-Wall -O3 -march=native -fopenmp -ggdb
 LIBS=-lgsl -lgslcblas -lm
-OBJS=main.o bfield.o random.o tracking.o dopr.o derivatives.o parameters.o cylinder.o threevector.o basetracking.o equationtracker.o gravitationtracker.o polynom.o
+OBJS=main.o bfield.o random.o tracking.o dopr.o derivatives.o parameters.o cylinder.o threevector.o basetracking.o equationtracker.o polynom.o
 TAGFILES=$(shell find . -name "*.cpp" -or -name "*.h")
 
 all: cylindric tags
@@ -14,11 +14,13 @@ all: cylindric tags
 cylindric : $(OBJS:%.o=objs/%.o)
 	$(CXX) $(CXXFLAGS) $(OBJS:%.o=objs/%.o) $(LIBS) -o cylindric
 
-objs/%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $*.cpp -o objs/$*.o
-	$(CXX) $(CXXFLAGS) -MM -MP -MF deps/$*.d $*.cpp
+deps/%.d: %.cpp
+	$(CXX) $(CXXFLAGS) -MM -MP -MF deps/$*.d -MT objs/$*.o $*.cpp
 
 -include $(OBJS:%.o=deps/%.d)
+
+objs/%.o::
+	$(CXX) $(CXXFLAGS) -c $*.cpp -o objs/$*.o
 
 clean : 
 	rm -f $(OBJS:%.o=deps/%.d)

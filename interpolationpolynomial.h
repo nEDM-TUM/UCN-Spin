@@ -1,4 +1,8 @@
+#ifndef _INTERPOLATIONPOLYNOMIAL_H
+#define _INTERPOLATIONPOLYNOMIAL_H
+
 #include "polynom.h"
+#include "debug.h"
 
 class InterpolationPolynomial : public Polynom
 {
@@ -16,5 +20,10 @@ class InterpolationPolynomial : public Polynom
 			coeffs[3] = d0*h + d1*h + 2.*y0 - 2.*y1;
 		};
 
-		double operator()(double t) const { return Polynom::operator()(t-t0/h); };
+		double operator()(double t) const { 
+			debug << "InterpolationPolynomial: " << this->toString() << " called for x = " << ((t-t0)/h) << ", t was: " << t << std::endl;
+			return Polynom::operator()((t-t0)/h);
+		};
 };
+
+#endif // _INTERPOLATIONPOLYNOMIAL_H

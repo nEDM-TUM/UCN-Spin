@@ -1,4 +1,5 @@
 #include <sstream>
+#include "debug.h"
 #include "polynom.h"
 
 /**
@@ -54,13 +55,18 @@ Polynom::Polynom(double a3, double a2, double a1, double a0) :
  * Evaluate polynom at @p x using a horner schema.
  */
 double Polynom::operator()(double x) const {
+	debug << "Polynom: " << this->toString() << " called for x = " << x << std::endl;
 	double acc = 0;
 	
-	for (int i = coeffs.size(); i >= 0; i--) {
+	for (int i = degree(); i >= 0; i--) {
+		debug << "i = " << i << ", acc = " << acc << std::endl;
 		acc *= x;
+		debug << "acc *= x -> acc = " << acc << std::endl;
 		acc += coeffs[i];
+		debug << "acc += " << coeffs[i] << " -> acc = " << acc << std::endl;
 	}
 
+	debug << "Polynom: result = " << acc << std::endl;
 	return acc;
 }
 
@@ -144,6 +150,23 @@ Polynom operator+(const Polynom &l, const Polynom &r) {
 }
 
 /**
+ * Substract two polynomials.
+ */
+Polynom operator-(const Polynom &l, const Polynom &r) {
+	return l + (-r);
+}
+
+/**
+ * Negate a polynomial.
+ */
+Polynom Polynom::operator-() const {
+	Polynom t(degree());
+	for (int i = 0; i < degree(); i++)
+		t[i] = -coeffs[i];
+	return t;
+}
+
+/**
  * Multiply two polynomials
  */
 Polynom operator*(const Polynom &l, const Polynom &r) {
@@ -165,7 +188,7 @@ Polynom operator*(const Polynom &l, const Polynom &r) {
 /**
  * Return a human-readable string representation.
  */
-std::string Polynom::toString() {
+std::string Polynom::toString() const {
 	bool first = true;
 	std::ostringstream o;
 

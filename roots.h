@@ -1,3 +1,4 @@
+#include "debug.h"
 #include <iostream>
 #include <cmath>
 
@@ -32,6 +33,8 @@ double Roots::bisectStep(const T &f, double &x1, double &x2) {
 	const double y2 = f(x2);
 	const double xm = .5*(x1+x2);
 	const double ym = f(xm);
+
+	debug << "bisecting: (" << x1 << "," << y1 << ") -- (" << xm << "," << ym << ") -- (" << x2 << "," << y2 << ")" << std::endl;
 
 	if (x1 > x2)
 		throw "x1 > x2";
@@ -68,6 +71,7 @@ double Roots::bisectStep(const T &f, double &x1, double &x2) {
  */
 template <class T>
 double Roots::safeNewton(const T &f, const T &d, double x1, double x2, double eps) {
+	debug << "Doing initial bisection step:" << std::endl;
 	double x = bisectStep(f, x1, x2); // Do a bisection step first to check arguments for sanity
 	double y = f(x);
 	double last_y = INFINITY;
@@ -75,28 +79,30 @@ double Roots::safeNewton(const T &f, const T &d, double x1, double x2, double ep
 	while (fabs(y) > eps) {
 		const double xn = x - f(x)/d(x);
 
-		std::clog << "f(" << x << ") = " << y << ", last was: " << last_y << std::endl;
+		debug << "f(" << x << ") = " << y << ", last was: " << last_y << std::endl;
 
 		// Test if result is ok
 		if (xn < x1 || xn > x2) {
 			// outside of original rage, bisect
-			std::clog << "Bisecting: " << xn << " out of range." << std::endl;
+			debug << "Bisecting: " << xn << " out of range." << std::endl;
 			x = bisectStep(f, x1, x2);
 		}
 		else if (fabs(f(xn)) >= last_y) {
-			// function value got bigger, maybe oscillation or divergence
-			std::clog << "Bisecting: |f(" << xn << ")| >= " << last_y << std::endl;
+			// function value got bigger, maybe osciallation or divergence
+			debug << "Bisecting: |f(" << xn << ")| >= " << last_y << std::endl;
 			x = bisectStep(f, x1, x2);
 		}
 		else {
 			// newton seems to go into the right direction, go on
-			std::clog << "Accepting: " << x << " -> " << xn << std::endl;
+			debug << "Accepting: " << x << " -> " << xn << std::endl;
 			x = xn;
 		}
 		
 		last_y = fabs(y);
 		y = f(x);
 	}
+
+	debug << "Reached accuracy of " << eps << ", f(" << x << ") = " << y << std::endl;
 
 	return x;
 }

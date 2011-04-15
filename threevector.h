@@ -1,7 +1,9 @@
 #ifndef THREEVECTOR_H
 #define THREEVECTOR_H
 
+#include "debug.h"
 #include <vector>
+#include <string>
 
 class Threevector
 {
@@ -9,6 +11,7 @@ class Threevector
 		Threevector(double x, double y, double z);
 		Threevector();
 		Threevector(double *v);
+		Threevector(const Threevector &t);
 		void setX(double x){fVec[0] = x;};
 		void setY(double y){fVec[1] = y;};
 		void setZ(double z){fVec[2] = z;};
@@ -17,6 +20,11 @@ class Threevector
 		double getZ(){return fVec[2];};
 		double &operator[](const int i) {return fVec[i];};
 		double operator[](const int i) const {return fVec[i];};
+		Threevector &operator*=(const double a) {
+			for (int i = 0; i < 3; i++)
+				fVec[i] *= a;
+			return *this;
+		}
 		Threevector &operator=(const Threevector &v) {
 			for (int i = 0; i < 3; i++)
 				fVec[i] = v.fVec[i];
@@ -38,6 +46,7 @@ class Threevector
 		double mag();
 		double magsquare();
 		void normalize();
+		std::string toString() const;
 
 	protected:
 		double fVec[3];

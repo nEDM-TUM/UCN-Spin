@@ -40,7 +40,8 @@ class Cylinder : public Basegeometry
 		 * @see Basegeometry::boundsCheck
 		 * @see Basegeometry::reflect
 		 */
-		bool fReflectHeight;
+		bool fReflectTop;
+		bool fReflectBottom;
 };
 
 #endif // CYLINDER_H

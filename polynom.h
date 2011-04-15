@@ -13,11 +13,11 @@ class Polynom {
 		Polynom(double a3, double a2, double a1, double a0);
 		int degree() const;
 		Polynom derivative() const;
-		std::string toString();
-		double operator()(double x) const;
+		std::string toString() const;
+		virtual double operator()(double x) const;
 		double &operator[](unsigned int n);
 		double operator[](unsigned int n) const { return coeffs[n]; };
-		Polynom operator-();
+		Polynom operator-() const;
 		friend bool operator==(const Polynom &l, const Polynom& r);
 		friend bool operator!=(const Polynom &l, const Polynom& r);
 		friend Polynom operator+(const Polynom &l, const Polynom& r);

@@ -1,14 +1,19 @@
 #include "../cylinder.h"
 #include "../threevector.h"
 #include "../random.h"
+#include "../gravitationtracker.h"
 #include <iostream>
 #include <cctype>
+
+using namespace std;
+
+inline void outputThreevector(const Threevector &t) {
+	cout << t[0] << " " << t[1] << " " << t[2];
+}
 
 int main(int argc, char *argv[]) {
 	// how long the simulation should run
 	const double T = 300;
-	// which stepsize should be used
-	const double dt = 1e-3;
 
 	// seed for rng
 	int seed = 1;
@@ -20,19 +25,19 @@ int main(int argc, char *argv[]) {
 	// Cylinder for testing
 	Cylinder c(&ran, 5, 2);
 
-	// Place and velocity for simple test
-	Threevector v(0, 0, 0);
-	Threevector x(0, 0, 0);
+	// Gravitation tracker
+	GravitationTracker t(&ran, &c, 9.18);
+	t.initialize();
 
-	c.initialize(v, x);
+	// Make all of the track at once
+	t.makeTrack(T);
 
-	for (int n = 0; n <= (int) (T/dt); n++) {
-		if (c.boundsCheck(x))
-			c.reflect(v, x);
-		
-		for (int i = 0; i <= 2; i++)
-			x[i] += v[i]*dt;
-
-		std::cout << n*dt << " " << x[0] << " " << x[1] << " " << x[2] << " " << v[0] << " " << v[1] << " " << v[2] << std::endl;
+	// output track
+	for (int i = 0; i < t.fTracktimes.size(); i++) {
+		cout << t.fTracktimes[i] << " ";
+		outputThreevector(t.fTrackpositions[i]);
+		cout << " ";
+		outputThreevector(t.fTrackvelocities[i]);
+		cout << endl;
 	}
 }
