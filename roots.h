@@ -88,8 +88,8 @@ double Roots::safeNewton(const T &f, const T &d, double x1, double x2, double ep
 			x = bisectStep(f, x1, x2);
 		}
 		else if (fabs(f(xn)) >= last_y) {
-			// function value got bigger, maybe osciallation or divergence
-			debug << "Bisecting: |f(" << xn << ")| >= " << last_y << std::endl;
+			// function value got bigger, maybe oscillation or divergence
+			std::clog << "Bisecting: |f(" << xn << ")| >= " << last_y << std::endl;
 			x = bisectStep(f, x1, x2);
 		}
 		else {
