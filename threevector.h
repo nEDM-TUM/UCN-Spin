@@ -35,10 +35,10 @@ class Threevector
 		};
 		friend bool operator==(const Threevector &left, const Threevector &right);
 		friend bool operator!=(const Threevector &left, const Threevector &right);
-		double mag();
-		double magsquare();
+		double mag() const;
+		double magsquare() const;
 		void normalize();
-
+		Threevector cross (const Threevector &x) const ;
 	protected:
 		double fVec[3];
 };

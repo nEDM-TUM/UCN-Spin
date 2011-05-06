@@ -70,7 +70,7 @@ bool operator!=(const Threevector &left, const Threevector &right)
 	return !(left==right);
 }
 
-double Threevector::mag()
+double Threevector::mag() const
 {
 	double a=0.0;
 	for(int i=0; i<3; i++)
@@ -80,7 +80,7 @@ double Threevector::mag()
 	return sqrt(a);
 }
 
-double Threevector::magsquare()
+double Threevector::magsquare() const
 {
 	double a=0;
 	for(int i=0; i<3; i++)
@@ -96,4 +96,12 @@ void Threevector::normalize()
 
 	for(int i=0; i<3; i++)
 		fVec[i] /= div;
+}
+
+Threevector Threevector::cross (const Threevector &x) const {
+	Threevector c;
+	c[0]=fVec[1]*x[2]-fVec[2]*x[1];
+	c[1]=fVec[2]*x[0]-fVec[0]*x[2];
+	c[2]=fVec[0]*x[1]-fVec[1]*x[0];
+	return c;
 }

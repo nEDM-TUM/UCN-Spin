@@ -1,6 +1,6 @@
 LIBS=-lgsl -lgslcblas -lm
 
-all: cylinder roots polynom
+all: cylinder roots polynom tube
 
 cylinder: cylinder.cpp ../objs/cylinder.o ../objs/threevector.o ../objs/random.o ../objs/polynom.o
 	$(CXX) $(CXXFLAGS) $(LIBS) cylinder.cpp ../objs/cylinder.o ../objs/random.o  ../objs/polynom.o ../objs/threevector.o -o cylinder
@@ -10,6 +10,9 @@ roots: roots.cpp ../roots.h ../objs/polynom.o
 
 polynom: polynom.cpp ../objs/polynom.o
 	$(CXX) $(CXXFLAGS) $(LIBS) polynom.cpp ../objs/polynom.o -o polynom
+
+tube: tube.cpp ../objs/tubegeometry.o ../objs/threevector.o 
+	$(CXX) $(CXXFLAGS) $(LIBS) tube.cpp ../objs/tubegeometry.o ../objs/threevector.o -o tube
 
 # be careful and let make in .. decide if a prequisite should be rebuilt
 ../objs/%.o: $(wildcard ../*.cpp) $(wildcard ../*.h)

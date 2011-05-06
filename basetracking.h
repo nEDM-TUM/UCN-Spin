@@ -13,7 +13,7 @@ class Basetracking
 		Basetracking(Random* ran, Basegeometry *geo);
 		
 		virtual void initialize();
-		Threevector getPosition(double time);
+		virtual Threevector getPosition(double time);
 
 		/**
 		 * Pure virtual function
@@ -22,8 +22,8 @@ class Basetracking
 		 */
 
 		virtual void makeTrack(double hmax) = 0;
-		void reset();
-		void stepDone();
+		virtual void reset();
+		virtual void stepDone(double time);
 
 	protected:
 		Random *fRandomgenerator;

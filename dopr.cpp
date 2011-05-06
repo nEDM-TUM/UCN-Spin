@@ -280,7 +280,7 @@ void Dopr::step()
 	told = t;
 	t += (hdid = h);
 	htry = hnext;
-	tracker->stepDone();
+	tracker->stepDone(t);
 }
 
 void Dopr::dy(const double h) {
