@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 	Cylinder c(&ran, 5, 2);
 
 	// Gravitation tracker
-	GravitationTracker t(&ran, &c, 9.18);
+	GravitationTracker t(&ran, &c, 9.81);
 	t.initialize();
 
 	// Make all of the track at once

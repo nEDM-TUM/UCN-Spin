@@ -37,16 +37,16 @@ void EquationTracker::rkStep(const double &h, const double &t, Threevector &x, T
 	Threevector k1x, k2x, k3x, k4x;
 	Threevector k1v, k2v, k3v, k4v;
 
-	debug << "i\tk1x\tk1v" << std::endl;
+	debug << "i\tkix\tkiv" << std::endl;
 	derivs(t, x, v, k1x, k1v);
 	k1x *= h;
 	k1v *= h;
 	debug << "1\t" << k1x.toString() << "\t" << k1v.toString() << std::endl;
-	derivs(t + h/2., x + .5*k1x, v + .5*k1v, k2x, k2v);
+	derivs(t + .5*h, x + .5*k1x, v + .5*k1v, k2x, k2v);
 	k2x *= h;
 	k2v *= h;
 	debug << "2\t" << k2x.toString() << "\t" << k2v.toString() << std::endl;
-	derivs(t + h/2., x + .5*k2x, v + .5*k2v, k3x, k3v);
+	derivs(t + .5*h, x + .5*k2x, v + .5*k2v, k3x, k3v);
 	k3x *= h;
 	k3v *= h;
 	debug << "3\t" << k3x.toString() << "\t" << k3v.toString() << std::endl;
@@ -78,7 +78,7 @@ void EquationTracker::makeTrack(const double hmax) {
 		if (fGeometry->boundsCheck(fPos)) {
 			/// If the particle left the volume during the step, backtrack to the intersection time,
 			/// do the reflection and save position and velocity before and after the collision.
-			debug << "Particle left Volume, x = " << fPos.toString() << std::endl;
+			debug << "COLLISION: x = " << fPos.toString() << std::endl;
 
 			// Save current vectors and time for interpolation polynomial
 			Threevector pos1(fPos);

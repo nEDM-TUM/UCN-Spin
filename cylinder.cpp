@@ -98,9 +98,9 @@ bool Cylinder::boundsCheck(const Threevector &x) {
 	}
 	fReflectRadius = !insideRadius(x);
 
-	debug << "fReflectTop = " << fReflectTop << "fReflectBottom = " << fReflectBottom << ", fReflectRadius = " << fReflectRadius << std::endl;
+	debug << "fReflectTop = " << fReflectTop << ", fReflectBottom = " << fReflectBottom << ", fReflectRadius = " << fReflectRadius << std::endl;
 
-	/// If any of the flags is set, return true to signal thar reflect must be called.
+	/// If any of the flags is set, return true to signal that reflect must be called.
 	return (fReflectRadius || fReflectTop || fReflectBottom);
 }
 
@@ -179,11 +179,13 @@ double Cylinder::findIntersection(const double t0, const double t1, const Polyno
 
 	if (fReflectRadius) {
 		// Polynomial for radius: x^2 + y^2 - r^2 == 0
-		Polynom rsquared(px*px + py*py - Polynom(0, fRSquared));
-		debug << "Looking for radius intersection, r^2(t) = " << rsquared.toString() << std::endl;
+		debug << "Constructing r^2(t) polynomial from px = " << px.toString() << " and py = " << py.toString() << " with offset " << fRSquared << std::endl;
+		Polynom rint(px*px + py*py); // Calculate x^2 + y^2
+		rint[0] -= fRSquared; // Apply offset
+		debug << "Looking for radius intersection, r^2(t) = " << rint.toString() << std::endl;
 
 		// Find intersection time
-		t_radius = Roots::safeNewton(rsquared, rsquared.derivative(), t0, t1, eps);
+		t_radius = Roots::safeNewton(rint, rint.derivative(), t0, t1, eps);
 	}
 
 	if (fReflectBottom) {
