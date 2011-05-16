@@ -14,6 +14,7 @@ using namespace std;
 #include "dopr.h"
 #include "derivatives.h"
 #include "parameters.h"
+#include "tubetracking.h"
 
 
 int main(int nargs, char** argv)
@@ -38,7 +39,12 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("CylinderHeight");
 	theParameters.expectDouble("B0");
 	theParameters.expectDouble("B1");
+	theParameters.expectDouble("mu");
+	theParameters.expectDouble("radiustube");
+	theParameters.expectDouble("vdrift");
+	theParameters.expectDouble("sigma");
 
+	
 	theParameters.readParameters(cin);
 
 	// TODO: reorder this if possible
@@ -84,13 +90,11 @@ int main(int nargs, char** argv)
 		{
 			TP[z] = 0.0;
 		}
-		
-		string rotationBfilename = "./RotatingBfield.txt";	//File which contains B-field frequencies and times
-		Bfield *bfield = new Bfield(rotationBfilename,theParameters);
 													
-		Tracking *tracker = new Tracking(randgen, 		//Pointer to the random-generator
-						 bfield,		//Pointer to the magnetic field
-						 theParameters);
+		Tubetracking *tracker = new Tubetracking(randgen, theParameters);		//Pointer to the random-generator
+
+		Bfield *bfield = new Bfield(rotationBfilename,theParameters,tracker);
+
 
 		Derivatives * derivatives = new Derivatives(tracker);
 		double errorgoal = theParameters.getDoubleParam("ErrorGoal");
@@ -119,7 +123,7 @@ int main(int nargs, char** argv)
 				savetime = 0;
 				j = 0;
 				int lifetime1 = theParameters.getDoubleParam("Lifetime");
-				while(T < lifetime1)
+				while(tracker->reachedendoftube == false)
 				{
 					try
 					{
@@ -148,6 +152,7 @@ int main(int nargs, char** argv)
 						j++;
 					}			
 				}
+				// Polarisationsvektor aufschreiben /evt auch die Zeit...
 				#pragma omp critical
 				{
 					P_end[3*iP]   = stepper->dense_out(0,lifetime1,hdid);

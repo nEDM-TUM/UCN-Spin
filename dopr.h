@@ -1,4 +1,6 @@
-#include "derivatives.h"
+
+class Basetracking;
+class Derivatives;
 
 class Dopr
 {
@@ -24,13 +26,12 @@ class Dopr
 		double t;
 		double *k2,*k3,*k4,*k5,*k6,*k7,*k8,*k9,*k10;
 		double *rcont1, *rcont2, *rcont3, *rcont4, *rcont5, *rcont6, *rcont7, *rcont8;
-		Derivatives *derivatives;
+		Derivatives * const derivatives;
 		double atol, rtol, EPS, errold;
 		bool reject;
 		bool dense;
-		Tracking *tracker;
 		int stepsnottaken;
-		const double hmax;
+		Basetracking * const tracker;
 		
 		const double c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c14,c15,c16;
 		const double b1,b6,b7,b8,b9,b10,b11,b12,bhh1,bhh2,bhh3;

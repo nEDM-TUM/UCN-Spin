@@ -13,6 +13,7 @@ class Random
 		double uniform();
 		int uniform_int(int max);
 		double gaussian(const double);
+		double exponential(const double);
 		gsl_rng* GetGsl_Rng();
 	private:
 		const gsl_rng_type* T;

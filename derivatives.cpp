@@ -2,6 +2,8 @@
 #include "globals.h"
 #include <math.h>
 #include <iostream>
+#include "bfield.h"
+#include "threevector.h"
 
 using namespace std;
 
@@ -12,8 +14,8 @@ using namespace std;
  * @see Dopr
  */
 
-Derivatives::Derivatives(Tracking* TR)
-: tracker(TR)
+Derivatives::Derivatives(Bfield* F)
+: field(F)
 {
 
 }
@@ -30,25 +32,14 @@ void Derivatives::operator()(const double t, const double y[], double derivs[])
  * @param[in] y[] current coordinates of the particle
  * @param[out] derivs[] is set to the derivatives
  */
-void Derivatives::eval(const double factor, const double y[], double derivs[])
+void Derivatives::eval(const double time, const double y[], double derivs[])
 {
-	double B[3] = {0.0,0.0,0.0};
-	tracker->getB(factor,B);
+	Threevector B = field->eval(time);
 	
 	/**
 	 * The first 3 components of @p derivs are the polarization vector
 	 * P and follow the Boch equation.
 	 */
-	derivs[0] = PRECES_N * (y[1]*B[2] - y[2]*B[1]);
-	derivs[1] = PRECES_N * (y[2]*B[0] - y[0]*B[2]);
-	derivs[2] = PRECES_N * (y[0]*B[1] - y[1]*B[0]);
-}
-
-void Derivatives::evalInitial(const double t, const double y[], double derivs[])
-{
-	double B[3] = {0.0,0.0,0.0};
-	tracker->getInitialB(t,B);
-	
 	derivs[0] = PRECES_N * (y[1]*B[2] - y[2]*B[1]);
 	derivs[1] = PRECES_N * (y[2]*B[0] - y[0]*B[2]);
 	derivs[2] = PRECES_N * (y[0]*B[1] - y[1]*B[0]);

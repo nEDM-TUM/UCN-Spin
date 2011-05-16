@@ -26,6 +26,11 @@ double Random::gaussian(const double sigma)
 	return gsl_ran_gaussian(r, sigma);
 }
 
+double Random::exponential(const double mu)
+{
+	return gsl_ran_exponential(r, mu)
+}
+
 gsl_rng* Random::GetGsl_Rng()
 {
 	return r;

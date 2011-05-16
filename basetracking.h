@@ -11,6 +11,7 @@ class Basetracking
 {
 	public:
 		Basetracking(Random* ran, Basegeometry *geo);
+		virtual ~Basetracking();
 		
 		virtual void initialize();
 		virtual Threevector getPosition(double time) = 0;
@@ -22,8 +23,8 @@ class Basetracking
 		 */
 
 		virtual void makeTrack(double hmax) = 0;
-		void reset();
-		void stepDone();
+		virtual void reset();
+		virtual void stepDone(double time);
 
 		std::vector<double> fTracktimes;
 		std::vector<Threevector> fTrackpositions;

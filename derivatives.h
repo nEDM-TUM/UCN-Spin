@@ -1,17 +1,15 @@
 #ifndef DERIVATIVES_H
 #define DERIVATIVES_H
 
-#include "tracking.h"
+class Bfield;
 
 class Derivatives
 {
 	public:
-		Derivatives(Tracking*);
+		Derivatives(Basetracking*);
 		void operator()(const double, const double[], double[]);
 		void eval(const double, const double[], double[]);
-		void evalInitial(const double, const double[], double[]);
-		inline Tracking *getTracker(){return tracker;};
 	private:
-		Tracking *tracker;
+		Bfield *field;
 };
 #endif
