@@ -1,4 +1,5 @@
 #include "derivatives.h"
+#include "tubetracking.h"
 
 class Dopr
 {
@@ -28,7 +29,7 @@ class Dopr
 		double atol, rtol, EPS, errold;
 		bool reject;
 		bool dense;
-		Tracking *tracker;
+		Tubetracking *tracker;
 		int stepsnottaken;
 		const double hmax;
 		

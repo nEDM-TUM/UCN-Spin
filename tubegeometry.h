@@ -7,8 +7,6 @@
 // Offene Probleme:
 // Sicherstellen, dass man beim Auslesen der Datei am Ende der Zeile jeweils angekommen ist?
 
-// Parameter innerhalb dieser Klasse, die in das Parameterfile eingetragen werden
-// müssen: Schlauchradius double 'radiustube'
 
 class TubeGeometry : public Basegeometry {
 	public:
@@ -40,6 +38,7 @@ class TubeGeometry : public Basegeometry {
 // zurück. Wenn nicht, dann gibt sie als axialen Vektor den Nullvektor zurück.
 // Vorsicht: das zweite Argument 'rootstart' wird während der Funktion verändert.
 		Threevector contains(const Threevector &x, double &rootstart);
+		bool lastsegmentcontains(const Threevector &x, const double &rootstartsegment);
 	
 	private:
 		Random *rand;

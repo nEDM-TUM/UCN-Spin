@@ -9,6 +9,7 @@ Csegment::Csegment(Threevector s, Threevector v, Threevector n, double r, double
 	b = v.normalize();
 	a = b.cross(n.normalize);
 	centre = start + (-radius)*a;
+	radiustube = theParameters.getDoubleParam("radiustube");
 }
 
 Threevector Csegment::getposition (double tau) { 
@@ -101,6 +102,7 @@ Lsegment::Lsegment(Threevector s, Threevector v, double t) {
 	start = s;
 	direction = v.normalize();
 	t_max = t;
+	radiustube = theParameters.getDoubleParam("radiustube")
 }
 
 Threevector Lsegment::getposition (double tau) {

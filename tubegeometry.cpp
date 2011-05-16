@@ -70,6 +70,7 @@ Tubegeometry::Tubegeometry(Random *ran, std:string Tubefile){
 	else 
 		cerr << "Could not open file \n" ;
 	tube.close(); 
+	radiustube = theParameters.getDoubleParam("radiustube");
 }
 
 void TubeGeometry::initialize(Threevector &v, Threevector &x){
@@ -106,7 +107,7 @@ Threevector TubeGeometry::contains(const Threevector &x, double &rootstart)  {
 // Gleichzeitig wird dann der Wert 'rootstart' verändert. Er ist dann die momentane
 // Projektion der Position auf die Schlauchachse und soll im nächsten Schritt als
 // Startwert für die Nullstellensuche verwendet werden.  
-	for (vector<Segments>::const_iterator it = segment.begin(); it !=segment_end(); it++) {
+	for (vector<Segments>::const_iterator it = segments.begin(); it !=segments_end(); it++) {
 		double rootstartsegment;
 		rootstartsegment = rootstart - it;
 		if (*it.segmentcontains(x, trootstartsegment) != v){
@@ -115,4 +116,15 @@ Threevector TubeGeometry::contains(const Threevector &x, double &rootstart)  {
 		}
 	}
 	return v;
+}
+
+bool TubeGeometry::lastsegmentcontains(const Threevector &x) {
+	Segment lastsegment;
+	double rootstartsegment;
+	lastsegment = segment.back();
+	rootstartsegment = 0
+	if (lastsegment.segmentcontains(x,rootstartsegment) == true)
+		return true;
+	else 
+		return false;
 }

@@ -17,7 +17,7 @@ class Csegment : public Segments {
 	Threevector b;
 	Threevector centre;
 	Threevector start;
-	double radius;
+	double radius, radiustube;
 	double t_max;
 	Csegment (Threevector s, Threevector v, Threevector n, double r, double t);
 	Threevector getposition (double tau);
@@ -34,7 +34,7 @@ class Csegment : public Segments {
 class Lsegment : public Segments {
 	Threevector	start;
 	Threevector direction;
-	double t_max;
+	double t_max, radiustube;
 	Lsegment (Threevector s, Threevector v, double t);
 	Threevector getposition (double tau);
 	Threevector axis();

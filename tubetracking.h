@@ -5,19 +5,6 @@
 #include "threevector.h"
 #include "tubegeometry.h"
 
-// Offene Probleme:
-// Feststellung, ob man am Schlauchende angekommen ist.
-
-// Offene Fragen:
-// Wann wird thetubegeometry, Objekt der Klasse Tubegeometry erzeugt?
-
-// Paramter innerhalb dieser Klasse, die noch in die Paramterliste eingefügt werden 
-// müssen:
-// double mu : in random: exponential(mu) zum Würfeln der Stoßzeit
-// double vdrift : Driftgeschwindigkeit der Xe-Atome im Schlauch
-// Außerdem muss noch die Berechnung von 'sigma' aus der Streuzeit eingefügt werden.
-// Filename, mit den Informationen über den Schlauch.
-
 class Tubetracking : Basetracking {	
 	public:
 		Tubetracking(Random*);
@@ -41,9 +28,11 @@ class Tubetracking : Basetracking {
 		bool reachedendoftube = false;
 	
 	private:
+		double vdrift, mu, sigma;
 		Random *rand;
 		int Nstart = 0;
 		int wasinlastsegment = 0;
+		int t_end = 0;
 // In den Vektoren sollen die bisherigen ausgewürfelten Werte, die zu einer "guten"
 // Position geführt haben, gespeichert werden. 
 		vector<double> times;
