@@ -12,7 +12,7 @@ class Segment {
 // Kreissegmente:
 // stattet die Objekte mit den erforderlichen Größen aus, um das Segment paramtetrisieren
 // zu können, und um festzustellen ob das Segment einen Vektor x enthält oder nicht.
-class Csegment : public Segments {
+class Csegment : public Segment {
 	Threevector a;
 	Threevector b;
 	Threevector centre;
@@ -22,7 +22,7 @@ class Csegment : public Segments {
 	Csegment (Threevector s, Threevector v, Threevector n, double r, double t);
 	Threevector getposition (double tau);
 	Threevector axis(double tau);
-	Treevector startpoint();
+	Threevector startpoint();
 	double derivdist(const Threevector &x, double tau);
 	double secderivdist(const Threevector &x, double tau);
 	double rootNewton(const Threevector &x, double rootstartsegment);
@@ -31,7 +31,7 @@ class Csegment : public Segments {
 };
 
 // Das Gleiche mit geraden Segmenten.
-class Lsegment : public Segments {
+class Lsegment : public Segment {
 	Threevector	start;
 	Threevector direction;
 	double t_max, radiustube;

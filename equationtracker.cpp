@@ -62,9 +62,10 @@ void EquationTracker::rkStep(const double &h, const double &t, Threevector &x, T
 /**
  * Ensure that track was already generated.
  */
-void EquationTracker::makeTrack(const double hmax) {
+void EquationTracker::makeTrack(const double t_start, double h) {
+	assert(t_start == fTime);
 	// time until which the solution is to be calculated
-	const double goal = fTime + hmax;
+	const double goal = fTime + h;
 
 	// Generate track as far as necessary
 	while (fTime < goal) {

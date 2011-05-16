@@ -43,17 +43,16 @@ Bfield::Bfield(const Parameters &theParameters, Basetracking* const btr)
 
 Bfield::~Bfield()
 {
-	delete[] Brotationtimes;
 }
 
-Threevector Bfield::operator()(const double time)
+Threevector Bfield::operator()(const double time) const
 {
-	return eval(t);
+	return eval(time);
 }
 
-Threevector Bfield::eval(const double time)
+Threevector Bfield::eval(const double time) const
 {
-	Threevector position = tracker.getPosition(time);
+	Threevector position = tracking->getPosition(time);
 	double r = sqrt(position[0]*position[0]+position[1]*position[1]);
 	double xr = 0.0, yr = 0.0;
 	if(r > 0.0){
@@ -61,12 +60,12 @@ Threevector Bfield::eval(const double time)
 		yr = position[1]/r;
 	}
 	// calculate the B-field of a solenoid at this position
-	double Br = Br(r,position[2]);
-	double Bz = Bz(r,position[2]);
-	return Threevector(Br*xr,Br*yr,Bz);
+	double BR = Br(r,position[2]);
+	double BZ = Bz(r,position[2]);
+	return Threevector(BR*xr,BR*yr,BZ);
 }
 
-double Bfield::Br(const double r, const double z)
+double Bfield::Br(const double r, const double z) const
 {
 	double c1 = (R+r)*(R+r);
 	double c2 = (R-r)*(R-r);
@@ -77,7 +76,7 @@ double Bfield::Br(const double r, const double z)
 	return B000*(a1*cel(k1,1,1,-1) - a2*cel(k2,1,1,-1));
 }
 
-double Bfield::Bz(const double r, const double z)
+double Bfield::Bz(const double r, const double z) const
 {
 	double c1 = (R+r)*(R+r);
 	double c2 = (R-r)*(R-r);
@@ -89,7 +88,7 @@ double Bfield::Bz(const double r, const double z)
 	return B000*R/(R+r)*(b1*cel(k1,g*g,1,g) - b2*cel(k2,g*g,1,g));
 }
 
-double Bfield::cel(double qqc, double pp, double aa, double bb)
+double Bfield::cel(double qqc, double pp, double aa, double bb) const
 {
 	const double ca = 0.000001; // the desired accuracy is the square of ca
 	const double pi02 = 1.5707963268;

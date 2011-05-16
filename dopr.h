@@ -5,7 +5,7 @@ class Derivatives;
 class Dopr
 {
 	public:
-		Dopr(double, int, double*, double*, double, Derivatives*, double, double, bool);
+		Dopr(double firsthtry, int dimension, double* initialY, double* initialDYDX, double initialT, Derivatives * const DERI, double atoll, double rtoll, bool dens, Basetracking* const btr);
 		~Dopr();
 		void reset(double, double*, double*, double);
 		void step();

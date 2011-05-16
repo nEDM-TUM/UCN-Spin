@@ -7,13 +7,13 @@
 
 using namespace std;
 
-Dopr::Dopr(double firsthtry, int dimension, double* initialY, double* initialDYDX, double initialT, Derivatives * const DERI, double atoll, double rtoll, bool dens Basetracking* const btr)
+Dopr::Dopr(double firsthtry, int dimension, double* initialY, double* initialDYDX, double initialT, Derivatives * const DERI, double atoll, double rtoll, bool dens, Basetracking* const btr)
 : told (0.0), hdid(0.0), htry(firsthtry), hnext(firsthtry), n(dimension),
  y(initialY), yout(NULL), dydx(initialDYDX), yerr(NULL), yerr2(NULL), t(initialT),
  k2(NULL), k3(NULL), k4(NULL), k5(NULL), k6(NULL), k7(NULL), k8(NULL), k9(NULL), k10(NULL),
  rcont1(NULL), rcont2(NULL), rcont3(NULL), rcont4(NULL), rcont5(NULL), rcont6(NULL), rcont7(NULL), rcont8(NULL),
  derivatives(DERI), atol(atoll), rtol(rtoll), EPS(0.0) , errold(1.0e-4), reject(false), dense(dens),
- stepsnottaken(0), tracker(btr)
+ stepsnottaken(0), tracker(btr),
 c2(0.526001519587677318785587544488e-01),
 c3(0.789002279381515978178381316732e-01),
 c4(0.118350341907227396726757197510e+00),

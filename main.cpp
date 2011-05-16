@@ -14,7 +14,8 @@ using namespace std;
 #include "dopr.h"
 #include "derivatives.h"
 #include "parameters.h"
-#include "tubetracking.h"
+#include "gravitationtracker.h"
+#include "cylinder.h"
 
 
 int main(int nargs, char** argv)
@@ -90,13 +91,15 @@ int main(int nargs, char** argv)
 		{
 			TP[z] = 0.0;
 		}
-													
-		Tubetracking *tracker = new Tubetracking(randgen, theParameters);		//Pointer to the random-generator
 
-		Bfield *bfield = new Bfield(rotationBfilename,theParameters,tracker);
+		// TODO
+		Cylinder *c = new Cylinder(randgen, 5, 2);
+		GravitationTracker *tracker = new GravitationTracker(randgen, c, 9.81); // TODO: parameters		//Pointer to the random-generator
+
+		Bfield *bfield = new Bfield(theParameters,tracker);
 
 
-		Derivatives * derivatives = new Derivatives(tracker);
+		Derivatives * derivatives = new Derivatives(bfield);
 		double errorgoal = theParameters.getDoubleParam("ErrorGoal");
 		Dopr *stepper = new Dopr(firsthtry,	//initial stepsize guess 
 					 3,		//dimension of ODE sytem
@@ -106,7 +109,9 @@ int main(int nargs, char** argv)
 					 derivatives,
 					 errorgoal,	//relative error tolerance
 					 errorgoal,	//absolute error tolerance
-					 true);		//dense output?
+					 true,		//dense output?
+					 tracker
+					 );
 		
 		#pragma omp for
 			for(i=0; i<N_particles; i++)
@@ -123,7 +128,7 @@ int main(int nargs, char** argv)
 				savetime = 0;
 				j = 0;
 				int lifetime1 = theParameters.getDoubleParam("Lifetime");
-				while(tracker->reachedendoftube == false)
+				while(true) // TODO: Abbruchbedingung
 				{
 					try
 					{
@@ -178,6 +183,7 @@ int main(int nargs, char** argv)
 		delete derivatives; derivatives = NULL;
 		delete tracker; tracker = NULL;
 		delete bfield; bfield = NULL;
+		delete c; c = NULL;
 		
 		delete[] tempTP; tempTP = NULL;
 		delete[] TP; TP = NULL;

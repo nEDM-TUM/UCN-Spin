@@ -22,9 +22,9 @@ class Basetracking
 		 * This method must be provided by a user tracking class
 		 */
 
-		virtual void makeTrack(double hmax) = 0;
+		virtual void makeTrack(double t_start, double h) = 0;
 		virtual void reset();
-		virtual void stepDone(double time);
+		virtual void stepDone(double time) {};
 
 		std::vector<double> fTracktimes;
 		std::vector<Threevector> fTrackpositions;

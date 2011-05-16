@@ -14,7 +14,7 @@
 class EquationTracker : public Basetracking {
 	public:
 		EquationTracker(Random *ran, Basegeometry *geo);
-		void makeTrack(double hmax);
+		void makeTrack(double t_start, double h);
 		void initialize();
 		Threevector getPosition(double time);
 

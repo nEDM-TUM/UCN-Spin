@@ -14,7 +14,7 @@ class Basegeometry
 {
 	public:
 		Basegeometry(Random *ran) : fRandom(ran) {};
-		virtual ~Basegeometry();
+		virtual ~Basegeometry() {};
 
 		/**
 		 * Initialize @p x to be inside the cylinder
