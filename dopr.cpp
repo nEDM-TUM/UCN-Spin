@@ -208,6 +208,7 @@ d716(-0.14972683625798562581422125276e+03)
 
 void Dopr::reset(double firsthtry, double* initialY, double* initialDYDX, double initialT)
 {
+	derivatives->evalInitial(initialT, initialY, initialDYDX);
 	y = initialY;
 	dydx = initialDYDX;
 	t = initialT;
@@ -279,7 +280,7 @@ void Dopr::step()
 	told = t;
 	t += (hdid = h);
 	htry = hnext;
-	tracker->stepDone();
+	tracker->stepDone(t);
 }
 
 void Dopr::dy(const double h) {

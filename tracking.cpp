@@ -7,10 +7,13 @@
 using namespace std;
 
 
-Tracking::Tracking(Random *ran, Bfield* BF, double D, double Radius)
-: B(BF), rand(ran), Pos(NULL), xyz1(NULL), xyz2(NULL), dir1(NULL), dir2(NULL), posxyz(NULL), sqrt2D(sqrt(2*D)), 
-  lambda(0.0), Rsquare(Radius*Radius), R(Radius), scaling(1.), t(0.0), usetwopoints(false), htry(0.0)
+Tracking::Tracking(Random *ran, Bfield* BF, Parameters& theParameters)
+: B(BF), rand(ran), Pos(NULL), xyz1(NULL), xyz2(NULL), dir1(NULL), dir2(NULL), posxyz(NULL), sqrt2D(0.00025), 
+  lambda(0.0), Rsquare(0.0), R(0.0), H(0.0), scaling(1.), t(0.0), usetwopoints(false), htry(0.0)
 {
+	R = theParameters.getDoubleParam("CylinderRadius");
+	H = theParameters.getDoubleParam("CylinderHeight");
+	Rsquare = R*R;
 	Pos = new double[3];
 	xyz1 = new double[3];
 	xyz2 = new double[3];
@@ -86,17 +89,17 @@ void Tracking::initialize()
 {
 	double r = Rsquare+1.0;
 	t = 0.0;
-	while(r > Rsquare)
+	while(r > Rsquare || fabs(Pos[2]) > H/2.)
 	{
 		r = 0.0;
 		for(int i=0; i<3; i++)
 		{
 			#pragma omp critical
 			{
-				Pos[i] = (2.*rand->uniform()-1.)*R;
+				Pos[i] = (2.*rand->uniform()-1.)*R;	//rand->uniform() gives random number between 0 and 1
 			}
-			r += Pos[i]*Pos[i];
 		}
+		r = Pos[0]*Pos[0] + Pos[1]*Pos[1];
 	}
 }
 

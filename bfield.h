@@ -3,13 +3,14 @@
 
 #include <string>
 #include <fstream>
+#include "parameters.h"
+
 using namespace std;
 
 class Bfield
 {
 	public:
-		Bfield(string, string, string, const double, const double, const double, const double, const double, 
-			   const double, const double, const double*, const double, const double, const double, bool);
+		Bfield(string,const Parameters&);
 		~Bfield();
 		void FieldsRotatingWithLarmorfreq(double&, double*, double*, double&, double&);
 		void NonrotatingFields(double*, double*, double&, double&);
@@ -20,11 +21,10 @@ class Bfield
 		void eval(double, double*, double*);
 
 	private:
-		const double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;
-		const double *xyz0;
-		double B000, I, h2, r0_mag;
-		double *Brotationtimes, *Crosstalkrotationtimes, *r0;
-		int NBrottimes, NCrossrottimes;
-		bool rotatedipole;
+		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor;
+		double xyz0[3];
+		double B000,I,h2;
+		double *Brotationtimes;
+		int NBrottimes;
 };
 #endif

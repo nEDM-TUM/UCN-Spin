@@ -1,0 +1,177 @@
+#include "cylinder.h"
+#include "roots.h"
+#include <math.h>
+#include <iostream>
+
+/**
+ * @class Cylinder
+ * Provides methods to find out if a given vector lies inside a cylinder and
+ * to reflect it at the cylinders walls.
+ * @attention This class keeps internal state, use one instance for one specific particle only!
+ */
+
+/**
+ * Create a cylinder.
+ * @param radius radius of the cylinder
+ * @param height height of the cylinder
+ */
+Cylinder::Cylinder(Random *ran, double radius, double height)
+	: Basegeometry(ran), fRadius(radius), fRSquared(radius*radius), fHeight(height), fReflectRadius(false), fReflectHeight(false)
+{
+	std::clog << "New cylinder, r = " << fRadius << ", h = " << fHeight << ", r^2 = " << fRSquared << std::endl;
+}
+
+void Cylinder::initialize(Threevector &v, Threevector &x) {
+	// initialize x[0] and x[1] to be inside of radius
+	do {
+		for (int i = 0; i <= 1; i++)
+			x[i] = (fRandom->uniform() - .5) * 2 * fRadius;
+	}
+	while (!insideRadius(x));
+	
+	// initialize x[2] to be inside of height
+	x[2] = fRandom->uniform() * fHeight;
+
+	// initialize velocity randomly TODO!!!
+	for (int i = 0; i < 3; i++)
+		v[i] = fRandom->gaussian(1); // TODO
+}
+
+
+/**
+ * Check if the cylinder contains the point @p x.
+ */
+bool Cylinder::contains(const Threevector &x) const
+{
+	return insideRadius(x) && insideHeight(x);
+}
+
+/**
+ * Check if @p x is inside the height of the cylinder.
+ *
+ * This function does not check if it is inside the radius.
+ * @see Cylinder::contains(double[])
+ */
+bool Cylinder::insideHeight(const Threevector &x) const
+{
+	return (x[2] > 0) && (x[2] < fHeight);
+}
+
+
+/**
+ * Check if @p x is inside the radius of the cylinder.
+ *
+ * This function does not check if it is inside the height.
+ * @see Cylinder::contains(double[])
+ */
+bool Cylinder::insideRadius(const Threevector &x) const
+{
+	return (x[0]*x[0] + x[1]*x[1]) < fRSquared;
+}
+
+/**
+ * Check if particle is inside of cylinder and set reflection
+ * state accordingly. Always call reflect if this method has
+ * returned true.
+ *
+ * @param x The point for which the bounds check is made
+ * @returns if the particle is outside the bounds of the geometry
+ *
+ * @see Basegeometry::boundsCheck
+ * @see reflect
+ */
+bool Cylinder::boundsCheck(const Threevector &x) {
+	/// Set reflection flag if x is outside of height or radius.
+	fReflectHeight = !insideHeight(x);
+	fReflectRadius = !insideRadius(x);
+
+	/// If any of the flags is set, return true to signal thar reflect must be called.
+	return (fReflectRadius || fReflectHeight);
+}
+
+/**
+ * Reflect v if the previous boundsCheck has returned true.
+ *
+ * @param[in,out] v veclocity vector, will be changed if necessary.
+ * @param[in]     x position of particle, read-only
+ *
+ * @see Basegeometry::reflect
+ */
+void Cylinder::reflect(Threevector &v, const Threevector &x)
+{
+	if (fReflectHeight) {
+		reflectHeight(v);
+
+		// reset state
+		fReflectHeight = false;
+	}
+
+	if (fReflectRadius) {
+		reflectRadius(v, x);
+
+		// reset state
+		fReflectRadius = false;
+	}
+}
+
+void Cylinder::reflectHeight(Threevector &v) {
+	v[2] = -v[2];
+}
+
+void Cylinder::reflectRadius(Threevector &v, const Threevector &x) {
+	std::clog << "!!! Reflecting x-y, r = " << sqrt(x[0]*x[0]+x[1]*x[1]) << std::endl;
+	double n[2]; ///< unitiy vector perpendicular to x[1,2]
+	double vn[2]; ///< direction vector of v in x-y-plane
+	double v_abs = 0; ///< length of v in x-y-plane
+	double sp = 0; ///< scalar product of vn and n
+
+	// fill v_old, v_abs and vn
+	for (int i = 0; i <= 2; i++) {
+		v_abs += v[i]*v[i];
+	}
+	v_abs = sqrt(v_abs);
+	if (v_abs == 0)
+		throw "Cylinder::reflectRadius called with v[0]^2 + v[1]^2 = 0";
+	vn[0] = v[0] / v_abs;
+	vn[1] = v[1] / v_abs;
+
+	// fill n
+	double x_abs = sqrt(x[0]*x[0] + x[1]*x[1]);
+	if (x_abs == 0)
+		throw "Cylinder::reflectRadius called with x[0]^2 + x[1]^2 = 0";
+	n[0] = x[1] / x_abs;
+	n[1] = -x[0] / x_abs;
+
+	// Calculate sp
+	for (int i = 0; i <= 1; i++) {
+		sp += vn[i]*n[i];
+	}
+
+	// set v to reflected value
+	for (int i = 0; i <= 1; i++) {
+		v[i] = -v[i] + 2*v_abs*n[i]*sp;
+	}
+}
+
+double Cylinder::findIntersection(const double t0, const double t1, const Polynom &px, const Polynom &py, const Polynom &pz, double eps)
+{
+	double t_height = INFINITY;
+	double t_radius = INFINITY;
+
+	if (fReflectRadius) {
+		// Polynomial for radius: r^2 = x^2 + y^2
+		Polynom rsquared(px*px + py*py);
+
+		// Find intersection time
+		t_radius = Roots::safeNewton(rsquared, rsquared.derivative(), t0, t1, eps);
+	}
+
+	if (fReflectHeight) {
+		t_height = Roots::safeNewton(pz, pz.derivative(), t0, t1, eps);
+	}
+
+	if (t_radius < t_height)
+		return t_radius;
+	else
+		return t_height;
+}
