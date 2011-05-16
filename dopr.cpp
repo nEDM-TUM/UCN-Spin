@@ -2,16 +2,18 @@
 #include <limits>
 #include <math.h>
 #include <iostream>
+#include "basetracking.h"
+#include "derivatives.h"
 
 using namespace std;
 
-Dopr::Dopr(double firsthtry, int dimension, double* initialY, double* initialDYDX, double initialT, Derivatives *DERI, double atoll, double rtoll, bool dens)
+Dopr::Dopr(double firsthtry, int dimension, double* initialY, double* initialDYDX, double initialT, Derivatives * const DERI, double atoll, double rtoll, bool dens Basetracking* const btr)
 : told (0.0), hdid(0.0), htry(firsthtry), hnext(firsthtry), n(dimension),
  y(initialY), yout(NULL), dydx(initialDYDX), yerr(NULL), yerr2(NULL), t(initialT),
  k2(NULL), k3(NULL), k4(NULL), k5(NULL), k6(NULL), k7(NULL), k8(NULL), k9(NULL), k10(NULL),
  rcont1(NULL), rcont2(NULL), rcont3(NULL), rcont4(NULL), rcont5(NULL), rcont6(NULL), rcont7(NULL), rcont8(NULL),
- derivatives(DERI), atol(atoll), rtol(rtoll), EPS(0.0) , errold(1.0e-4), reject(false), dense(dens), tracker(NULL),
- stepsnottaken(0), hmax(0.003),
+ derivatives(DERI), atol(atoll), rtol(rtoll), EPS(0.0) , errold(1.0e-4), reject(false), dense(dens),
+ stepsnottaken(0), tracker(btr)
 c2(0.526001519587677318785587544488e-01),
 c3(0.789002279381515978178381316732e-01),
 c4(0.118350341907227396726757197510e+00),
@@ -203,12 +205,11 @@ d716(-0.14972683625798562581422125276e+03)
 	rcont6 = new double[n];
 	rcont7 = new double[n];
 	rcont8 = new double[n];
-	tracker = derivatives->getTracker();
 }
 
 void Dopr::reset(double firsthtry, double* initialY, double* initialDYDX, double initialT)
 {
-	derivatives->evalInitial(initialT, initialY, initialDYDX);
+	derivatives->eval(initialT, initialY, initialDYDX);
 	y = initialY;
 	dydx = initialDYDX;
 	t = initialT;
@@ -258,7 +259,6 @@ void Dopr::step()
 		}
 		else
 		{
-			tracker->setScaling(h/htry);
 			stepsnottaken++;
 		}
 		if(fabs(h) <= fabs(t)*EPS)
@@ -266,7 +266,7 @@ void Dopr::step()
 			throw("stepsize underflow in Dopr");
 		}
 	}
-	derivatives->eval(1.0, yout, dydxnew);
+	derivatives->eval(t+h, yout, dydxnew);
 	//cout << "\t hdone (after " << i << " steps) = " << h << endl;
 	if (dense)
 	{
@@ -290,67 +290,67 @@ void Dopr::dy(const double h) {
 	{
 		ytemp[i]=y[i]+h*a21*dydx[i];
 	}
-	derivatives->eval(c2,ytemp,k2);
+	derivatives->eval(t+c2*h,ytemp,k2);
 	
 	for (i=0;i<n;i++)
 	{
 		ytemp[i]=y[i]+h*(a31*dydx[i]+a32*k2[i]);
 	}
-	derivatives->eval(c3,ytemp,k3);
+	derivatives->eval(t+c3*h,ytemp,k3);
 	
 	for (i=0;i<n;i++)
 	{
 		ytemp[i]=y[i]+h*(a41*dydx[i]+a43*k3[i]);
 	}
-	derivatives->eval(c4,ytemp,k4);
+	derivatives->eval(t+c4*h,ytemp,k4);
 	
 	for (i=0;i<n;i++)
 	{
 		ytemp[i]=y[i]+h*(a51*dydx[i]+a53*k3[i]+a54*k4[i]);
 	}
-	derivatives->eval(c5,ytemp,k5);
+	derivatives->eval(t+c5*h,ytemp,k5);
 	
 	for (i=0;i<n;i++)
 	{
 		ytemp[i]=y[i]+h*(a61*dydx[i]+a64*k4[i]+a65*k5[i]);
 	}
-	derivatives->eval(c6,ytemp,k6);
+	derivatives->eval(t+c6*h,ytemp,k6);
 	
 	for (i=0;i<n;i++)
 	{
 		ytemp[i]=y[i]+h*(a71*dydx[i]+a74*k4[i]+a75*k5[i]+a76*k6[i]);
 	}
-	derivatives->eval(c7,ytemp,k7);
+	derivatives->eval(t+c7*h,ytemp,k7);
 	
 	for (i=0;i<n;i++)
 	{
 		ytemp[i]=y[i]+h*(a81*dydx[i]+a84*k4[i]+a85*k5[i]+a86*k6[i]+a87*k7[i]);
 	}
-	derivatives->eval(c8,ytemp,k8);
+	derivatives->eval(t+c8*h,ytemp,k8);
 	
 	for (i=0;i<n;i++)
 	{
 		ytemp[i]=y[i]+h*(a91*dydx[i]+a94*k4[i]+a95*k5[i]+a96*k6[i]+a97*k7[i]+a98*k8[i]);
 	}
-	derivatives->eval(c9,ytemp,k9);
+	derivatives->eval(t+c9*h,ytemp,k9);
 	
 	for (i=0;i<n;i++)
 	{
 		ytemp[i]=y[i]+h*(a101*dydx[i]+a104*k4[i]+a105*k5[i]+a106*k6[i]+a107*k7[i]+a108*k8[i]+a109*k9[i]);
 	}
-	derivatives->eval(c10,ytemp,k10);
+	derivatives->eval(t+c10*h,ytemp,k10);
 	
 	for (i=0;i<n;i++)
 	{
 		ytemp[i]=y[i]+h*(a111*dydx[i]+a114*k4[i]+a115*k5[i]+a116*k6[i]+a117*k7[i]+a118*k8[i]+a119*k9[i]+a1110*k10[i]);
 	}
-	derivatives->eval(c11,ytemp,k2);
+	derivatives->eval(t+c11*h,ytemp,k2);
 	
 	for (i=0;i<n;i++)
 	{
 		ytemp[i]=y[i]+h*(a121*dydx[i]+a124*k4[i]+a125*k5[i]+a126*k6[i]+a127*k7[i]+a128*k8[i]+a129*k9[i]+a1210*k10[i]+a1211*k2[i]);
 	}
-	derivatives->eval(1.,ytemp,k3);
+	derivatives->eval(t+h,ytemp,k3);
 	
 	for (i=0;i<n;i++)
 	{
@@ -391,34 +391,29 @@ bool Dopr::success(const double err, double &h)
 	double scale=1.0;
 	if (err <= 1.0)
 	{
-		if(hnext < hmax)
+		if (err == 0.0)
 		{
-			if (err == 0.0)
+			scale=maxscale;
+		}
+		else
+		{
+			scale=safe*pow(err,-alpha)*pow(errold,beta);
+			if(scale<minscale)
+			{
+				scale=minscale;
+			}
+			if (scale>maxscale)
 			{
 				scale=maxscale;
 			}
-			else
-			{
-				scale=safe*pow(err,-alpha)*pow(errold,beta);
-				if(scale<minscale)
-				{
-					scale=minscale;
-				}
-				if (scale>maxscale)
-				{
-					scale=maxscale;
-				}
-			}
-			if(reject)
-			{
-				hnext=h*min(scale,1.0);
-			}
-			else
-			{
-				hnext=h*scale;
-			}
-			hnext=min(hnext,hmax);
-			
+		}
+		if(reject)
+		{
+			hnext=h*min(scale,1.0);
+		}
+		else
+		{
+			hnext=h*scale;
 		}
 		errold=max(err,1.0e-4);
 		reject=false;
@@ -455,17 +450,17 @@ void Dopr::prepare_dense(const double h, double *dydxnew)
     {
 		ytemp[i]=y[i]+h*(a141*dydx[i]+a147*k7[i]+a148*k8[i]+a149*k9[i]+a1410*k10[i]+a1411*k2[i]+a1412*k3[i]+a1413*dydxnew[i]);
 	}
-    derivatives->eval(c14,ytemp,k10);
+    derivatives->eval(t+c14*h,ytemp,k10);
     for (i=0;i<n;i++)
     {
 		ytemp[i]=y[i]+h*(a151*dydx[i]+a156*k6[i]+a157*k7[i]+a158*k8[i]+a1511*k2[i]+a1512*k3[i]+a1513*dydxnew[i]+a1514*k10[i]);
 	}
-    derivatives->eval(c15,ytemp,k2);
+    derivatives->eval(t+c15*h,ytemp,k2);
     for (i=0;i<n;i++)
     {
 		ytemp[i]=y[i]+h*(a161*dydx[i]+a166*k6[i]+a167*k7[i]+a168*k8[i]+a169*k9[i]+a1613*dydxnew[i]+a1614*k10[i]+a1615*k2[i]);
 	}
-    derivatives->eval(c16,ytemp,k3);
+    derivatives->eval(t+c16*h,ytemp,k3);
 	for (i=0;i<n;i++)
 	{
 		rcont5[i]=h*(rcont5[i]+d413*dydxnew[i]+d414*k10[i]+d415*k2[i]+d416*k3[i]);

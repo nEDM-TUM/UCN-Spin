@@ -3,6 +3,7 @@
 #include <math.h>
 #include <iostream>
 #include "bfield.h"
+#include "threevector.h"
 
 using namespace std;
 
@@ -33,8 +34,7 @@ void Derivatives::operator()(const double t, const double y[], double derivs[])
  */
 void Derivatives::eval(const double time, const double y[], double derivs[])
 {
-	double B[3] = {0.0,0.0,0.0};
-	field->eval(time,B);
+	Threevector B = field->eval(time);
 	
 	/**
 	 * The first 3 components of @p derivs are the polarization vector

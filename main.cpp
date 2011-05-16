@@ -90,11 +90,10 @@ int main(int nargs, char** argv)
 		{
 			TP[z] = 0.0;
 		}
-		
-		string rotationBfilename = "./RotatingBfield.txt";	//File which contains B-field frequencies and times
-		Bfield *bfield = new Bfield(rotationBfilename,theParameters);
 													
 		Tubetracking *tracker = new Tubetracking(randgen, theParameters);		//Pointer to the random-generator
+
+		Bfield *bfield = new Bfield(rotationBfilename,theParameters,tracker);
 
 
 		Derivatives * derivatives = new Derivatives(tracker);

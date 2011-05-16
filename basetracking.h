@@ -11,6 +11,7 @@ class Basetracking
 {
 	public:
 		Basetracking(Random* ran, Basegeometry *geo);
+		virtual ~Basetracking();
 		
 		virtual void initialize();
 		virtual Threevector getPosition(double time);

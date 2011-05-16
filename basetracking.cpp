@@ -20,6 +20,9 @@ Basetracking::Basetracking(Random *ran, Basegeometry *geo)
 {
 }
 
+Basetracking::~Basetracking()
+{
+}
 /**
  * Initializes the track portion. Generates a starting point and sets the
  * starting time to zero
