@@ -1,4 +1,5 @@
 #include "debug.h"
+#include "exceptions.h"
 #include <iostream>
 #include <cmath>
 
@@ -11,6 +12,8 @@ namespace Roots {
 	double bisectStep(const T &f, double &x1, double &x2);
 	template <class T>
 	double safeNewton(const T &f, const T &d, double x1, double x2, double eps);
+
+	const unsigned int MAX_ITERATIONS = 10000;
 
 	class NoRoot {};
 }
@@ -76,7 +79,13 @@ double Roots::safeNewton(const T &f, const T &d, double x1, double x2, double ep
 	double y = f(x);
 	double last_y = INFINITY;
 
+	unsigned int iteration = 0;
+
 	while (fabs(y) > eps) {
+		// Protect against infinite loops
+		if(iteration++ > MAX_ITERATIONS)
+			throw EndlessLoop(); // TODO: review
+
 		const double xn = x - f(x)/d(x);
 
 		debug << "f(" << x << ") = " << y << ", last was: " << last_y << std::endl;

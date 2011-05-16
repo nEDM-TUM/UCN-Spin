@@ -57,7 +57,7 @@ class Basegeometry
 		 */
 		virtual void reflect(Threevector &v, const Threevector &x) = 0;
 
-		virtual double findIntersection(const double t0, const double t1,
+		virtual double findIntersection(double t0, double t1,
 				const Polynom &px, const Polynom &py, const Polynom &pz, double eps) = 0;
 
 	protected:

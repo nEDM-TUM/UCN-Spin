@@ -2,6 +2,7 @@
 #include "../threevector.h"
 #include "../random.h"
 #include "../gravitationtracker.h"
+#include "../debug.h"
 #include <iostream>
 #include <cctype>
 
@@ -14,6 +15,8 @@ inline void outputThreevector(const Threevector &t) {
 int main(int argc, char *argv[]) {
 	// how long the simulation should run
 	const double T = 300;
+
+	initialize_debug();
 
 	// seed for rng
 	int seed = 1;

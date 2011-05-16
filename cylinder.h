@@ -18,7 +18,7 @@ class Cylinder : public Basegeometry
 
 		void initialize(Threevector &v, Threevector &x);
 
-		double findIntersection(const double t0, const double t1,
+		double findIntersection(double t0, double t1,
 				const Polynom &px, const Polynom &py, const Polynom &pz, double eps);
 
 	private:

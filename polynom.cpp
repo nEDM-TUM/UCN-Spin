@@ -228,6 +228,11 @@ std::string Polynom::toString() const {
 	bool first = true;
 	std::ostringstream o;
 
+#ifndef NDEBUG
+	o << std::scientific;
+	o.precision(15);
+#endif
+
 	for (int i = degree(); i >= 0; i--) {
 		const double c = coeffs[i];
 
