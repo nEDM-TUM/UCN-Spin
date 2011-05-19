@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 	t.initialize();
 
 	// Make all of the track at once
-	t.makeTrack(T);
+	t.makeTrack(0, T);
 
 	// output track
 	for (int i = 0; i < t.fTracktimes.size(); i++) {
