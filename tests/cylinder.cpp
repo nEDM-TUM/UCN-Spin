@@ -5,6 +5,7 @@
 #include "../debug.h"
 #include <iostream>
 #include <cctype>
+#include <unistd.h>
 
 using namespace std;
 
@@ -15,6 +16,11 @@ inline void outputThreevector(const Threevector &t) {
 int main(int argc, char *argv[]) {
 	// how long the simulation should run
 	const double T = 300;
+
+	// how long until the simulation is aborted
+	const unsigned int TIMEOUT = 300; // seconds
+
+	alarm(TIMEOUT);
 
 	initialize_debug();
 
@@ -35,6 +41,8 @@ int main(int argc, char *argv[]) {
 	// Make all of the track at once
 	t.makeTrack(0, T);
 
+	alarm(TIMEOUT); // Restart timer for writing of output
+
 	// output track
 	for (int i = 0; i < t.fTracktimes.size(); i++) {
 		cout << t.fTracktimes[i] << " ";
@@ -43,4 +51,6 @@ int main(int argc, char *argv[]) {
 		outputThreevector(t.fTrackvelocities[i]);
 		cout << endl;
 	}
+
+	return 0;
 }
