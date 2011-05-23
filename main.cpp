@@ -16,6 +16,7 @@ using namespace std;
 #include "parameters.h"
 #include "gravitationtracker.h"
 #include "cylinder.h"
+#include "debug.h"
 
 
 int main(int nargs, char** argv)
@@ -44,6 +45,10 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("radiustube");
 	theParameters.expectDouble("vdrift");
 	theParameters.expectDouble("sigma");
+	theParameters.expectDouble("SolenoidField");
+	theParameters.expectDouble("SolenoidCurrent");
+	theParameters.expectDouble("SolenoidHeight");
+	theParameters.expectDouble("SolenoidRadius");
 
 	
 	theParameters.readParameters(cin);
@@ -130,10 +135,12 @@ int main(int nargs, char** argv)
 				int lifetime1 = theParameters.getDoubleParam("Lifetime");
 				while(true) // TODO: Abbruchbedingung
 				{
+					debug << "Entering endless loop" << endl;
 					try
 					{
 						stepper->step();
 						Nsteps++;
+						debug << "Step " << Nsteps << " done" << endl;
 					}
 					catch(char const* error)
 					{
@@ -141,8 +148,9 @@ int main(int nargs, char** argv)
 						exit(1);
 					}
 					Told = T;
-					T = stepper->getT();			
+					T = stepper->getT();
 					hdid = stepper->getHdid();
+					debug << "hdid = " << hdid << endl;
 					double st = 0.0;
 					while(T >= (st = savetime*savetimediff))
 					{
