@@ -2,24 +2,27 @@
 
 // Setzt den Zeitstartwert und die Projektion der Startposition auch die Schlauchachse 
 // auf 0. 
-Tubetracking::Tubetracking(Random *ran)
-:rand(ran){
-	std::string geometryfilename = "thetube.txt";
-	thetubegeometry = new Tubegeometry(ran, geometryfilename);
-	times.push_back(double 0);
-	roots.push_back(double 0);
+Tubetracking::Tubetracking(Random *ran, Tubegeometry * geo, Parameters& theParameters)
+:Basetracking(ran, geo), rand(ran), fTubegeometry(geo)
+{
+	times.push_back(0.0);
+	roots.push_back(0.0);
 	vdrift = theParameters.getDoubleParam("vdrift");
 	mu = theParameters.getDoubleParam("mu");
 	sigma = theParameters.getDoubleParam("sigma");
+	reachedendoftube = false;
+	Nstart = 0;
+	wasinlastsegment = 0;
+	t_end = 0;
 }
 
 void Tubetracking::initialize(){
 	Threevector v,x;
 	v = Threevector();
 	x = Threevector();
-	thetubegeometry->initialize(v,x); 
+	fTubegeometry->initialize(v,x); 
 	positions.push_back(x);
-	axis.push_back(v);
+	axes.push_back(v);
 }
 // Prüft zunächst ob die gefragte Zeit schon ausgewürfelt wurde oder noch nicht. 
 // Falls nicht, werden so lange "gute" neue Positionen ausgewürfelt, bis die 
@@ -36,38 +39,37 @@ void Tubetracking::initialize(){
 Threevector Tubetracking::getPosition(double time){
 	Threevector pos;
 	while (times.back() < time && t_end != 0) {
-		double tnew, rootnew, simga, scatteringtime, scatteringlength_1, scatteringlength_2, scatteringlength_3;
+		double tnew, rootnew, scatteringtime, scatteringlength_1, scatteringlength_2, scatteringlength_3;
 		Threevector positionnew, axisnew, control, scatteringvector;
-		scatteringtime = random->exponential(mu); 
+		scatteringtime = fRandomgenerator->exponential(mu); 
 		tnew = times.back() + scatteringtime;
 		rootnew = 0; 
 		control = Threevector ();
-		scatteringlength_1 = scatteringtime * random->gaussian(sigma); 
-		scatteringlength_2 = scatteringtime * random->gaussian(sigma);
-		scatteringlength_3 = scatteringtime * random->gaussian(sigma);
+		scatteringlength_1 = scatteringtime * fRandomgenerator->gaussian(sigma); 
+		scatteringlength_2 = scatteringtime * fRandomgenerator->gaussian(sigma);
+		scatteringlength_3 = scatteringtime * fRandomgenerator->gaussian(sigma);
 		scatteringvector = Threevector (scatteringlength_1, scatteringlength_2, scatteringlength_3);
-		positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalize();
-		axisnew = thetubegeometry->contains(positionnew, roots.back());
+		positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
+		axisnew = fTubegeometry->contains(positionnew, roots.back());
+		if (fTubegeometry->lastsegmentcontains(positionnew) == true)
+				reachedendoftube = true;
 		while (axisnew == control){
-			if (thetubegeometry->lastsegmentcontains(positionnew) == true){
-				reachedendoftube1 = true;
-				axisnew = 
-			}
-			else {
-				scatteringlength_1 = scatteringtime * random->gaussian(sigma); 
-				scatteringlength_2 = scatteringtime * random->gaussian(sigma);
-				scatteringlength_3 = scatteringtime * random->gaussian(sigma);
+				scatteringlength_1 = scatteringtime * fRandomgenerator->gaussian(sigma); 
+				scatteringlength_2 = scatteringtime * fRandomgenerator->gaussian(sigma);
+				scatteringlength_3 = scatteringtime * fRandomgenerator->gaussian(sigma);
 				scatteringvector = Threevector (scatteringlength_1, scatteringlength_2, scatteringlength_3);
-				positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalize();
-				axisnew = thetubegeomtry->contains(positionnew, roots.back());
+				positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
+				axisnew = fTubegeometry->contains(positionnew, roots.back());
+				if (fTubegeometry->lastsegmentcontains(positionnew) == true){
+				reachedendoftube = true;
 			} 
+		}
 		times.push_back(tnew);	
 		positions.push_back(positionnew);
 		axes.push_back(axisnew);
 		roots.push_back(rootnew);
-		if (thetubegeomtry->lastsegmentcontains(positionnew) == true) {
+		if (fTubegeometry->lastsegmentcontains(positionnew) == true) 
 			t_end = times.back();
-		}
 	}
 	
 // Ist die gefragte Zeit dann ausgewürfelt, dann wird zuerst der geeignete Schritt
@@ -75,18 +77,20 @@ Threevector Tubetracking::getPosition(double time){
 // gefragte Ort ermittelt.
 	if (t_end != 0 && time > t_end){
 		wasinlastsegment = true;
-		return positions.back()
+		return positions.back();
 	}
 	else {
+		Threevector v;
 		double vel;
 		int i = Nstart;
 		while (times[i] < time)  
 			i = i+1;	
 		Nstart = i - 1;	
-		v = positions[i]-positions[i-1];
+		v = positions[i] + (-1)*positions[i-1];
 		vel = v.mag() / (times[i]-times[i-1]);
-		pos = positions[i-1] + (time-times[i-1]) * vel * v.normalize();		
+		pos = positions[i-1] + (time-times[i-1]) * vel * v.normalized();		
 		return pos; 
+	}
 }
 
 void Tubetracking::reset(){
@@ -95,11 +99,10 @@ void Tubetracking::reset(){
 
 // Löscht die nicht mehr benötigten Daten aus den vier Vektoren. 
 void Tubetracking::stepDone(double time){
-	int i = Nstart
-	int N = times.size()
+	int i = Nstart, N = times.size();
 	while (times[i] < time)  
 		i = i + 1;
-	for (int j = 0, j < N-i+1, j++){
+	for (int j = 0; j < N-i+1; j++){
 		times[j] = times[j+i-1];
 		roots[j] = roots[j+i-1];
 		axes[j] = axes[j+i-1];

@@ -107,6 +107,13 @@ void Threevector::normalize()
 		fVec[i] /= div;
 }
 
+Threevector Threevector::normalized()
+{
+	Threevector temp(*this);
+	temp.normalize();
+	return temp;
+}
+
 std::string Threevector::toString() const {
 	std::ostringstream o;
 	o << "(" << fVec[0] << " " << fVec[1] << " " << fVec[2] << ")";

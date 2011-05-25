@@ -1,25 +1,21 @@
+#ifndef TUBEGEOMETRY_H
+#define TUBEGEOMETRY_H
 #include "basegeometry.h"
 #include "threevector.h"
-#include "segment.h"
+#include "lsegment.h"
+#include "csegment.h"
 #include "random.h"
 #include "parameters.h"
+#include <string>
+#include <vector>
 
-// Offene Probleme:
-// Sicherstellen, dass man beim Auslesen der Datei am Ende der Zeile jeweils angekommen ist?
 
-
-class TubeGeometry : public Basegeometry {
+class Tubegeometry : public Basegeometry {
 	public:
-// Im Konstruktor wird ein File ausgelesen, das die Informationen über den Schlauch 
-// enthält. Der Schlauch soll sich aus Kreisbogenstücken und geraden Stücken
-// zusammensetzen. Der Konstruktor erzeugt aus dem File einen Vektor mit Segmenten
-// des Schlauchs. Diese Segmente sind entweder Objekte der Klasse Csegment oder Lsegment.
-		TubeGeometry(Random*, std:string Tubefile);
-
-// Würfelt einen Startvektor in der Startebene des Schlauchs. Und gibt den ersten
-// axialen Vektor zurück. Vorsicht: Diese Funktion verändert die Threevectoren v und x. 
+		Tubegeometry(Random*, std::string Tubefile, Parameters& theParameters);
+// Vorsicht: Diese Funktion verändert die Threevectoren v und x. 
 		void initialize(Threevector &v, Threevector &x);
-		Threevector boundsCheck(const Threevector &x){
+		bool boundsCheck(const Threevector &x){
 			throw "not implemented";
 		};
 		void reflect(Threevector &v, const Threevector &x) {
@@ -29,17 +25,18 @@ class TubeGeometry : public Basegeometry {
 				const Polynom &px, const Polynom &py, const Polynom &pz, double eps){
 			throw "not implemented";
 		};
-		bool contains(const Threevector &x, double rootstart) const {
+		bool contains(const Threevector &x) const {
 			throw "not implemented";
 		};
-
-// 'contains' prüft ob eine Position x im Schlauch enthalten ist oder nicht.
-// Wenn ja, gibt sie den axialen Vektor der Projektion der Position auf die Schlauchachse
-// zurück. Wenn nicht, dann gibt sie als axialen Vektor den Nullvektor zurück.
-// Vorsicht: das zweite Argument 'rootstart' wird während der Funktion verändert.
-		Threevector contains(const Threevector &x, double &rootstart);
-		bool lastsegmentcontains(const Threevector &x, const double &rootstartsegment);
+// Vorsicht: das Argument 'rootstart' wird während der Funktion verändert.
+		virtual Threevector contains(const Threevector &x, double &rootstart);
+		virtual bool lastsegmentcontains(const Threevector &x);
 	
 	private:
 		Random *rand;
+		double radiustube;
+		std::vector<Segment*> Segments;
+		std::vector<Lsegment> Lsegments;
+		std::vector<Csegment> Csegments;
 };
+#endif

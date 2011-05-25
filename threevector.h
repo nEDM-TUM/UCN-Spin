@@ -46,6 +46,7 @@ class Threevector
 		double mag() const;
 		double magsquare() const;
 		void normalize();
+		Threevector normalized();
 		std::string toString() const;
 		Threevector cross (const Threevector &x) const ;
 	protected:

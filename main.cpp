@@ -14,9 +14,8 @@ using namespace std;
 #include "dopr.h"
 #include "derivatives.h"
 #include "parameters.h"
-#include "gravitationtracker.h"
-#include "cylinder.h"
-
+#include "tubetracking.h"
+#include "tubegeometry.h"
 
 int main(int nargs, char** argv)
 {
@@ -91,10 +90,8 @@ int main(int nargs, char** argv)
 		{
 			TP[z] = 0.0;
 		}
-
-		// TODO
-		Cylinder *c = new Cylinder(randgen, 5, 2);
-		GravitationTracker *tracker = new GravitationTracker(randgen, c, 9.81); // TODO: parameters		//Pointer to the random-generator
+		Tubegeometry *geo = new Tubegeometry(randgen, "tube.txt", theParameters); 
+		Tubetracking *tracker = new Tubetracking(randgen, geo, theParameters); 	//Pointer to the random-generator
 
 		Bfield *bfield = new Bfield(theParameters,tracker);
 
@@ -110,8 +107,7 @@ int main(int nargs, char** argv)
 					 errorgoal,	//relative error tolerance
 					 errorgoal,	//absolute error tolerance
 					 true,		//dense output?
-					 tracker
-					 );
+					 tracker);
 		
 		#pragma omp for
 			for(i=0; i<N_particles; i++)
@@ -128,7 +124,7 @@ int main(int nargs, char** argv)
 				savetime = 0;
 				j = 0;
 				int lifetime1 = theParameters.getDoubleParam("Lifetime");
-				while(true) // TODO: Abbruchbedingung
+				while(tracker->reachedendoftube == false)
 				{
 					try
 					{
@@ -183,7 +179,6 @@ int main(int nargs, char** argv)
 		delete derivatives; derivatives = NULL;
 		delete tracker; tracker = NULL;
 		delete bfield; bfield = NULL;
-		delete c; c = NULL;
 		
 		delete[] tempTP; tempTP = NULL;
 		delete[] TP; TP = NULL;
