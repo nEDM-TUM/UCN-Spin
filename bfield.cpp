@@ -15,6 +15,8 @@ Bfield::Bfield(const Parameters &theParameters, Basetracking* const btr)
 	B0 = theParameters.getDoubleParam("B0");
 	B1 = theParameters.getDoubleParam("B1");
 	E0 = theParameters.getDoubleParam("EfieldMag");
+	h2 = theParameters.getDoubleParam("SolenoidHeight") / 2.;
+	R = theParameters.getDoubleParam("SolenoidRadius");
 	g = theParameters.getDoubleParam("B0Gradient");
 	ghalf = g/2.0;
 	B1_g = theParameters.getDoubleParam("B1Gradient");
@@ -25,7 +27,8 @@ Bfield::Bfield(const Parameters &theParameters, Basetracking* const btr)
 	omegalarmor = -PRECES_N*B0;
 	xyz0[0] = theParameters.getDoubleParam("GradientOffsetX");
 	xyz0[2] = theParameters.getDoubleParam("GradientOffsetZ");
-	B000 = I*mu0/M_PI/h2/2.;
+	B000 = theParameters.getDoubleParam("SolenoidField");
+	I = theParameters.getDoubleParam("SolenoidCurrent");
 	#pragma omp master
 	{
 		cout << "The B0-field = " << B0 << " T" << endl;
@@ -53,6 +56,7 @@ Threevector Bfield::operator()(const double time) const
 Threevector Bfield::eval(const double time) const
 {
 	Threevector position = tracking->getPosition(time);
+	debug << "In Bfield: position = " << position.toString() << endl;
 	double r = sqrt(position[0]*position[0]+position[1]*position[1]);
 	double xr = 0.0, yr = 0.0;
 	if(r > 0.0){

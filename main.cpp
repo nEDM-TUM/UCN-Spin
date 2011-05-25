@@ -17,6 +17,7 @@ using namespace std;
 #include "tubetracking.h"
 #include "tubegeometry.h"
 
+
 int main(int nargs, char** argv)
 {
 	double savetimediff = 2e-2, firsthtry = 1e-6;
@@ -43,6 +44,10 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("radiustube");
 	theParameters.expectDouble("vdrift");
 	theParameters.expectDouble("sigma");
+	theParameters.expectDouble("SolenoidField");
+	theParameters.expectDouble("SolenoidCurrent");
+	theParameters.expectDouble("SolenoidHeight");
+	theParameters.expectDouble("SolenoidRadius");
 
 	
 	theParameters.readParameters(cin);
@@ -126,10 +131,12 @@ int main(int nargs, char** argv)
 				int lifetime1 = theParameters.getDoubleParam("Lifetime");
 				while(tracker->reachedendoftube == false)
 				{
+					debug << "Entering endless loop" << endl;
 					try
 					{
 						stepper->step();
 						Nsteps++;
+						debug << "Step " << Nsteps << " done" << endl;
 					}
 					catch(char const* error)
 					{
@@ -137,8 +144,9 @@ int main(int nargs, char** argv)
 						exit(1);
 					}
 					Told = T;
-					T = stepper->getT();			
+					T = stepper->getT();
 					hdid = stepper->getHdid();
+					debug << "hdid = " << hdid << endl;
 					double st = 0.0;
 					while(T >= (st = savetime*savetimediff))
 					{
