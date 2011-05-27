@@ -55,18 +55,20 @@ Threevector Bfield::operator()(const double time) const
 
 Threevector Bfield::eval(const double time) const
 {
-	Threevector position = tracking->getPosition(time);
-	debug << "In Bfield: position = " << position.toString() << endl;
-	double r = sqrt(position[0]*position[0]+position[1]*position[1]);
-	double xr = 0.0, yr = 0.0;
-	if(r > 0.0){
-		xr = position[0]/r;
-		yr = position[1]/r;
-	}
-	// calculate the B-field of a solenoid at this position
-	double BR = Br(r,position[2]);
-	double BZ = Bz(r,position[2]);
-	return Threevector(BR*xr,BR*yr,BZ);
+	// TODO: comment back in
+//	Threevector position = tracking->getPosition(time);
+//	debug << "In Bfield: position = " << position.toString() << endl;
+//	double r = sqrt(position[0]*position[0]+position[1]*position[1]);
+//	double xr = 0.0, yr = 0.0;
+//	if(r > 0.0){
+//		xr = position[0]/r;
+//		yr = position[1]/r;
+//	}
+//	// calculate the B-field of a solenoid at this position
+//	double BR = Br(r,position[2]);
+//	double BZ = Bz(r,position[2]);
+//	return Threevector(BR*xr,BR*yr,BZ);
+	return Threevector(0,0,1);
 }
 
 double Bfield::Br(const double r, const double z) const

@@ -7,6 +7,8 @@ using namespace std;
 #include <string>
 #include <vector>
 #include <sstream>
+
+
 #include "globals.h"
 #include "bfield.h"
 #include "random.h"
@@ -23,7 +25,7 @@ int main(int nargs, char** argv)
 {
 	initialize_debug();
 
-	double savetimediff = 2e-2, firsthtry = 1e-6;
+	double firsthtry = 1e-6;
 	int iP=0;
 	double *TP_shared = NULL, *P_end = NULL;
 	
@@ -51,13 +53,14 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("SolenoidCurrent");
 	theParameters.expectDouble("SolenoidHeight");
 	theParameters.expectDouble("SolenoidRadius");
+	theParameters.expectDouble("SaveTimeDiff");
 
-	
 	theParameters.readParameters(cin);
 
 	// TODO: reorder this if possible
 	theParameters.add("GyroelectricRatio",theParameters.getDoubleParam("EDM")*0.01*elementarycharge/hbar);
 
+	double savetimediff = theParameters.getDoubleParam("SaveTimeDiff");
 	const int J = 4*((int)(theParameters.getDoubleParam("Lifetime")/savetimediff) + 14);
 	int N_particles = theParameters.getIntParam("NumberOfParticles");
 	TP_shared = new double[J];
@@ -268,7 +271,8 @@ int main(int nargs, char** argv)
 	}
 	Pend.close();
 	
-	delete[] TP_shared; TP_shared = NULL;
-	delete[] P_end; P_end = NULL;
+	// TODO: fix
+	//delete[] TP_shared; TP_shared = NULL;
+	//delete[] P_end; P_end = NULL;
 	return 0;
 }

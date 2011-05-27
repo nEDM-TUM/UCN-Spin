@@ -65,8 +65,9 @@ void EquationTracker::rkStep(const double &h, const double &t, Threevector &x, T
  * Ensure that track was already generated.
  */
 void EquationTracker::makeTrack(const double t_start, double h) {
+	debug << "makeTrack(" << t_start << ", " << h << ")" << std::endl;
 	// time until which the solution is to be calculated
-	const double goal = fTime + h;
+	const double goal = t_start + h;
 
 	// Generate track as far as necessary
 	while (fTime < goal) {
@@ -127,56 +128,55 @@ void EquationTracker::makeTrack(const double t_start, double h) {
 }
 
 Threevector EquationTracker::getPosition(double time) {
-	// rage in which fPosInterpolation is valid
-	static double min, max;
+	assert(fTracktimes.size() == fTrackvelocities.size() && fTrackvelocities.size() == fTrackpositions.size());
 
-	if (time < min || time > max || fPosInterpolation[0] == 0) {
-		assert(fTrackvelocities.size() == fTrackpositions.size() && fTracktimes.size() == fTrackpositions.size());
+	if (fTrackpositions.size() == 1) {
+		return fTrackpositions[0];
+	}
+	assert(fTrackpositions.size() > 1);
 
-		if (fTrackpositions.size() == 1) {
-			assert(fTrackpositions[0] == fPos);
-			return fPos;
+	static bool initialized = false;
+	static Polynom px(2), py(2), pz(2);
+	static double tmin = 0.;
+	static double tmax = 0.;
+
+	if (!initialized || time < tmin || time > tmax) {
+		unsigned int l = 0;
+		unsigned int u = fTracktimes.size() - 1;
+		assert(u > 0);
+
+		// Find time by bisection
+		while (u - l > 1) {
+			assert(u > l);
+
+			int i = l + (u-l)/2;
+
+			if (fTracktimes[i] > time)
+				u = i;
+			else // (fTracktimes[i] <=)
+				l = i;
 		}
 
-		assert(fTrackpositions.size() > 1);
-
-		// Find index for time
-		unsigned int il = 0; // lower bound
-		unsigned int iu = fTracktimes.size() - 1; // upper bound
-		unsigned int i = iu / 2; // test value
-
-		// bisect
-		while (iu - il != 1) {
-			debug << "bisecting: " << il << " -- " << iu << std::endl;
-			assert(iu > il);
-			int i = il + (iu - il)/2;
-
-			if (fTracktimes[i] <= time)
-				il = i;
-			else /* fTracktimes[i] > time */
-				iu = i;
-		}
-
-		assert(il < fTracktimes.size() && iu < fTracktimes.size());
-		double min = fTracktimes[il];
-		double max = fTracktimes[iu];
+		// set new limits
+		assert(l < fTracktimes.size() && u < fTracktimes.size());
+		double min = fTracktimes[l];
+		double max = fTracktimes[u];
 		assert(max > min);
 
-		// Need new InterpolationPolynomials
-		for (int j = 0; i < 3; j++) {
-			fPosInterpolation[j] = new InterpolationPolynomial(min, fTrackpositions[il][j], fTrackvelocities[il][j],
-					max, fTrackpositions[iu][j], fTrackvelocities[iu][j]);
-		}
+		// generate new interpolation polynomial
+		px = InterpolationPolynomial(min, fTrackpositions[l][0], fTrackvelocities[l][0],
+				max, fTrackpositions[u][0], fTrackvelocities[u][0]);
+		py = InterpolationPolynomial(min, fTrackpositions[l][1], fTrackvelocities[l][1],
+				max, fTrackpositions[u][1], fTrackvelocities[u][1]);
+		pz = InterpolationPolynomial(min, fTrackpositions[l][2], fTrackvelocities[l][2],
+				max, fTrackpositions[u][2], fTrackvelocities[u][2]);
+
+		initialized = true;
 	}
 
-
-	return Threevector((*fPosInterpolation[0])(time), (*fPosInterpolation[1])(time), (*fPosInterpolation[2])(time));
+	return Threevector(px(time), py(time), pz(time));
 }
 
 EquationTracker::~EquationTracker()
 {
-	for (int i = 0; i < 3; i++) {
-		delete fPosInterpolation[i];
-		fPosInterpolation[i] = 0;
-	}
 }

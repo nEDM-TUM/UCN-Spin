@@ -28,9 +28,6 @@ class EquationTracker : public Basetracking {
 		double fTime;
 		Threevector fPos;
 		Threevector fVel;
-
-		// for getPosition()
-		InterpolationPolynomial *fPosInterpolation[3];
 	
 	protected:
 		/**
