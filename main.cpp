@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 #include "TFile.h"
-#include "TNtuple.h"
+#include "TTree.h"
 
 #include "globals.h"
 #include "bfield.h"
@@ -68,6 +68,13 @@ int main(int nargs, char** argv)
 
 	// Open output file
 	TFile out(generateFileName().c_str(), "new");
+
+	// Trees for ROOT
+	double P_end[3]; // Polarization on end of simulation
+	double t_end; // time at end of simulation
+	TTree end_polarization("end_polarization", "Polarization at end of run");
+	end_polarization.Branch("polarization", P_end, "x/D:y:z");
+	end_polarization.Branch("time", &t_end, "t/D");
 
 	#pragma omp parallel
 	{
@@ -148,10 +155,11 @@ int main(int nargs, char** argv)
 				}
 				#pragma omp critical
 				{
-//					P_end[3*iP]   = stepper->dense_out(0,lifetime,hdid);
-//					P_end[3*iP+1] = stepper->dense_out(1,lifetime,hdid);
-//					P_end[3*iP+2] = stepper->dense_out(2,lifetime,hdid);
-//					iP++;
+					// fill TTree
+					for (int j = 0; j < 3; j++)
+						P_end[j] = stepper->dense_out(0,lifetime,hdid);
+					t_end = lifetime;
+					end_polarization.Fill();
 				}
 
 				cout << "Particle " << (i+1) << ": " << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
@@ -165,6 +173,8 @@ int main(int nargs, char** argv)
 		delete c; c = 0;
 
 	}
+
+	out.Write();
 		
 	return 0;
 }
