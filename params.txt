@@ -1,5 +1,5 @@
 NumberOfParticles	1000
-Lifetime			20
+Lifetime			300
 ErrorGoal			1e-11
 EfieldMag			0
 B0Gradient			1e-7

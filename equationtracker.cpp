@@ -2,6 +2,8 @@
 #include "debug.h"
 #include "interpolationpolynomial.h"
 
+#include <memory>
+
 /**
  * Construct a new @p EquationTracker Object. Do not use it
  * without calling initialize(void) first!
@@ -125,5 +127,56 @@ void EquationTracker::makeTrack(const double t_start, double h) {
 }
 
 Threevector EquationTracker::getPosition(double time) {
-	return fPos; // TODO?
+	// rage in which fPosInterpolation is valid
+	static double min, max;
+
+	if (time < min || time > max || fPosInterpolation[0] == 0) {
+		assert(fTrackvelocities.size() == fTrackpositions.size() && fTracktimes.size() == fTrackpositions.size());
+
+		if (fTrackpositions.size() == 1) {
+			assert(fTrackpositions[0] == fPos);
+			return fPos;
+		}
+
+		assert(fTrackpositions.size() > 1);
+
+		// Find index for time
+		unsigned int il = 0; // lower bound
+		unsigned int iu = fTracktimes.size() - 1; // upper bound
+		unsigned int i = iu / 2; // test value
+
+		// bisect
+		while (iu - il != 1) {
+			debug << "bisecting: " << il << " -- " << iu << std::endl;
+			assert(iu > il);
+			int i = il + (iu - il)/2;
+
+			if (fTracktimes[i] <= time)
+				il = i;
+			else /* fTracktimes[i] > time */
+				iu = i;
+		}
+
+		assert(il < fTracktimes.size() && iu < fTracktimes.size());
+		double min = fTracktimes[il];
+		double max = fTracktimes[iu];
+		assert(max > min);
+
+		// Need new InterpolationPolynomials
+		for (int j = 0; i < 3; j++) {
+			fPosInterpolation[j] = new InterpolationPolynomial(min, fTrackpositions[il][j], fTrackvelocities[il][j],
+					max, fTrackpositions[iu][j], fTrackvelocities[iu][j]);
+		}
+	}
+
+
+	return Threevector((*fPosInterpolation[0])(time), (*fPosInterpolation[1])(time), (*fPosInterpolation[2])(time));
+}
+
+EquationTracker::~EquationTracker()
+{
+	for (int i = 0; i < 3; i++) {
+		delete fPosInterpolation[i];
+		fPosInterpolation[i] = 0;
+	}
 }

@@ -4,6 +4,7 @@
 #include "threevector.h"
 #include "basetracking.h"
 #include "basegeometry.h"
+#include "interpolationpolynomial.h"
 
 /**
  * @class EquationTracker
@@ -17,6 +18,7 @@ class EquationTracker : public Basetracking {
 		void makeTrack(double t_start, double h);
 		void initialize();
 		Threevector getPosition(double time);
+		virtual ~EquationTracker();
 
 	private:
 		void rkStep(const double &h, const double &t, Threevector &x, Threevector &v);
@@ -26,6 +28,9 @@ class EquationTracker : public Basetracking {
 		double fTime;
 		Threevector fPos;
 		Threevector fVel;
+
+		// for getPosition()
+		InterpolationPolynomial *fPosInterpolation[3];
 	
 	protected:
 		/**

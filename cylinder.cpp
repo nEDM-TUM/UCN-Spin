@@ -217,6 +217,9 @@ one_more_try:
 			debug << "NO ROOT: Trying again with extended interval [" << t0 << "," << t1 << "]" << std::endl;
 			goto one_more_try;
 		}
+		else {
+			throw;
+		}
 	}
 
 	if (t_radius < t_height)

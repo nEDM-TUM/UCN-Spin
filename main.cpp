@@ -21,6 +21,8 @@ using namespace std;
 
 int main(int nargs, char** argv)
 {
+	initialize_debug();
+
 	double savetimediff = 2e-2, firsthtry = 1e-6;
 	int iP=0;
 	double *TP_shared = NULL, *P_end = NULL;
@@ -133,9 +135,9 @@ int main(int nargs, char** argv)
 				savetime = 0;
 				j = 0;
 				int lifetime1 = theParameters.getDoubleParam("Lifetime");
-				while(true) // TODO: Abbruchbedingung
+				debug << "Will run for " << lifetime1 << "seconds" << endl;
+				while(T <= lifetime1) // TODO: Abbruchbedingung
 				{
-					debug << "Entering endless loop" << endl;
 					try
 					{
 						stepper->step();
@@ -149,6 +151,7 @@ int main(int nargs, char** argv)
 					}
 					Told = T;
 					T = stepper->getT();
+					debug << "Stepper TIME: " << T << endl;
 					hdid = stepper->getHdid();
 					debug << "hdid = " << hdid << endl;
 					double st = 0.0;
