@@ -33,6 +33,7 @@ int main(int nargs, char** argv)
 	double firsthtry = 1e-6;
 	
 	Parameters theParameters;
+	theParameters.expectDouble("GyromagneticRatio");
 	theParameters.expectInt("NumberOfParticles");
 	theParameters.expectDouble("Lifetime");
 	theParameters.expectDouble("ErrorGoal");
@@ -93,7 +94,7 @@ int main(int nargs, char** argv)
 		Bfield *bfield = new Bfield(theParameters,tracker);
 
 
-		Derivatives * derivatives = new Derivatives(bfield);
+		Derivatives * derivatives = new Derivatives(theParameters, bfield);
 		double errorgoal = theParameters.getDoubleParam("ErrorGoal");
 		Dopr *stepper = new Dopr(firsthtry,	//initial stepsize guess 
 					 3,		//dimension of ODE sytem
@@ -156,8 +157,9 @@ int main(int nargs, char** argv)
 				#pragma omp critical
 				{
 					// fill TTree
-					for (int j = 0; j < 3; j++)
-						P_end[j] = stepper->dense_out(0,lifetime,hdid);
+					for (int j = 0; j < 3; j++) {
+						P_end[j] = stepper->dense_out(j,lifetime,hdid);
+					}
 					t_end = lifetime;
 					end_polarization.Fill();
 				}

@@ -1,16 +1,17 @@
-NumberOfParticles	5
-Lifetime			3
-ErrorGoal			1e-3
+GyromagneticRatio	30e+6
+NumberOfParticles	20
+Lifetime			900
+ErrorGoal			1e-10
 EfieldMag			0
 B0Gradient			1e-7
 GradientOffsetX		0
 GradientOffsetZ		0
 B1Gradient			0
 EDM					0
-Flipangle			45
+Flipangle			90
 Seed				552
 #GyroelectricRatio	EDM*0.01*elementarycharge/hbar ### TODO!
-CylinderRadius		3.0e-4
+CylinderRadius		0.235
 CylinderHeight		0.12
 B0					1.0e-6
 B1					1.0e-9
