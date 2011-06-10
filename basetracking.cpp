@@ -29,6 +29,11 @@ Basetracking::~Basetracking()
  */
 void Basetracking::initialize()
 {
+	// clear anything that may be left over from last run
+	fTracktimes.clear();
+	fTrackvelocities.clear();
+	fTrackpositions.clear();
+
 	fLasttime = fStarttime = 0.0;
 	Threevector pos;
 	Threevector vel;

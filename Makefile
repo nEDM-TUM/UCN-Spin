@@ -2,8 +2,8 @@ ROOT_CONFIG=/usr/local/ROOT/bin/root-config
 
 CXX=g++
 #CXXFLAGS=-Wall -O3 -march=native -fopenmp -ggdb -DNDEBUG
-CXXFLAGS=-Wall -O0 -pg -ggdb -Wno-unknown-pragmas
-#CXXFLAGS=-Wall -O3 -Wno-unknown-pragmas -DNDEBUG
+#CXXFLAGS=-Wall -O0 -pg -ggdb -Wno-unknown-pragmas
+CXXFLAGS=-Wall -O3 -Wno-unknown-pragmas -DNDEBUG
 CXXFLAGS+= $(shell $(ROOT_CONFIG) --cflags --ldflags --libs)
 LIBS=-lgsl -lgslcblas -lm
 OBJS=main.o bfield.o random.o dopr.o derivatives.o parameters.o cylinder.o threevector.o basetracking.o equationtracker.o polynom.o

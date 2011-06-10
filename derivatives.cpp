@@ -29,7 +29,7 @@ void Derivatives::operator()(const double t, const double y[], double derivs[])
 /**
  * Save the value of the derivatives into @p derivs[].
  *
- * @param[in] factor TODO: time?!
+ * @param[in] time current simulation time
  * @param[in] y[] current coordinates of the particle
  * @param[out] derivs[] is set to the derivatives
  */

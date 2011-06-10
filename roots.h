@@ -15,7 +15,10 @@ namespace Roots {
 
 	const unsigned int MAX_ITERATIONS = 10000;
 
-	class NoRoot {};
+	class NoRoot : public Exception {
+		public:
+			NoRoot() : Exception("no root found") {};
+	};
 }
 
 /**

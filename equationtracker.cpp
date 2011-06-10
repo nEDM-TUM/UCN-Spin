@@ -1,5 +1,6 @@
 #include "equationtracker.h"
 #include "debug.h"
+#include "parameters.h"
 #include "interpolationpolynomial.h"
 
 #include <memory>
@@ -10,9 +11,11 @@
  * @param ran    random number generator
  * @param geo    geometry
  */
-EquationTracker::EquationTracker(Random *ran, Basegeometry *geo) : 
-	Basetracking(ran, geo), fStepSize(0.01), fTime(0) // TODO: read stepsize as param
+EquationTracker::EquationTracker(const Parameters &params, Random *ran, Basegeometry *geo) :
+	Basetracking(ran, geo), fStepSize(0.01), fNewtonEps(params.getDoubleParam("CollisionAccuracy")),
+	fTime(0), fTimeout(params.getIntParam("Timeout"))
 {
+	fStepSize = params.getDoubleParam("TrackerStepSize");
 }
 
 /**
@@ -20,6 +23,7 @@ EquationTracker::EquationTracker(Random *ran, Basegeometry *geo) :
  * other method of EquationTracker is called.
  */
 void EquationTracker::initialize() {
+	fTimeout.reset();
 	fTime = 0;
 	Basetracking::initialize();
 	fPos = fTrackpositions.back();
@@ -71,6 +75,8 @@ void EquationTracker::makeTrack(const double t_start, double h) {
 
 	// Generate track as far as necessary
 	while (fTime < goal) {
+		fTimeout.check();
+
 		debug << "TIME: " << fTime << ", dt = " << fStepSize << std::endl;
 		debug << "Before step: " << fPos.toString() << " speed " << fVel.toString() << std::endl;
 		// Do one Runge-Kutta step
@@ -98,8 +104,7 @@ void EquationTracker::makeTrack(const double t_start, double h) {
 			InterpolationPolynomial pz(fTime, fPos[2], fVel[2], t1, pos1[2], vel1[2]);
 
 			// Find the time when the particle left the volume
-			// TODO: make eps flexible
-			double t_coll = fGeometry->findIntersection(fTime, t1, px, py, pz, 1e-10);
+			double t_coll = fGeometry->findIntersection(fTime, t1, px, py, pz, fNewtonEps);
 
 			// Do smaller step and advance time
 			rkStep(t_coll - fTime, fTime, fPos, fVel);

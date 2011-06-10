@@ -6,6 +6,7 @@
 #include <vector>
 #include <sstream>
 #include <ctime>
+#include <limits>
 #include <unistd.h>
 
 #include "TFile.h"
@@ -21,6 +22,8 @@
 #include "gravitationtracker.h"
 #include "cylinder.h"
 #include "debug.h"
+#include "exceptions.h"
+#include "timeout.h"
 
 using namespace std;
 
@@ -58,6 +61,10 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("SolenoidHeight");
 	theParameters.expectDouble("SolenoidRadius");
 	theParameters.expectDouble("SaveTimeDiff");
+	theParameters.expectDouble("TrackerStepSize");
+	theParameters.expectDouble("GravitationConstant");
+	theParameters.expectDouble("CollisionAccuracy");
+	theParameters.expectInt("Timeout");
 
 	theParameters.readParameters(cin);
 
@@ -77,9 +84,25 @@ int main(int nargs, char** argv)
 	end_polarization.Branch("polarization", P_end, "x/D:y:z");
 	end_polarization.Branch("time", &t_end, "t/D");
 
+	double random_val;
+	TTree random_tree("random", "Random numbers from start of each run");
+	random_tree.Branch("random", &random_val, "random/D");
+
+	float start_velocity[3];
+	float start_position[3];
+	TTree start_tree("start_values", "Place and velocity at start of run");
+	start_tree.Branch("velocity", start_velocity, "x:y:z");
+	start_tree.Branch("position", start_position, "x:y:z");
+
+	Random seed_generator(theParameters.getIntParam("Seed"));
+
 	#pragma omp parallel
 	{
-		Random *randgen = new Random(theParameters.getIntParam("Seed"));
+		Random *randgen;
+		#pragma omp critical
+		{
+			randgen = new Random(seed_generator.generate_seed());
+		}
 		double T = 0.0;
 		double flipangle = theParameters.getDoubleParam("Flipangle");
 		double P[3] = {0.0,sin(-flipangle/180*M_PI),cos(-flipangle/180*M_PI)};	//the polarization-vector
@@ -88,8 +111,8 @@ int main(int nargs, char** argv)
 		int savetime = 0;
 
 		// TODO
-		Cylinder *c = new Cylinder(randgen, 5, 2);
-		GravitationTracker *tracker = new GravitationTracker(randgen, c, 9.81); // TODO: parameters
+		Cylinder *c = new Cylinder(theParameters, randgen);
+		GravitationTracker *tracker = new GravitationTracker(theParameters, randgen, c); // TODO: parameters
 
 		Bfield *bfield = new Bfield(theParameters,tracker);
 
@@ -109,21 +132,39 @@ int main(int nargs, char** argv)
 					 );
 		
 		#pragma omp for
-			for (int i = 0; i < N_particles; i++)
-			{
+		for (int i = 0; i < N_particles; i++)
+		{
+			try {
+				Timeout timeout(theParameters.getIntParam("Timeout"));
+
 				cout << "Particle " << i << "/" << N_particles << endl;
+				#pragma omp critical
+				{
+					random_val = randgen->uniform_double(0, 1);
+					random_tree.Fill();
+				}
 				T = 0.0;
 				int Nsteps = 0;
 				P[0] = 0.0;
 				P[1] = sin(-flipangle/180*M_PI);
 				P[2] = cos(-flipangle/180*M_PI);
 				tracker->initialize();
+				#pragma omp critical
+				{
+					for (int i = 0; i < 3; i++) {
+						start_velocity[i] = tracker->fTrackvelocities[0][i];
+						start_position[i] = tracker->fTrackpositions[0][i];
+						start_tree.Fill();
+					}
+				}
 				stepper->reset(firsthtry, P, dPdt, T);
 				savetime = 0;
 				int lifetime = theParameters.getDoubleParam("Lifetime");
 				debug << "Will run for " << lifetime << "seconds" << endl;
 				while(T <= lifetime) // TODO: Abbruchbedingung
 				{
+					timeout.check();
+
 					try
 					{
 						stepper->step();
@@ -142,7 +183,7 @@ int main(int nargs, char** argv)
 					debug << "hdid = " << hdid << endl;
 
 //					while(T >= (st = savetime*savetimediff))
-//					{
+//						{
 //						Pol[0] = stepper->dense_out(0,st,hdid);
 //						Pol[1] = stepper->dense_out(1,st,hdid);
 //						Pol[2] = stepper->dense_out(2,st,hdid);
@@ -153,19 +194,31 @@ int main(int nargs, char** argv)
 //						savetime++;
 //						j++;
 //					}			
-				}
+				} // while
+
+				// write end polarization
 				#pragma omp critical
 				{
 					// fill TTree
 					for (int j = 0; j < 3; j++) {
-						P_end[j] = stepper->dense_out(j,lifetime,hdid);
+							P_end[j] = stepper->dense_out(j,lifetime,hdid);
 					}
 					t_end = lifetime;
 					end_polarization.Fill();
 				}
 
 				cout << "Particle " << (i+1) << ": " << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
+
+			} // try
+			catch (const Exception& e) {
+				#pragma omp critical
+				{
+					cout << "Exception for particle " << i << ": " << e.what() << endl;
+				}
 			}
+
+		} // for
+
 		
 		delete randgen; randgen = 0;
 		delete stepper; stepper = 0;

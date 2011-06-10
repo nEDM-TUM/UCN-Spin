@@ -5,6 +5,7 @@
 #include "basetracking.h"
 #include "basegeometry.h"
 #include "interpolationpolynomial.h"
+#include "timeout.h"
 
 /**
  * @class EquationTracker
@@ -14,7 +15,7 @@
  */
 class EquationTracker : public Basetracking {
 	public:
-		EquationTracker(Random *ran, Basegeometry *geo);
+		EquationTracker(const Parameters&, Random *ran, Basegeometry *geo);
 		void makeTrack(double t_start, double h);
 		void initialize();
 		Threevector getPosition(double time);
@@ -24,10 +25,15 @@ class EquationTracker : public Basetracking {
 		void rkStep(const double &h, const double &t, Threevector &x, Threevector &v);
 		double fStepSize; ///< stepsize of the Runge-Kutta integration
 
+		const double fNewtonEps; ///< accuracy of roots found with safeNewton
+
 		// State for makeTrack()
 		double fTime;
 		Threevector fPos;
 		Threevector fVel;
+
+		// Timeout
+		Timeout fTimeout;
 	
 	protected:
 		/**
