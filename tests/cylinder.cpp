@@ -2,8 +2,10 @@
 #include "../threevector.h"
 #include "../random.h"
 #include "../gravitationtracker.h"
+#include "../debug.h"
 #include <iostream>
 #include <cctype>
+#include <unistd.h>
 
 using namespace std;
 
@@ -14,6 +16,13 @@ inline void outputThreevector(const Threevector &t) {
 int main(int argc, char *argv[]) {
 	// how long the simulation should run
 	const double T = 300;
+
+	// how long until the simulation is aborted
+	const unsigned int TIMEOUT = 300; // seconds
+
+	alarm(TIMEOUT);
+
+	initialize_debug();
 
 	// seed for rng
 	int seed = 1;
@@ -26,11 +35,13 @@ int main(int argc, char *argv[]) {
 	Cylinder c(&ran, 5, 2);
 
 	// Gravitation tracker
-	GravitationTracker t(&ran, &c, 9.18);
+	GravitationTracker t(&ran, &c, 9.81);
 	t.initialize();
 
 	// Make all of the track at once
-	t.makeTrack(T);
+	t.makeTrack(0, T);
+
+	alarm(TIMEOUT); // Restart timer for writing of output
 
 	// output track
 	for (int i = 0; i < t.fTracktimes.size(); i++) {
@@ -40,4 +51,6 @@ int main(int argc, char *argv[]) {
 		outputThreevector(t.fTrackvelocities[i]);
 		cout << endl;
 	}
+
+	return 0;
 }

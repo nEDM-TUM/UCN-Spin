@@ -1,8 +1,10 @@
 #include "cylinder.h"
 #include "roots.h"
 #include "debug.h"
+#include "parameters.h"
 #include <math.h>
 #include <iostream>
+#include <cassert>
 
 /**
  * @class Cylinder
@@ -16,8 +18,8 @@
  * @param radius radius of the cylinder
  * @param height height of the cylinder
  */
-Cylinder::Cylinder(Random *ran, double radius, double height)
-	: Basegeometry(ran), fRadius(radius), fRSquared(radius*radius), fHeight(height), fReflectRadius(false), fReflectTop(false), fReflectBottom(false)
+Cylinder::Cylinder(const Parameters &params, Random *ran)
+	: Basegeometry(ran), fRadius(params.getDoubleParam("CylinderRadius")), fRSquared(fRadius*fRadius), fHeight(params.getDoubleParam("CylinderHeight")), fReflectRadius(false), fReflectTop(false), fReflectBottom(false)
 {
 	debug << "New cylinder, r = " << fRadius << ", h = " << fHeight << ", r^2 = " << fRSquared << std::endl;
 }
@@ -26,12 +28,12 @@ void Cylinder::initialize(Threevector &v, Threevector &x) {
 	// initialize x[0] and x[1] to be inside of radius
 	do {
 		for (int i = 0; i <= 1; i++)
-			x[i] = (fRandom->uniform() - .5) * 2 * fRadius;
+			x[i] = fRandom->uniform_double(-fRadius, fRadius);
 	}
 	while (!insideRadius(x));
 	
 	// initialize x[2] to be inside of height
-	x[2] = fabs(fRandom->uniform()) * fHeight;
+	x[2] = fRandom->uniform_double(0, fHeight);
 
 	// initialize velocity randomly TODO!!!
 	for (int i = 0; i < 3; i++)
@@ -98,9 +100,9 @@ bool Cylinder::boundsCheck(const Threevector &x) {
 	}
 	fReflectRadius = !insideRadius(x);
 
-	debug << "fReflectTop = " << fReflectTop << "fReflectBottom = " << fReflectBottom << ", fReflectRadius = " << fReflectRadius << std::endl;
+	debug << "fReflectTop = " << fReflectTop << ", fReflectBottom = " << fReflectBottom << ", fReflectRadius = " << fReflectRadius << std::endl;
 
-	/// If any of the flags is set, return true to signal thar reflect must be called.
+	/// If any of the flags is set, return true to signal that reflect must be called.
 	return (fReflectRadius || fReflectTop || fReflectBottom);
 }
 
@@ -171,29 +173,54 @@ void Cylinder::reflectRadius(Threevector &v, const Threevector &x) {
 	}
 }
 
-double Cylinder::findIntersection(const double t0, const double t1, const Polynom &px, const Polynom &py, const Polynom &pz, double eps)
+double Cylinder::findIntersection(double t0, double t1, const Polynom &px, const Polynom &py, const Polynom &pz, double eps)
 {
+	assert(eps > 0);
+	
+	bool try_again = true;
+one_more_try:
 	double t_height = INFINITY;
 	double t_radius = INFINITY;
 	debug << "Looking for intersection in [" << t0 << "," << t1 << "]" << std::endl;
 
-	if (fReflectRadius) {
-		// Polynomial for radius: x^2 + y^2 - r^2 == 0
-		Polynom rsquared(px*px + py*py - Polynom(0, fRSquared));
-		debug << "Looking for radius intersection, r^2(t) = " << rsquared.toString() << std::endl;
+	try {
+		if (fReflectRadius) {
+			// Polynomial for radius: x^2 + y^2 - r^2 == 0
+			debug << "Constructing r^2(t) polynomial from px = " << px.toString() << " and py = " << py.toString() << " with offset " << fRSquared << std::endl;
+			Polynom rint(px*px + py*py); // Calculate x^2 + y^2
+			rint[0] -= fRSquared; // Apply offset
+			debug << "Looking for radius intersection, r^2(t) = " << rint.toString() << std::endl;
 
-		// Find intersection time
-		t_radius = Roots::safeNewton(rsquared, rsquared.derivative(), t0, t1, eps);
+			// Find intersection time
+			t_radius = Roots::safeNewton(rint, rint.derivative(), t0, t1, eps);
+		}
+
+		if (fReflectBottom) {
+			debug << "Looking for bottom intersection, z(t) = " << pz.toString() << std::endl;
+			t_height = Roots::safeNewton(pz, pz.derivative(), t0, t1, eps);
+		}
+
+		if (fReflectTop) {
+			debug << "Looking for top intersection, z(t) = " << pz.toString() << std::endl;
+			Polynom top(pz);
+			top[0] -= fHeight; // Apply offset
+			t_height = Roots::safeNewton(top, top.derivative(), t0, t1, eps);
+		}
 	}
-
-	if (fReflectBottom) {
-		debug << "Looking for bottom intersection, z(t) = " << pz.toString() << std::endl;
-		t_height = Roots::safeNewton(pz, pz.derivative(), t0, t1, eps);
-	}
-
-	if (fReflectTop) {
-		debug << "Looking for top intersection, z(t) = " << pz.toString() << std::endl;
-		t_height = Roots::safeNewton(pz - Polynom(0, fHeight), pz.derivative(), t0, t1, eps);
+	catch (Roots::NoRoot) {
+		if (try_again) {
+			// Try again once with extended Interval
+			try_again = false;
+			const double delta = (t1-t0)/2;
+			assert(delta > 0);
+			t0 -= delta;
+			t1 += delta;
+			debug << "NO ROOT: Trying again with extended interval [" << t0 << "," << t1 << "]" << std::endl;
+			goto one_more_try;
+		}
+		else {
+			throw;
+		}
 	}
 
 	if (t_radius < t_height)

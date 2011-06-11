@@ -3,11 +3,12 @@
 
 #include "basegeometry.h"
 #include "threevector.h"
+#include "parameters.h"
 
 class Cylinder : public Basegeometry
 {
 	public:
-		Cylinder(Random *ran, double radius, double height);
+		Cylinder(const Parameters& params, Random *ran);
 		
 		bool contains(const Threevector &x) const;
 		bool insideHeight(const Threevector &x) const;
@@ -18,7 +19,7 @@ class Cylinder : public Basegeometry
 
 		void initialize(Threevector &v, Threevector &x);
 
-		double findIntersection(const double t0, const double t1,
+		double findIntersection(double t0, double t1,
 				const Polynom &px, const Polynom &py, const Polynom &pz, double eps);
 
 	private:

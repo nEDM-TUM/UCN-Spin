@@ -1,5 +1,3 @@
-using namespace std;
-
 #include <iostream>
 #include <fstream>
 #include <math.h>
@@ -7,6 +5,13 @@ using namespace std;
 #include <string>
 #include <vector>
 #include <sstream>
+#include <ctime>
+#include <limits>
+#include <unistd.h>
+
+#include "TFile.h"
+#include "TTree.h"
+
 #include "globals.h"
 #include "bfield.h"
 #include "random.h"
@@ -14,15 +19,24 @@ using namespace std;
 #include "dopr.h"
 #include "derivatives.h"
 #include "parameters.h"
+#include "gravitationtracker.h"
+#include "cylinder.h"
+#include "debug.h"
+#include "exceptions.h"
+#include "timeout.h"
 
+using namespace std;
+
+string generateFileName(void);
 
 int main(int nargs, char** argv)
 {
-	double savetimediff = 2e-2, firsthtry = 1e-6;
-	int iP=0;
-	double *TP_shared = NULL, *P_end = NULL;
+	initialize_debug();
+
+	double firsthtry = 1e-6;
 	
 	Parameters theParameters;
+	theParameters.expectDouble("GyromagneticRatio");
 	theParameters.expectInt("NumberOfParticles");
 	theParameters.expectDouble("Lifetime");
 	theParameters.expectDouble("ErrorGoal");
@@ -38,61 +52,72 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("CylinderHeight");
 	theParameters.expectDouble("B0");
 	theParameters.expectDouble("B1");
+	theParameters.expectDouble("mu");
+	theParameters.expectDouble("radiustube");
+	theParameters.expectDouble("vdrift");
+	theParameters.expectDouble("sigma");
+	theParameters.expectDouble("SolenoidField");
+	theParameters.expectDouble("SolenoidCurrent");
+	theParameters.expectDouble("SolenoidHeight");
+	theParameters.expectDouble("SolenoidRadius");
+	theParameters.expectDouble("SaveTimeDiff");
+	theParameters.expectDouble("TrackerStepSize");
+	theParameters.expectDouble("GravitationConstant");
+	theParameters.expectDouble("CollisionAccuracy");
+	theParameters.expectInt("Timeout");
 
 	theParameters.readParameters(cin);
 
 	// TODO: reorder this if possible
 	theParameters.add("GyroelectricRatio",theParameters.getDoubleParam("EDM")*0.01*elementarycharge/hbar);
 
-	const int J = 4*((int)(theParameters.getDoubleParam("Lifetime")/savetimediff) + 14);
-	int N_particles = theParameters.getIntParam("NumberOfParticles");
-	TP_shared = new double[J];
-	P_end = new double[3*N_particles];
-	#pragma omp parallel for
-	for(int z=0; z<J; z++)
-	{
-		TP_shared[z] = 0.0;
-	}
-	#pragma omp parallel for
-	for(int z=0; z<3*N_particles; z++)
-	{
-		P_end[z] = 0.0;
-	}
-		
-	Random *randgen = new Random(theParameters.getIntParam("Seed"));
+	const double savetimediff = theParameters.getDoubleParam("SaveTimeDiff");
+	const int N_particles = theParameters.getIntParam("NumberOfParticles");
+
+	// Open output file
+	TFile out(generateFileName().c_str(), "new");
+
+	// Trees for ROOT
+	double P_end[3]; // Polarization on end of simulation
+	double t_end; // time at end of simulation
+	TTree end_polarization("end_polarization", "Polarization at end of run");
+	end_polarization.Branch("polarization", P_end, "x/D:y:z");
+	end_polarization.Branch("time", &t_end, "t/D");
+
+	double random_val;
+	TTree random_tree("random", "Random numbers from start of each run");
+	random_tree.Branch("random", &random_val, "random/D");
+
+	float start_velocity[3];
+	float start_position[3];
+	TTree start_tree("start_values", "Place and velocity at start of run");
+	start_tree.Branch("velocity", start_velocity, "x:y:z");
+	start_tree.Branch("position", start_position, "x:y:z");
+
+	Random seed_generator(theParameters.getIntParam("Seed"));
 
 	#pragma omp parallel
 	{
+		Random *randgen;
+		#pragma omp critical
+		{
+			randgen = new Random(seed_generator.generate_seed());
+		}
 		double T = 0.0;
-		double Told = 0.0;
 		double flipangle = theParameters.getDoubleParam("Flipangle");
 		double P[3] = {0.0,sin(-flipangle/180*M_PI),cos(-flipangle/180*M_PI)};	//the polarization-vector
 		double dPdt[3] = {0.0};
 		double hdid = 0.0;
 		int savetime = 0;
-		double *tempTP = new double[J];
-		double *TP = new double[J];
-		for(int z=0; z<J; z++)
-		{
-			tempTP[z] = 0.0;
-			TP[z] = 0.0;
-		}
-		int i=0,j=0;
-		double Pol[3] = {0.0,0.0,0.0};
 
-		for(int z=0; z<J; z++)
-		{
-			TP[z] = 0.0;
-		}
-		
-		string rotationBfilename = "./RotatingBfield.txt";	//File which contains B-field frequencies and times
-		Bfield *bfield = new Bfield(rotationBfilename,theParameters);
-													
-		Tracking *tracker = new Tracking(randgen, 		//Pointer to the random-generator
-						 bfield,		//Pointer to the magnetic field
-						 theParameters);
+		// TODO
+		Cylinder *c = new Cylinder(theParameters, randgen);
+		GravitationTracker *tracker = new GravitationTracker(theParameters, randgen, c); // TODO: parameters
 
-		Derivatives * derivatives = new Derivatives(tracker);
+		Bfield *bfield = new Bfield(theParameters,tracker);
+
+
+		Derivatives * derivatives = new Derivatives(theParameters, bfield);
 		double errorgoal = theParameters.getDoubleParam("ErrorGoal");
 		Dopr *stepper = new Dopr(firsthtry,	//initial stepsize guess 
 					 3,		//dimension of ODE sytem
@@ -102,151 +127,124 @@ int main(int nargs, char** argv)
 					 derivatives,
 					 errorgoal,	//relative error tolerance
 					 errorgoal,	//absolute error tolerance
-					 true);		//dense output?
+					 true,		//dense output?
+					 tracker
+					 );
 		
 		#pragma omp for
-			for(i=0; i<N_particles; i++)
-			{
+		for (int i = 0; i < N_particles; i++)
+		{
+			try {
+				Timeout timeout(theParameters.getIntParam("Timeout"));
+
 				cout << "Particle " << i << "/" << N_particles << endl;
+				#pragma omp critical
+				{
+					random_val = randgen->uniform_double(0, 1);
+					random_tree.Fill();
+				}
 				T = 0.0;
-				Told = 0.0;
 				int Nsteps = 0;
 				P[0] = 0.0;
 				P[1] = sin(-flipangle/180*M_PI);
 				P[2] = cos(-flipangle/180*M_PI);
 				tracker->initialize();
+				#pragma omp critical
+				{
+					for (int i = 0; i < 3; i++) {
+						start_velocity[i] = tracker->fTrackvelocities[0][i];
+						start_position[i] = tracker->fTrackpositions[0][i];
+						start_tree.Fill();
+					}
+				}
 				stepper->reset(firsthtry, P, dPdt, T);
 				savetime = 0;
-				j = 0;
-				int lifetime1 = theParameters.getDoubleParam("Lifetime");
-				while(T < lifetime1)
+				int lifetime = theParameters.getDoubleParam("Lifetime");
+				debug << "Will run for " << lifetime << "seconds" << endl;
+				while(T <= lifetime) // TODO: Abbruchbedingung
 				{
+					timeout.check();
+
 					try
 					{
 						stepper->step();
 						Nsteps++;
+						debug << "Step " << Nsteps << " done" << endl;
 					}
 					catch(char const* error)
 					{
 						cerr << "ERROR: "<< error << "at t = " << T << endl;
 						exit(1);
 					}
-					Told = T;
-					T = stepper->getT();			
+					
+					T = stepper->getT();
+					debug << "Stepper TIME: " << T << endl;
 					hdid = stepper->getHdid();
-					double st = 0.0;
-					while(T >= (st = savetime*savetimediff))
-					{
-						Pol[0] = stepper->dense_out(0,st,hdid);
-						Pol[1] = stepper->dense_out(1,st,hdid);
-						Pol[2] = stepper->dense_out(2,st,hdid);
-						tempTP[4*j] = st;
-						tempTP[4*j+1] = Pol[0];
-						tempTP[4*j+2] = Pol[1];
-						tempTP[4*j+3] = Pol[2];
-						savetime++;
-						j++;
-					}			
-				}
+					debug << "hdid = " << hdid << endl;
+
+//					while(T >= (st = savetime*savetimediff))
+//						{
+//						Pol[0] = stepper->dense_out(0,st,hdid);
+//						Pol[1] = stepper->dense_out(1,st,hdid);
+//						Pol[2] = stepper->dense_out(2,st,hdid);
+//						tempTP[4*j] = st;
+//						tempTP[4*j+1] = Pol[0];
+//						tempTP[4*j+2] = Pol[1];
+//						tempTP[4*j+3] = Pol[2];
+//						savetime++;
+//						j++;
+//					}			
+				} // while
+
+				// write end polarization
 				#pragma omp critical
 				{
-					P_end[3*iP]   = stepper->dense_out(0,lifetime1,hdid);
-					P_end[3*iP+1] = stepper->dense_out(1,lifetime1,hdid);
-					P_end[3*iP+2] = stepper->dense_out(2,lifetime1,hdid);
-					iP++;
+					// fill TTree
+					for (int j = 0; j < 3; j++) {
+							P_end[j] = stepper->dense_out(j,lifetime,hdid);
+					}
+					t_end = lifetime;
+					end_polarization.Fill();
 				}
-				for(int z=0; z<J; z++)
-				{
-					TP[z] += tempTP[z];
-				}
-				cout << "Particle " << i << ": " << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
-			}
-		#pragma omp critical
-		{
-			for(int z=0; z<J; z++)
-			{
-				TP_shared[z] += TP[z];
-			}
-		}
-		
-		delete stepper; stepper = NULL;
-		delete derivatives; derivatives = NULL;
-		delete tracker; tracker = NULL;
-		delete bfield; bfield = NULL;
-		
-		delete[] tempTP; tempTP = NULL;
-		delete[] TP; TP = NULL;
-	}
-	string ofilename = "";
-	string ofilename1 = "";
-	stringstream NumberString;
-	NumberString << N_particles;
-	ofilename1 = "("+NumberString.str()+")_";
-	NumberString.str("");
-	NumberString.clear();
-	NumberString << theParameters.getDoubleParam("Lifetime");
-	ofilename = "Lifetime("+NumberString.str()+")_";
-	NumberString.str("");
-	NumberString.clear();
-	NumberString << theParameters.getDoubleParam("ErrorGoal");
-	ofilename += "Err("+NumberString.str()+")_";
-	NumberString.str("");
-	NumberString.clear();
-	NumberString << theParameters.getDoubleParam("EfieldMag");
-	ofilename += "Efield("+NumberString.str()+")_";
-	NumberString.str("");
-	NumberString.clear();
-	NumberString << theParameters.getDoubleParam("B0Gradient");
-	ofilename += "Gradient("+NumberString.str()+")_";
-	NumberString.str("");
-	NumberString.clear();
-	NumberString << theParameters.getDoubleParam("GradientOffsetX");
-	ofilename += "x-offset("+NumberString.str()+")_";
-	NumberString.str("");
-	NumberString.clear();
-	NumberString << theParameters.getDoubleParam("GradientOffsetZ");
-	ofilename += "z-offset("+NumberString.str()+")_";
-	NumberString.str("");
-	NumberString.clear();
-	NumberString << theParameters.getDoubleParam("B1Gradient");
-	ofilename += "B1-gradient("+NumberString.str()+")_";
-	NumberString.str("");
-	NumberString.clear();
-	NumberString << theParameters.getDoubleParam("B1");
-	ofilename += "B1("+NumberString.str()+")_";
-	NumberString.str("");
-	NumberString.clear();
-	NumberString << theParameters.getDoubleParam("EDM");
-	ofilename += "EDM("+NumberString.str()+")_";
-	NumberString.str("");
-	NumberString.clear();
-	NumberString << theParameters.getDoubleParam("Flipangle");
-	ofilename += "Flip("+NumberString.str()+")_";
-	NumberString.str("");
-	NumberString.clear();
-	NumberString << theParameters.getIntParam("Seed");
-	ofilename += "seed("+NumberString.str()+").dat";
-	NumberString.str("");
-	NumberString.clear();
 
-	ofstream Poutput(("./output/Pol/Pol"+ofilename1+ofilename).c_str());
-	Poutput.precision(15);
-	for(int z=0; z<(J-1)/4; z++)
-	{
-		Poutput << TP_shared[z*4]/N_particles << "\t" << TP_shared[z*4+1]/N_particles << "\t" << TP_shared[z*4+2]/N_particles 
-				<< "\t" << TP_shared[z*4+3]/N_particles << endl;
+				cout << "Particle " << (i+1) << ": " << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
+
+			} // try
+			catch (const Exception& e) {
+				#pragma omp critical
+				{
+					cout << "Exception for particle " << i << ": " << e.what() << endl;
+				}
+			}
+
+		} // for
+
+		
+		delete randgen; randgen = 0;
+		delete stepper; stepper = 0;
+		delete derivatives; derivatives = 0;
+		delete tracker; tracker = 0;
+		delete bfield; bfield = 0;
+		delete c; c = 0;
+
 	}
-	Poutput.close();
-	
-	ofstream Pend(("./output/Pend/Pend"+ofilename1+ofilename).c_str());
-	Pend.precision(15);
-	for(int z=0; z<N_particles; z++)
-	{
-		Pend << P_end[3*z] << "\t" << P_end[3*z+1] << "\t" << P_end[3*z+2] << endl;
-	}
-	Pend.close();
-	
-	delete[] TP_shared; TP_shared = NULL;
-	delete[] P_end; P_end = NULL;
+
+	out.Write();
+		
 	return 0;
+}
+
+string generateFileName(void) {
+	const size_t MAX_DATE_LEN = 100;
+	time_t rawtime;
+	char date[MAX_DATE_LEN] = "";
+
+	// get date
+	time(&rawtime);
+	strftime(date, MAX_DATE_LEN, "%Y-%m-%d-%H-%M-%S-%Z-pid-", gmtime(&rawtime));
+
+	// add pid
+	ostringstream o;
+	o << "./output/" << date << getpid() << ".root";
+	return o.str();
 }

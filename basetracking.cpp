@@ -20,12 +20,20 @@ Basetracking::Basetracking(Random *ran, Basegeometry *geo)
 {
 }
 
+Basetracking::~Basetracking()
+{
+}
 /**
  * Initializes the track portion. Generates a starting point and sets the
  * starting time to zero
  */
 void Basetracking::initialize()
 {
+	// clear anything that may be left over from last run
+	fTracktimes.clear();
+	fTrackvelocities.clear();
+	fTrackpositions.clear();
+
 	fLasttime = fStarttime = 0.0;
 	Threevector pos;
 	Threevector vel;

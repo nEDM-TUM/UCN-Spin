@@ -1,4 +1,6 @@
 #include <sstream>
+#include <algorithm>
+#include <cassert>
 #include "debug.h"
 #include "polynom.h"
 
@@ -74,12 +76,18 @@ double Polynom::operator()(double x) const {
  * Return the degree of the polynomial.
  * @returns the biggest n with <tt>coeffs[n] != 0</tt>.
  */
-int Polynom::degree() const {
-	// Reduce degree if degree is smaller than size of vector
-	int deg = coeffs.size() - 1;
+unsigned int Polynom::degree() const {
+	if (coeffs.size() == 0)
+		return 0;
+	assert(coeffs.size() > 0);
 
-	while (deg >= 0 && coeffs[deg] == 0)
+	// Reduce degree if degree is smaller than size of vector
+	unsigned int deg = coeffs.size() - 1;
+
+	while (deg > 0 && coeffs[deg] == 0)
 		deg--;
+
+	assert(deg >= 0);
 
 	return deg;
 }
@@ -114,7 +122,7 @@ double &Polynom::operator[](unsigned int n) {
  * Compare two Polynom objects for equality.
  */
 bool operator==(const Polynom &l, const Polynom &r) {
-	const int deg = l.degree();
+	const unsigned int deg = l.degree();
 
 	if (deg != r.degree())
 		return false;
@@ -137,14 +145,35 @@ bool operator!=(const Polynom &l, const Polynom &r) {
  * Add two Polynom objects.
  */
 Polynom operator+(const Polynom &l, const Polynom &r) {
-	const int deg = l.degree();
-	if (deg < r.degree())
-		return r+l;
+	// l should be the polynomials with the lower degree, r the one with the higher (or equal) degree. See below for 
+	// how this is made sure.
 
-	Polynom t(deg);
+	// common_deg must be the degree that both polynomials have in common, that is the lower of the two degrees
+	const unsigned int common_deg = l.degree();
+	// max_deg must be the greater of the two degrees
+	const unsigned int max_deg = r.degree();
 
-	for (int i = 0; i < deg; i++)
-		t[i] = l[i]+r[i];
+	// Make sure l is the polynomial of lower degree (see above)
+	if (common_deg > max_deg)
+		return r+l; // Change roles of r and l
+
+	debug << "Adding polynomials " << l.toString() << "  +  " << r.toString() << ", degrees: " << common_deg << ", " << max_deg << std::endl;
+
+	assert(common_deg <= max_deg);
+
+	// The resulting polynomial will have the maximum degree of both
+	Polynom t(max_deg);
+
+	for (unsigned int i = 0; i <= max_deg; i++) {\
+		if (i <= common_deg) {
+			t[i] = l[i]+r[i]; // Add both polynomials
+		}
+		else {
+			assert(i > l.degree());
+			assert(i <= r.degree());
+			t[i] = r[i]; // Only r[i] has entries of this degree
+		}
+	}
 
 	return t;
 }
@@ -161,7 +190,7 @@ Polynom operator-(const Polynom &l, const Polynom &r) {
  */
 Polynom Polynom::operator-() const {
 	Polynom t(degree());
-	for (int i = 0; i < degree(); i++)
+	for (unsigned int i = 0; i < degree(); i++)
 		t[i] = -coeffs[i];
 	return t;
 }
@@ -176,12 +205,19 @@ Polynom operator*(const Polynom &l, const Polynom &r) {
 
 	// Create temporary new polynomial
 	Polynom res(dl+dr);
+	
+	debug << "Created temporary Polynomial: " << res.toString() << std::endl;
+	for (unsigned int i = 0; i < res.coeffs.size(); i++) {
+		debug << "coeffs[" << i << "] = " << res.coeffs[i] << std::endl;
+	}
+	debug << "Degree of result polynomial is: " << res.degree() << std::endl;
 
 	// Multiply polynomials
 	for (int il = 0; il <= dl; il++)
 		for (int ir = 0; ir <= dr; ir++)
 			res[il+ir] += r[ir] * l[il];
 
+	debug << "Multiplication returning: " << res.toString() << std::endl;
 	return res;
 }
 
@@ -191,6 +227,11 @@ Polynom operator*(const Polynom &l, const Polynom &r) {
 std::string Polynom::toString() const {
 	bool first = true;
 	std::ostringstream o;
+
+#ifndef NDEBUG
+	o << std::scientific;
+	o.precision(15);
+#endif
 
 	for (int i = degree(); i >= 0; i--) {
 		const double c = coeffs[i];

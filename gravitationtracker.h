@@ -1,5 +1,6 @@
 #include "equationtracker.h"
 #include "basegeometry.h"
+#include "parameters.h"
 
 class GravitationTracker : public EquationTracker {
 	public:
@@ -7,9 +8,10 @@ class GravitationTracker : public EquationTracker {
 		 * Construct a new GravitationTracker and set the acceleration to @p g.
 		 * @param g acceleration due to gravitation, e.g. g = 9.81
 		 */
-		explicit GravitationTracker(Random *ran, Basegeometry *geo, const double g) :
-			EquationTracker(ran, geo), minus_g(-g)
-		{}
+		explicit GravitationTracker(const Parameters &params, Random *ran, Basegeometry *geo) :
+			EquationTracker(params, ran, geo), minus_g(params.getDoubleParam("GravitationConstant"))
+		{
+		}
 
 		/**
 		 * This class represents the equation of motion for a particle in the
