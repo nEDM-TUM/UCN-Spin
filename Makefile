@@ -1,4 +1,5 @@
-ROOT_CONFIG=/usr/local/ROOT/bin/root-config
+include config.mk
+ROOT_CONFIG=$(ROOT_DIR)/bin/root-config
 
 CXX=g++
 #CXXFLAGS=-Wall -O3 -march=native -fopenmp -ggdb -DNDEBUG
