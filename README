@@ -25,6 +25,28 @@ Build instructions
   - Run make
 
 
+Build options
+=============
+
+The Makefile supports different sets of build options:
+
+  - release will build with multithreading and full optimisations. It
+    should only be used, if the code has been throughoutly tested.
+  - devel (the default) will build with some optimizations, but without
+    threading and with assertions activated. This should be used during
+    development.
+  - debug will turn on the debugging output, deactivate all optimizations
+    and add debugging symbols. This is for finding errors.
+
+To select a set op build options, use for example:
+
+  make BUILD_OPTIONS=release
+
+To set the build options permanently, use
+
+  export BUILD_OPTIONS=release
+
+
 Running the simulation
 ======================
 
