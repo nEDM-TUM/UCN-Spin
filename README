@@ -1,0 +1,37 @@
+Dependencies
+============
+
+You will need the following build dependencies:
+  - Gnu Scientific Library, version 1.14
+    Debian / Ubuntu: libgsl0-dev, version 1.14+dfsg-1
+  - CERN ROOT, version 5.28
+    URL: http://root.cern.ch
+  - GCC 4.4 C++ compiler
+    Debian / Ubuntu: g++-4.4, version 4.4.4-14ubuntu5
+  - GNU Standard C++ Library v3
+    Debian / Ubuntu: libstdc++-dev, version 4.4.4-14ubuntu5
+
+Other versions or another C++ standard library might work too. The program was
+only testet on x86_64 architecture, mainly with Ubuntu 10.10 as provided by the
+Excellence Cluster Universe.
+
+
+Build instructions
+==================
+
+  - Copy config.mk.template to config.mk and edit ROOT_DIR to match your setup.
+    If the ROOT binaries are located in /opt/ROOT/bin, use:
+      ROOT_DIR = /opt/ROOT
+  - Run make
+
+
+Running the simulation
+======================
+
+  - The main executable ist ./cylindric. It reads parameters from standard
+    input. To read the parameters from the file params.txt, use:
+      ./cylindric < params.txt
+  - The output will be written to a ROOT file in the directory output
+
+--
+vim: et sts=4 ts=4
