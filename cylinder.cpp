@@ -42,7 +42,7 @@ void Cylinder::initialize(Threevector &v, Threevector &x) {
 	do {
 		for (int i = 0; i < 3; i++)
 			v[i] = fRandom->gaussian(fVelocitySigma);
-	} while (fCutoffSquare > 0 && v.magsquare() > fCutoffSquare)
+	} while (fCutoffSquare > 0 && v.magsquare() > fCutoffSquare);
 
 	debug << "initialize: x = " << x.toString() << std::endl;
 	debug << "initialize: v = " << v.toString() << std::endl;
