@@ -45,6 +45,7 @@ class Cylinder : public Basegeometry
 		bool fReflectBottom;
 
 		double fVelocitySigma; ///< sigma for maxwell distribution of velocity
+		double fCutoffSquare; ///< highest possible velocity
 };
 
 #endif // CYLINDER_H
