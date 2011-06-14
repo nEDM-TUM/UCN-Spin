@@ -1,5 +1,10 @@
 include config.mk
+
+ifdef ROOT_DIR
 ROOT_CONFIG=$(ROOT_DIR)/bin/root-config
+else
+ROOT_CONFIG=root-config
+endif
 
 CXX=g++
 CXXFLAGS=-Wall
