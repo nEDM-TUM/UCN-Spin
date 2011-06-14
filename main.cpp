@@ -65,6 +65,7 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("GravitationConstant");
 	theParameters.expectDouble("CollisionAccuracy");
 	theParameters.expectInt("Timeout");
+	theParameters.expectDouble("VelocitySigma");
 
 	theParameters.readParameters(cin);
 
@@ -151,11 +152,17 @@ int main(int nargs, char** argv)
 				tracker->initialize();
 				#pragma omp critical
 				{
+					debug << "Got from initialize: x = " << tracker->fTrackpositions[0].toString() << endl;
+					debug << "Got from initialize: v = " << tracker->fTrackvelocities[0].toString() << endl;
+
 					for (int i = 0; i < 3; i++) {
-						start_velocity[i] = tracker->fTrackvelocities[0][i];
+						assert(tracker->fTrackpositions.size() == 1);
 						start_position[i] = tracker->fTrackpositions[0][i];
-						start_tree.Fill();
+						assert(tracker->fTrackvelocities.size() == 1);
+						start_velocity[i] = tracker->fTrackvelocities[0][i];
 					}
+
+					start_tree.Fill();
 				}
 				stepper->reset(firsthtry, P, dPdt, T);
 				savetime = 0;

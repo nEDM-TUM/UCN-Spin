@@ -1,3 +1,4 @@
+#include <cassert>
 #include "basetracking.h"
 
 /**
@@ -37,11 +38,17 @@ void Basetracking::initialize()
 	fLasttime = fStarttime = 0.0;
 	Threevector pos;
 	Threevector vel;
-	// TODO: how should vel and pos be initialized???
 	fGeometry->initialize(vel, pos);
+
+	assert(fGeometry->contains(pos));
+
 	fTracktimes.push_back(0.0);
 	fTrackpositions.push_back(pos);
 	fTrackvelocities.push_back(vel);
+
+	assert(fTrackvelocities[0] == vel);
+	assert(fTrackpositions[0] == pos);
+	assert(fTracktimes[0] == 0);
 }
 
 /**

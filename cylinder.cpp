@@ -19,8 +19,9 @@
  * @param height height of the cylinder
  */
 Cylinder::Cylinder(const Parameters &params, Random *ran)
-	: Basegeometry(ran), fRadius(params.getDoubleParam("CylinderRadius")), fRSquared(fRadius*fRadius), fHeight(params.getDoubleParam("CylinderHeight")), fReflectRadius(false), fReflectTop(false), fReflectBottom(false)
+	: Basegeometry(ran), fRadius(params.getDoubleParam("CylinderRadius")), fRSquared(fRadius*fRadius), fHeight(params.getDoubleParam("CylinderHeight")), fReflectRadius(false), fReflectTop(false), fReflectBottom(false), fVelocitySigma(params.getDoubleParam("VelocitySigma"))
 {
+	assert(fRSquared == fRadius*fRadius);
 	debug << "New cylinder, r = " << fRadius << ", h = " << fHeight << ", r^2 = " << fRSquared << std::endl;
 }
 
@@ -31,13 +32,17 @@ void Cylinder::initialize(Threevector &v, Threevector &x) {
 			x[i] = fRandom->uniform_double(-fRadius, fRadius);
 	}
 	while (!insideRadius(x));
+
+	assert(x[0]*x[0] + x[1]*x[1] < fRadius*fRadius);
 	
 	// initialize x[2] to be inside of height
 	x[2] = fRandom->uniform_double(0, fHeight);
 
-	// initialize velocity randomly TODO!!!
+	// initialize velocity randomly
 	for (int i = 0; i < 3; i++)
-		v[i] = fRandom->gaussian(1); // TODO
+		v[i] = fRandom->gaussian(fVelocitySigma);
+
+	// TODO: linear distribution for UCN
 
 	debug << "initialize: x = " << x.toString() << std::endl;
 	debug << "initialize: v = " << v.toString() << std::endl;
@@ -72,6 +77,7 @@ bool Cylinder::insideHeight(const Threevector &x) const
  */
 bool Cylinder::insideRadius(const Threevector &x) const
 {
+	assert(fRSquared == fRadius*fRadius);
 	return (x[0]*x[0] + x[1]*x[1]) < fRSquared;
 }
 

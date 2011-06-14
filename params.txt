@@ -23,4 +23,5 @@ SaveTimeDiff		0.0002
 GravitationConstant	9.81
 TrackerStepSize		0.05
 CollisionAccuracy	1e-7
+VelocitySigma		1
 Timeout				5
