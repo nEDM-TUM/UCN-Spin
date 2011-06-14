@@ -66,6 +66,7 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("CollisionAccuracy");
 	theParameters.expectInt("Timeout");
 	theParameters.expectDouble("VelocitySigma");
+	theParameters.expectDouble("VelocityCutoff");
 
 	theParameters.readParameters(cin);
 
@@ -111,9 +112,8 @@ int main(int nargs, char** argv)
 		double hdid = 0.0;
 		int savetime = 0;
 
-		// TODO
 		Cylinder *c = new Cylinder(theParameters, randgen);
-		GravitationTracker *tracker = new GravitationTracker(theParameters, randgen, c); // TODO: parameters
+		GravitationTracker *tracker = new GravitationTracker(theParameters, randgen, c);
 
 		Bfield *bfield = new Bfield(theParameters,tracker);
 
