@@ -138,7 +138,10 @@ int main(int nargs, char** argv)
 			try {
 				Timeout timeout(theParameters.getIntParam("Timeout"));
 
-				cout << "Particle " << i << "/" << N_particles << endl;
+				#pragma omp critical
+				{
+					cout << "Particle " << i << "/" << N_particles << endl;
+				}
 				#pragma omp critical
 				{
 					random_val = randgen->uniform_double(0, 1);
@@ -214,7 +217,10 @@ int main(int nargs, char** argv)
 					end_polarization.Fill();
 				}
 
-				cout << "Particle " << (i+1) << ": " << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
+				#pragma omp critical
+				{
+					cout << "Particle " << (i+1) << ": " << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
+				}
 
 			} // try
 			catch (const Exception& e) {
