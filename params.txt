@@ -10,7 +10,6 @@ B1Gradient			0
 EDM					0
 Flipangle			90
 Seed				43277216
-#GyroelectricRatio	EDM*0.01*elementarycharge/hbar ### TODO!
 CylinderRadius		0.235
 CylinderHeight		0.12
 B0					1.0e-6

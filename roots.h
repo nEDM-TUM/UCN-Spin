@@ -87,7 +87,7 @@ double Roots::safeNewton(const T &f, const T &d, double x1, double x2, double ep
 	while (fabs(y) > eps) {
 		// Protect against infinite loops
 		if(iteration++ > MAX_ITERATIONS)
-			throw EndlessLoop(); // TODO: review
+			throw EndlessLoop();
 
 		const double xn = x - f(x)/d(x);
 

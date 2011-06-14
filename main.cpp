@@ -171,7 +171,7 @@ int main(int nargs, char** argv)
 				savetime = 0;
 				int lifetime = theParameters.getDoubleParam("Lifetime");
 				debug << "Will run for " << lifetime << "seconds" << endl;
-				while(T <= lifetime) // TODO: Abbruchbedingung
+				while(T <= lifetime)
 				{
 					timeout.check();
 
