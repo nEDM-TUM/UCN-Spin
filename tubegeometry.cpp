@@ -1,4 +1,5 @@
 #include "tubegeometry.h"
+#include "debug.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -17,27 +18,37 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 	ifstream tube;
 	std::string dummy;
 	tube.open(Tubefile.c_str());
+	int numberofsegments;
 	if(tube.is_open()) {
 		string type;
 		double s1,s2,s3,v1,v2,v3;
+		tube >> numberofsegments;
+		std::getline (tube, dummy);
 		std::getline (tube, dummy);
 // Liest Startvektor und Startachse der Schlauchachse aus.
 		tube >> s1 >> s2 >> s3 >> v1 >> v2 >> v3;
 		Threevector s (s1,s2,s3);
 		Threevector v (v1,v2,v3);
 		std::getline (tube, dummy);
+		std::getline (tube, dummy);
 		tube >> type;
 // Das erste Segment wird erzeugt (Sonderbehandlung für erstes Segment).
 // Wenn das 1. Segment ein Kreissegment ist wird noch der Winkel 't',
 // der Radius 'r' des Bogens und der Normalenvektor 'n' des Kreises ausgelesen
 // und ein Kreissegment Csegment erstellt.
-		if (type == "c") {				
+		if (type == "c") {			
 			double t,r,n1,n2,n3;
 			tube >> t >> r >> n1 >> n2 >> n3;
+			std::getline (tube, dummy);
 			Threevector n(n1,n2,n3);	
-			Csegment O (s,v,n,r,t,theParameters);
-			Csegments.push_back(O); 
-			Segments.push_back(& Csegments.back());		
+			//Csegment C(s,v,n,r,t,theParameters);
+			//Csegments.push_back(C);			
+			//Segments.push_back(& Csegments.back());
+			
+			// TODO: memory leak
+			Csegment *cs = new Csegment(s,v,n,r,t,theParameters);
+			Segments.push_back(cs);
+			std::cout << (*cs).toString() << std::endl;
 		}
 // Ist das erste Segment ein gerades Segment, wird die Länge 't' und nochmals die
 // Richtung 'v' (die mit der zuerst ausgelesenen Startrichtung übereinstimmen sollte)
@@ -45,18 +56,27 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 		else if (type == "l") {
 			double t,v1,v2,v3;
 			tube >> t >> v1 >> v2 >> v3;
+			std::getline (tube, dummy);
 			Threevector v(v1,v2,v3);
-			Lsegment O(s,v,t,theParameters);
-			Lsegments.push_back(O);			
-			Segments.push_back(& Lsegments.back());
+			
+			//Lsegment L(s,v,t,theParameters);
+			//Lsegments.push_back(L);			
+			//Segments.push_back(& Lsegments.back());
+			
+			// TODO: memory leak
+			Lsegment *ls = new Lsegment(s,v,t,theParameters);
+			Segments.push_back(ls);
+			std::cout << (*ls).toString() << std::endl;
 		}
-//		else 
-//			cerr << "File not good \n"; 			
+		else{ 
+			std::cerr << "File not good \n"; 			
+		}
 
 // Bei den anderen Einträgen wird ähnlich verfahren, nur dass der jeweilige Startvektor
 // der Endvektor des vorherigen Segments ist und bei Kreissegmenten der Startachsenvektor
 // auch der Endachsenvektor des vorherigen Segments ist.
-		while (tube.good()) {			
+		//while (tube.good()) {	
+		for (int i = 0; i < numberofsegments-1; i++) {		
 			tube >> type;
 			if (type == "c") {
 				Threevector s,v;
@@ -64,35 +84,50 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 				s = Segments.back()->getposition(1);		
 				v = Segments.back()->axis(1);
 				tube >> t >> r >> n1 >> n2 >> n3;
+				std::getline (tube, dummy);
 				Threevector n(n1,n2,n3);					
-				Csegment O (s,v,n,r,t,theParameters);
-				Csegments.push_back(O);
-				Segments.push_back(& Csegments.back());
+				//Csegment C(s,v,n,r,t,theParameters);
+				//Csegments.push_back(C);			
+				//Segments.push_back(& Csegments.back());
+			
+				// TODO: memory leak
+				Csegment *cs = new Csegment(s,v,n,r,t,theParameters);
+				Segments.push_back(cs);
+				std::cout << (*cs).toString() << std::endl;
 			}
 			else if (type == "l") {
-				double 	t,v1,v2,v3;
+								double 	t,v1,v2,v3;
 				Threevector s;
 				tube >> t >> v1 >> v2 >> v3;
+				std::getline (tube, dummy);
 				s = Segments.back()->getposition(1) ;
 				Threevector v(v1,v2,v3);								
-				Lsegment O(s,v,t,theParameters);
-				Lsegments.push_back(O);
-				Segments.push_back(& Lsegments.back());
+				//Lsegment L(s,v,t,theParameters);
+				//Lsegments.push_back(L);			
+				//Segments.push_back(& Lsegments.back());
+			
+				// TODO: memory leak
+				Lsegment *ls = new Lsegment(s,v,t,theParameters);
+				Segments.push_back(ls);
+				std::cout << (*ls).toString() << std::endl;
 			}
-//			else 
-//				cerr << "File not good \n";	
+			else 
+				std::cerr << "File not good \n";	
 		}		
 	}
-//	else 
-//		cerr << "Could not open file \n" ;
+	else 
+		std::cerr << "Could not open file \n" ;
 	tube.close(); 
 	radiustube = theParameters.getDoubleParam("radiustube");
+	std::cout << "Anzahl der Segmente: " << Segments.size()-1 << std::endl;
 }
 
 void Tubegeometry::initialize(Threevector &v, Threevector &x){
 	Threevector standard;
 	standard = Threevector(0,-1,0);
-	if (Segments[0]->axis(0) == standard){
+	debug << standard.toString() << std::endl;
+	debug << Segments[0]->axis(0).toString() << std::endl;
+	if (Segments[0]->axis(0).compare(standard)){
 		Threevector a, b;
 		double r, angle;
 		a = Threevector (1,0,0);
@@ -101,6 +136,7 @@ void Tubegeometry::initialize(Threevector &v, Threevector &x){
 		angle = fRandom->uniform() * 360; 
 		x = Segments[0]->startpoint() + r * cos(angle) * a + r * sin(angle) * b;
 		v = Segments[0]->axis(0);
+		debug << x.toString() << v.toString() << std::endl;
 	}
 	else {
 		Threevector a, b, d;
@@ -118,30 +154,32 @@ void Tubegeometry::initialize(Threevector &v, Threevector &x){
 // Wenn ja, gibt sie den axialen Vektor der Projektion der Position auf die Schlauchachse
 // zurück. Wenn nicht, dann gibt sie als axialen Vektor den Nullvektor zurück.
 
-Threevector Tubegeometry::contains(const Threevector &x, double &rootstart)  {
+//Threevector Tubegeometry::contains(const Threevector &x, double &rootstart)  {
+Threevector Tubegeometry::contains(const Threevector &x)  {
 	Threevector v(0,0,0);
-// Testet in jedem Segment, ob der Punkt enthalten ist oder nicht. Sobald ein Segment
-// einen Axialenvektor ungleich dem Nullvektor v zurückgibt, wird dieser ausgegeben.
-// Gleichzeitig wird dann der Wert 'rootstart' verändert. Er ist dann die momentane
-// Projektion der Position auf die Schlauchachse und soll im nächsten Schritt als
-// Startwert für die Nullstellensuche verwendet werden.  
-	for (size_t i = 0; i < Segments.size(); i++) {
-		double rootstartsegment;
-		rootstartsegment = rootstart - i;
-		if (Segments[i]->segmentcontains(x, rootstartsegment) != v){
-			rootstart = rootstartsegment + i;
-			return Segments[i]->segmentcontains(x, rootstartsegment);
+	for (size_t i = 0; i < Segments.size(); i++) {	
+		//double rootstartsegment;
+		bool inorout;
+		Threevector axis;
+		//rootstartsegment = rootstart - (double)i;
+		//axis = Segments[i]->segmentcontains(x, rootstartsegment);
+		axis = Segments[i]->segmentcontains(x);
+		inorout = axis.compare(v);
+		if (inorout == false){
+			//rootstart = rootstartsegment + (double)i;
+			return axis;
 		}
 	}
 	return v;
 }
 
 bool Tubegeometry::lastsegmentcontains(const Threevector &x) {
-	double rootstartsegment;
+	//double rootstartsegment;
 	Threevector v(0,0,0);
 	Segment* lastsegment = Segments.back();
-	rootstartsegment = 0;
-	if (lastsegment->segmentcontains(x,rootstartsegment) == v)
+	//rootstartsegment = 0;
+	//if (lastsegment->segmentcontains(x,rootstartsegment).compare(v))
+	if (lastsegment->segmentcontains(x).compare(v))
 		return false;
 	else 
 		return true;

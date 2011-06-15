@@ -8,10 +8,10 @@
  * Algorithms for root finding.
  */
 namespace Roots {
-	template <class T>
-	double bisectStep(const T &f, double &x1, double &x2);
-	template <class T>
-	double safeNewton(const T &f, const T &d, double x1, double x2, double eps);
+	template <class T, class C>
+	double bisectStep(C* const instance,const T &f, double &x1, double &x2);
+	template <class T, class C>
+	double safeNewton(C* const instance,const T &f, const T &d, double x1, double x2, double eps);
 
 	const unsigned int MAX_ITERATIONS = 10000;
 
@@ -30,12 +30,12 @@ namespace Roots {
  *
  * @returns The center of the new interval <tt>0.5*(x1+x2)</tt>
  */
-template <class T>
-double Roots::bisectStep(const T &f, double &x1, double &x2) {
-	const double y1 = f(x1);
-	const double y2 = f(x2);
+template <class T, class C>
+double Roots::bisectStep(C* const instance,const T &f, double &x1, double &x2) {
+	const double y1 = (instance->*f)(x1);
+	const double y2 = (instance->*f)(x2);
 	const double xm = .5*(x1+x2);
-	const double ym = f(xm);
+	const double ym = (instance->*f)(xm);
 
 	debug << "bisecting: (" << x1 << "," << y1 << ") -- (" << xm << "," << ym << ") -- (" << x2 << "," << y2 << ")" << std::endl;
 
@@ -72,11 +72,11 @@ double Roots::bisectStep(const T &f, double &x1, double &x2) {
  * @param[in] x2  Upper bound of the inverval that brackets the root.
  * @param[in] eps Accuracy goal, the algorithm will ensure <tt>|f(x_root)| < eps</tt>
  */
-template <class T>
-double Roots::safeNewton(const T &f, const T &d, double x1, double x2, double eps) {
+template <class T,class C>
+double Roots::safeNewton(C* const instance,const T &f, const T &d, double x1, double x2, double eps) {
 	debug << "Doing initial bisection step:" << std::endl;
-	double x = bisectStep(f, x1, x2); // Do a bisection step first to check arguments for sanity
-	double y = f(x);
+	double x = bisectStep(instance,f, x1, x2); // Do a bisection step first to check arguments for sanity
+	double y = (instance->*f)(x);
 	double last_y = INFINITY;
 
 	unsigned int iteration = 0;
@@ -86,7 +86,7 @@ double Roots::safeNewton(const T &f, const T &d, double x1, double x2, double ep
 		if(iteration++ > MAX_ITERATIONS)
 			throw EndlessLoop(); // TODO: review
 
-		const double xn = x - f(x)/d(x);
+		const double xn = x - (instance->*f)(x)/(instance->*d)(x);
 
 		debug << "f(" << x << ") = " << y << ", last was: " << last_y << std::endl;
 
@@ -94,12 +94,12 @@ double Roots::safeNewton(const T &f, const T &d, double x1, double x2, double ep
 		if (xn < x1 || xn > x2) {
 			// outside of original rage, bisect
 			debug << "Bisecting: " << xn << " out of range." << std::endl;
-			x = bisectStep(f, x1, x2);
+			x = bisectStep(instance,f, x1, x2);
 		}
-		else if (fabs(f(xn)) >= last_y) {
+		else if (fabs((instance->*f)(xn)) >= last_y) {
 			// function value got bigger, maybe oscillation or divergence
-			std::clog << "Bisecting: |f(" << xn << ")| >= " << last_y << std::endl;
-			x = bisectStep(f, x1, x2);
+			debug << "Bisecting: |f(" << xn << ")| >= " << last_y << std::endl;
+			x = bisectStep(instance,f, x1, x2);
 		}
 		else {
 			// newton seems to go into the right direction, go on
@@ -108,7 +108,7 @@ double Roots::safeNewton(const T &f, const T &d, double x1, double x2, double ep
 		}
 		
 		last_y = fabs(y);
-		y = f(x);
+		y = (instance->*f)(x);
 	}
 
 	debug << "Reached accuracy of " << eps << ", f(" << x << ") = " << y << std::endl;

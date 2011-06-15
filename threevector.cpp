@@ -79,6 +79,16 @@ bool operator!=(const Threevector &left, const Threevector &right)
 	return !(left==right);
 }
 
+bool Threevector::compare(const Threevector &x){
+	Threevector y = *this;
+	for (int i = 0; i < 3; i++){
+		if (fabs(y[i]-x[i]) > 1e-5)
+			return false;
+	}
+	return true;
+		
+}
+
 double Threevector::mag() const
 {
 	double a=0.0;
@@ -116,6 +126,7 @@ Threevector Threevector::normalized()
 
 std::string Threevector::toString() const {
 	std::ostringstream o;
+	o.precision(8);
 	o << "(" << fVec[0] << " " << fVec[1] << " " << fVec[2] << ")";
 	return o.str();
 }

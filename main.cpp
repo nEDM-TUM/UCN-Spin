@@ -16,6 +16,7 @@ using namespace std;
 #include "parameters.h"
 #include "tubetracking.h"
 #include "tubegeometry.h"
+#include "threevector.h"
 
 
 int main(int nargs, char** argv)
@@ -76,8 +77,8 @@ int main(int nargs, char** argv)
 	{
 		double T = 0.0;
 		double Told = 0.0;
-		double flipangle = theParameters.getDoubleParam("Flipangle");
-		double P[3] = {0.0,sin(-flipangle/180*M_PI),cos(-flipangle/180*M_PI)};	//the polarization-vector
+		double flipangle = theParameters.getDoubleParam("Flipangle");	
+		double P[3] = {0.0,0.0,1.0};	//the polarization-vector
 		double dPdt[3] = {0.0};
 		double hdid = 0.0;
 		int savetime = 0;
@@ -129,9 +130,9 @@ int main(int nargs, char** argv)
 				savetime = 0;
 				j = 0;
 				int lifetime1 = theParameters.getDoubleParam("Lifetime");
+				tracker->savetrack = false;
 				while(tracker->reachedendoftube == false)
 				{
-					debug << "Entering endless loop" << endl;
 					try
 					{
 						stepper->step();
@@ -146,6 +147,7 @@ int main(int nargs, char** argv)
 					Told = T;
 					T = stepper->getT();
 					hdid = stepper->getHdid();
+					std::cout << "T = " << T << " hdid = " << hdid << std::endl;
 					debug << "hdid = " << hdid << endl;
 					double st = 0.0;
 					while(T >= (st = savetime*savetimediff))

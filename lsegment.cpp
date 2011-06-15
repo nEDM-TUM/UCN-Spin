@@ -1,8 +1,10 @@
-# include "threevector.h"
-# include "roots.h"
-# include <cmath>
-# include "lsegment.h"
-
+#include "threevector.h"
+#include  "debug.h"
+#include "roots.h"
+#include <cmath>
+#include "lsegment.h"
+#include <sstream>
+#include <string>
 
 Lsegment::Lsegment(Threevector s, Threevector v, double t, Parameters& theParameters) :
 	start(s), direction(v.normalized()), t_max(t), radiustube(theParameters.getDoubleParam("radiustube"))
@@ -28,23 +30,34 @@ Threevector Lsegment::startpoint() {
 }
 
 // 'rootstartsegment' wird während der Funktion verändert.
-Threevector Lsegment::segmentcontains(const Threevector &x, double &rootstartsegment) {
+//Threevector Lsegment::segmentcontains(const Threevector &x, double &rootstartsegment) {
+Threevector Lsegment::segmentcontains(const Threevector &x) {
 	double projection;
-	Threevector radial;
-	Threevector axial;
+	Lsegment L = *this;
+	Threevector radial, axial;
 	Threevector v(0,0,0);
-	projection = (x + (-1 * start)) * direction;
-	if (projection < 0)
+	projection = (x + (-1 * L.startpoint())) * direction;
+	
+	if (projection < 0){
 		return v;
-	else if (projection > t_max)
+	}
+	else if (projection > t_max){
 		return v;
+	}
 	else {
-		radial = x + (-1) * (projection * direction);
-		if (radial.magsquare() > radiustube * radiustube) 
+		radial = x + (-1) * L.startpoint() + (-1) * (projection * direction);
+		if (radial.magsquare() > radiustube * radiustube) {
 			return v; 
+		}
 		else {
-			return axis();
-			rootstartsegment = projection / t_max;
+			//rootstartsegment = projection / t_max;
+			return L.axis().normalized();
 		}
 	}
 }  
+
+std::string Lsegment::toString() const {
+	std::ostringstream o;
+	o << "L-Segment: " << "Startpunkt = " << (*this).start.toString() << ";	Länge = " << t_max;
+	return o.str();
+}

@@ -1,4 +1,4 @@
-NumberOfParticles	1000
+NumberOfParticles	1
 Lifetime			20
 ErrorGoal			1e-11
 EfieldMag			0
@@ -7,7 +7,7 @@ GradientOffsetX		0
 GradientOffsetZ		0
 B1Gradient			0
 EDM					0
-Flipangle			90
+Flipangle			0
 Seed				123
 #GyroelectricRatio	EDM*0.01*elementarycharge/hbar ### TODO!
 CylinderRadius		3.0e-4
@@ -18,3 +18,8 @@ SolenoidField		1
 SolenoidHeight		.2
 SolenoidRadius		1
 SolenoidCurrent		100
+radiustube		0.01
+sigma			137.45
+vdrift 			5.0
+mu			8.58e-12
+

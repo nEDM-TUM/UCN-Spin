@@ -1,7 +1,9 @@
 CXX=g++
-CXXFLAGS=-Wall -O3 -march=native -fopenmp -ggdb
+#CXXFLAGS=-Wall -O3 -march=native -fopenmp -ggdb
+#CXXFLAGS=-Wall -Wno-unknown-pragmas -ggdb
+CXXFLAGS=-Wall -O3 -march=native -Wno-unknown-pragmas -ggdb -DNDEBUG
 LIBS=-lgsl -lgslcblas -lm
-OBJS=main.o bfield.o random.o dopr.o derivatives.o parameters.o cylinder.o threevector.o basetracking.o equationtracker.o polynom.o lsegment.o csegment.o tubegeometry.o tubetracking.o
+OBJS=main.o bfield.o random.o dopr.o derivatives.o parameters.o threevector.o basetracking.o equationtracker.o polynom.o lsegment.o csegment.o tubegeometry.o tubetracking.o
 TAGFILES=$(shell find . -name "*.cpp" -or -name "*.h")
 
 all: cylindric tags

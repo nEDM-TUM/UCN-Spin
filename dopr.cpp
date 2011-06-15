@@ -265,6 +265,7 @@ void Dopr::step()
 		else
 		{
 			stepsnottaken++;
+			tracker->reset();
 		}
 		if(fabs(h) <= fabs(t)*EPS)
 		{

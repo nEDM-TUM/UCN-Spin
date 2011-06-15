@@ -29,11 +29,12 @@ class Tubegeometry : public Basegeometry {
 			throw "not implemented";
 		};
 // Vorsicht: das Argument 'rootstart' wird während der Funktion verändert.
-		virtual Threevector contains(const Threevector &x, double &rootstart);
+		//virtual Threevector contains(const Threevector &x, double &rootstart);
+		virtual Threevector contains(const Threevector &x);
 		virtual bool lastsegmentcontains(const Threevector &x);
 	
 	private:
-		Random *rand;
+		Random *random;
 		double radiustube;
 		std::vector<Segment*> Segments;
 		std::vector<Lsegment> Lsegments;

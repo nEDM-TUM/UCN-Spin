@@ -43,6 +43,7 @@ class Threevector
 		};
 		friend bool operator==(const Threevector &left, const Threevector &right);
 		friend bool operator!=(const Threevector &left, const Threevector &right);
+		bool compare(const Threevector &x);
 		double mag() const;
 		double magsquare() const;
 		void normalize();

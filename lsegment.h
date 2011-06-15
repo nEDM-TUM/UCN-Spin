@@ -10,7 +10,9 @@ class Lsegment : public Segment {
 		Threevector axis(double tau);
 		Threevector startpoint();
 // Achtung 'rootstartsegmet' wird her verändert!!!
-		Threevector segmentcontains(const Threevector &x, double &rootstartsegment);
+		//Threevector segmentcontains(const Threevector &x, double &rootstartsegment);
+		Threevector segmentcontains(const Threevector &x);
+		std::string toString() const;
 	
 	private:
 		Threevector	start;

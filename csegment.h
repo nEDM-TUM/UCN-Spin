@@ -10,17 +10,17 @@ class Csegment : public Segment {
 		Threevector axis(double tau);
 		Threevector startpoint();
 // Achtung 'rootstartsegment' wird hier verändert!!
-		Threevector segmentcontains(const Threevector &x, double &rootstartsegment);
+		//Threevector segmentcontains(const Threevector &x, double &rootstartsegment);
+		Threevector segmentcontains(const Threevector &x);
+		std::string toString() const;
 	
 	private:
-		double derivdist(const Threevector &x, double tau);
-		double secderivdist(const Threevector &x, double tau);
+		double derivdist( double tau);
+		double secderivdist( double tau);
 		double rootNewton(const Threevector &x, double rootstartsegment);
 		double radius, radiustube, t_max;
-		Threevector start;
-		Threevector b; 
-		Threevector a;
-		Threevector centre;
+		Threevector start, b, a, centre;
+		Threevector position; 
 };
 
 #endif
