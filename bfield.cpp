@@ -17,6 +17,8 @@ Bfield::Bfield(const Parameters &theParameters, Basetracking* const btr)
 	E0 = theParameters.getDoubleParam("EfieldMag");
 	h2 = theParameters.getDoubleParam("SolenoidHeight") / 2.;
 	R = theParameters.getDoubleParam("SolenoidRadius");
+	centercoil1 = Threevector(-R/2., 0., 0.);
+	centercoil2 = Threevector(R/2., 0., 0.);
 	g = theParameters.getDoubleParam("B0Gradient");
 	ghalf = g/2.0;
 	B1_g = theParameters.getDoubleParam("B1Gradient");
@@ -28,7 +30,6 @@ Bfield::Bfield(const Parameters &theParameters, Basetracking* const btr)
 	xyz0[0] = theParameters.getDoubleParam("GradientOffsetX");
 	xyz0[2] = theParameters.getDoubleParam("GradientOffsetZ");
 	B000 = theParameters.getDoubleParam("SolenoidField");
-	I = theParameters.getDoubleParam("SolenoidCurrent");
 	#pragma omp master
 	{
 		cout << "The B0-field = " << B0 << " T" << endl;
@@ -53,21 +54,30 @@ Threevector Bfield::operator()(const double time) const
 	return eval(time);
 }
 
+Threevector Bfield::evalcoil(const Threevector &relposition) const
+{
+	Threevector posBfieldframe;
+	posBfieldframe = Threevector(relposition[2], relposition[1], relposition[0]);
+	double r = sqrt(posBfieldframe[0]*posBfieldframe[0]+posBfieldframe[1]*posBfieldframe[1]);
+	double xr = 0.0, yr = 0.0;
+	if(r > 0.0){
+		xr = posBfieldframe[0]/r;
+		yr = posBfieldframe[1]/r;
+	}
+	
+	double BR = Br(r,posBfieldframe[2]);
+	double BZ = Bz(r,posBfieldframe[2]);
+	return Threevector(BZ,BR*yr,BR*xr);
+}
+
 Threevector Bfield::eval(const double time) const
 {
 	Threevector position = tracking->getPosition(time);
-	debug << "In Bfield: position = " << position.toString() << endl;
-	//double r = sqrt(position[0]*position[0]+position[1]*position[1]);
-	//double xr = 0.0, yr = 0.0;
-	//if(r > 0.0){
-	//	xr = position[0]/r;
-	//	yr = position[1]/r;
-	//}
-	// calculate the B-field of a solenoid at this position
-	//double BR = Br(r,position[2]);
-	//double BZ = Bz(r,position[2]);
-	//return Threevector(BR*xr,BR*yr,BZ);
-	return Threevector(0.0, 0.0, 1.0e-6);
+	Threevector field;
+	field = evalcoil(position + (-1)*centercoil1) + evalcoil(position + (-1)*centercoil2); 
+	return field;
+	
+	//return Threevector(0.0, 0.0, 1.0e-6);
 }
 
 double Bfield::Br(const double r, const double z) const

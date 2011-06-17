@@ -1,0 +1,11 @@
+7
+Startpunkt 	Startrichtung
+0 0 0	0 -1 0	
+Art 	Winkelanteil/Länge	Radius	Normalenvektor/Richtungsvektor
+l	0.3				0 -1 0
+c	1.5708			0.1	0 0 1
+l	0.1				1 0 0
+c	1.5708			0.1	0 0 1
+l	0.3				0 1 0
+c	0.15708			0.1	0 0 -1
+l 	0.1				1 0 0 

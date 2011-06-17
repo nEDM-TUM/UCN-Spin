@@ -1,3 +1,6 @@
 *.o
 cylindric
 tags
+output
+debugout.txt
+
