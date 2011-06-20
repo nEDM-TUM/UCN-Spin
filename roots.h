@@ -77,6 +77,9 @@ double Roots::bisectStep(const T &f, double &x1, double &x2) {
  */
 template <class T>
 double Roots::safeNewton(const T &f, const T &d, double x1, double x2, double eps) {
+	if (fabs(f(x1)) < eps)
+		return x1;
+
 	debug << "Doing initial bisection step:" << std::endl;
 	double x = bisectStep(f, x1, x2); // Do a bisection step first to check arguments for sanity
 	double y = f(x);

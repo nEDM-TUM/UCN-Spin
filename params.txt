@@ -1,5 +1,5 @@
 GyromagneticRatio	30e+6
-NumberOfParticles	100000
+NumberOfParticles	100
 Lifetime			1000
 ErrorGoal			1e-12
 EfieldMag			0
@@ -25,4 +25,4 @@ CollisionAccuracy	1e-7
 VelocitySigma		1
 VelocityCutoff		1e100
 Timeout				5
-DiffusionProbability	.5
+DiffusionProbability	1

@@ -1,6 +1,7 @@
 #include "equationtracker.h"
 #include "basegeometry.h"
 #include "parameters.h"
+#include "debug.h"
 
 class GravitationTracker : public EquationTracker {
 	public:
@@ -9,8 +10,9 @@ class GravitationTracker : public EquationTracker {
 		 * @param g acceleration due to gravitation, e.g. g = 9.81
 		 */
 		explicit GravitationTracker(const Parameters &params, Random *ran, Basegeometry *geo) :
-			EquationTracker(params, ran, geo), minus_g(params.getDoubleParam("GravitationConstant"))
+			EquationTracker(params, ran, geo), minus_g(-params.getDoubleParam("GravitationConstant"))
 		{
+			debug << "minus_g = " << minus_g << std::endl;
 		}
 
 		/**

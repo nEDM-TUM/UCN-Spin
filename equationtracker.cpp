@@ -129,7 +129,7 @@ void EquationTracker::makeTrack(const double t_start, double h) {
 				fGeometry->reflect(fVel, fPos);
 			}
 			else {
-				// Duffuse scattering
+				// Diffuse scattering
 				fGeometry->diffuse(fVel, fPos);
 			}
 		}
