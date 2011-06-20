@@ -25,3 +25,4 @@ CollisionAccuracy	1e-7
 VelocitySigma		1
 VelocityCutoff		1e100
 Timeout				5
+DiffusionProbability	.5

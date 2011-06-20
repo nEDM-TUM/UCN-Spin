@@ -15,6 +15,7 @@ class Basetracking
 		
 		virtual void initialize();
 		virtual Threevector getPosition(double time) = 0;
+		virtual Threevector getVelocity(double time) = 0;
 
 		/**
 		 * Pure virtual function

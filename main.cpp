@@ -67,6 +67,7 @@ int main(int nargs, char** argv)
 	theParameters.expectInt("Timeout");
 	theParameters.expectDouble("VelocitySigma");
 	theParameters.expectDouble("VelocityCutoff");
+	theParameters.expectDouble("DiffusionProbability");
 
 	theParameters.readParameters(cin);
 

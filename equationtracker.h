@@ -19,6 +19,7 @@ class EquationTracker : public Basetracking {
 		void makeTrack(double t_start, double h);
 		void initialize();
 		Threevector getPosition(double time);
+		Threevector getVelocity(double time);
 		virtual ~EquationTracker();
 
 	private:
@@ -34,6 +35,8 @@ class EquationTracker : public Basetracking {
 
 		// Timeout
 		Timeout fTimeout;
+
+		double fDiffuseProbability;
 	
 	protected:
 		/**
