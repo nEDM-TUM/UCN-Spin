@@ -78,7 +78,7 @@ int main(int nargs, char** argv)
 		double T = 0.0;
 		double Told = 0.0;
 		double flipangle = theParameters.getDoubleParam("Flipangle");	
-		double P[3] = {0.0,0.0,1.0};	//the polarization-vector
+		double P[3] = {1.0,0.0,0.0};	//the polarization-vector
 		double dPdt[3] = {0.0};
 		double hdid = 0.0;
 		int savetime = 0;

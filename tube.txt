@@ -1,3 +1,4 @@
+Gesamtanzahl der Segmente (inklusive dem letzten "Stopsegment")
 7
 Startpunkt 	Startrichtung
 0 0 0	0 -1 0	

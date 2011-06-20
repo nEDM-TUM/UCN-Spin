@@ -22,6 +22,7 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 	if(tube.is_open()) {
 		string type;
 		double s1,s2,s3,v1,v2,v3;
+		std::getline (tube,dummy);
 		tube >> numberofsegments;
 		std::getline (tube, dummy);
 		std::getline (tube, dummy);
@@ -30,7 +31,7 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 		Threevector s (s1,s2,s3);
 		Threevector v (v1,v2,v3);
 		std::getline (tube, dummy);
-		std::getline (tube, dummy);
+		std::getline 1(tube, dummy);
 		tube >> type;
 // Das erste Segment wird erzeugt (Sonderbehandlung für erstes Segment).
 // Wenn das 1. Segment ein Kreissegment ist wird noch der Winkel 't',

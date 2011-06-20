@@ -18,6 +18,8 @@ class Bfield
 		double cel(double, double, double, double) const;
 		Threevector operator()(const double time) const;
 		Threevector evalcoil(const Threevector &relposition) const;
+		Threevector evalearthmagneticfield() const;
+		Threevector evaldipole (const Threevector &position, const Threevector &positiondipole, const Threevector &magneticdipole) const;
 		Threevector eval (const double time) const;
 
 	private:

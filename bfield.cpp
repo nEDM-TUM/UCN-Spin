@@ -70,6 +70,23 @@ Threevector Bfield::evalcoil(const Threevector &relposition) const
 	return Threevector(BZ,BR*yr,BR*xr);
 }
 
+Threevector Bfield::evaldipole(const Threevector &position, const Threevector &positiondipole, const Threevector &magneticdipole) const
+{
+	Threevector field, relposition, normrelposition;
+	double magrelposition, coefficient;
+	relposition = position + (-1) * positiondipole;
+	magrelposition = relposition.mag();
+	normrelposition = relposition.normalized();
+	coefficient = mu0 / 4. /3.1459 /magrelposition/magrelposition/magrelposition;
+	field = coefficient * (3*(normrelposition*magneticdipole)*normrelposition + (-1)* magneticdipole);
+	return field;
+}
+
+Threevector Bfield::evalearthmagneticfield () const
+{
+	return Threevector(0., 0., 0.);
+}
+
 Threevector Bfield::eval(const double time) const
 {
 	Threevector position = tracking->getPosition(time);
