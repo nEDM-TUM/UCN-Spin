@@ -13,7 +13,7 @@
  */
 EquationTracker::EquationTracker(const Parameters &params, Random *ran, Basegeometry *geo) :
 	Basetracking(ran, geo), fStepSize(0.01), fNewtonEps(params.getDoubleParam("CollisionAccuracy")),
-	fTime(0), fTimeout(params.getIntParam("Timeout"))
+	fTime(0), fTimeout(params.getIntParam("Timeout")), fDiffuseProbability(params.getDoubleParam("DiffusionProbability"))
 {
 	fStepSize = params.getDoubleParam("TrackerStepSize");
 }
@@ -116,8 +116,22 @@ void EquationTracker::makeTrack(const double t_start, double h) {
 			fTrackpositions.push_back(fPos);
 			fTrackvelocities.push_back(fVel);
 
-			// Reflect
-			fGeometry->reflect(fVel, fPos);
+			// Randomly decide wether to diffuse or reflect
+			double rand;
+			#pragma omp critical
+			{
+				rand = fRandomgenerator->uniform();
+				assert(rand <= 1 && rand >= 0); 
+			}
+
+			if (rand > fDiffuseProbability) {
+				// Reflect
+				fGeometry->reflect(fVel, fPos);
+			}
+			else {
+				// Diffuse scattering
+				fGeometry->diffuse(fVel, fPos);
+			}
 		}
 		else {
 			// Step was still inside, just advance time
@@ -180,6 +194,11 @@ Threevector EquationTracker::getPosition(double time) {
 	}
 
 	return Threevector(px(time), py(time), pz(time));
+}
+
+Threevector EquationTracker::getVelocity(double time) {
+	/// This function does not interpolate but just return the last velocity
+	return fTrackvelocities.back();
 }
 
 EquationTracker::~EquationTracker()

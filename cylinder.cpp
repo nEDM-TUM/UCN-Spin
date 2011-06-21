@@ -138,6 +138,45 @@ void Cylinder::reflect(Threevector &v, const Threevector &x)
 	}
 }
 
+/**
+ * Calculate the diffusion of v.
+ */
+void Cylinder::diffuse(Threevector &v, const Threevector &pos) {
+	/// Diffusion is only implemented at the side wall, in other
+	/// cases, reflection is used instead.
+	if (fReflectTop || fReflectBottom) {
+		reflect(v, pos);
+		return;
+	}
+
+	Threevector v_new; // New velocity
+	Threevector n(pos);
+	
+	assert(fReflectRadius);
+	n[2] = 0;
+	
+	do {
+		#pragma omp critical
+		{
+			for (int i = 0; i < 3; i++)
+				v_new[i] = fRandom->gaussian(1);
+		} 
+	} while (v_new * n > 0);
+	/// The scalar product of @p n and the new velocity is checked to find out
+	/// if the diffusion goes into the right direction.
+
+	debug << "diffuse: x = " << pos.toString() << ", n = " << n.toString() << ", v_new = " << v_new.toString() << std::endl;
+
+	// factor which has to be multiplied to vx, vy, vz to conserve velocity
+	const double v_fact = sqrt(v.magsquare() / v_new.magsquare());
+
+	assert(fabs(v.magsquare() - (v_fact*v_new).magsquare()) < v.magsquare()*0.0001);
+	v = v_fact * v_new;
+
+	// reset reflection state
+	fReflectRadius = false;
+}
+
 void Cylinder::reflectHeight(Threevector &v) {
 	debug << "Before reflectHeight: v = " << v.toString() << std::endl;
 	v[2] = -v[2];

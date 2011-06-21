@@ -16,6 +16,7 @@ class Cylinder : public Basegeometry
 		
 		bool boundsCheck(const Threevector &x);
 		void reflect(Threevector &v, const Threevector &x);
+		void diffuse(Threevector &v, const Threevector &x);
 
 		void initialize(Threevector &v, Threevector &x);
 
