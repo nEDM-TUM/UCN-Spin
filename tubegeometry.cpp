@@ -31,7 +31,7 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 		Threevector s (s1,s2,s3);
 		Threevector v (v1,v2,v3);
 		std::getline (tube, dummy);
-		std::getline 1(tube, dummy);
+		std::getline (tube, dummy);
 		tube >> type;
 // Das erste Segment wird erzeugt (Sonderbehandlung für erstes Segment).
 // Wenn das 1. Segment ein Kreissegment ist wird noch der Winkel 't',
@@ -49,7 +49,10 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 			// TODO: memory leak
 			Csegment *cs = new Csegment(s,v,n,r,t,theParameters);
 			Segments.push_back(cs);
-			std::cout << (*cs).toString() << std::endl;
+                        #pragma omp master
+                        {
+		        	std::cout << (*cs).toString() << std::endl;
+                        }
 		}
 // Ist das erste Segment ein gerades Segment, wird die Länge 't' und nochmals die
 // Richtung 'v' (die mit der zuerst ausgelesenen Startrichtung übereinstimmen sollte)
@@ -67,7 +70,10 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 			// TODO: memory leak
 			Lsegment *ls = new Lsegment(s,v,t,theParameters);
 			Segments.push_back(ls);
-			std::cout << (*ls).toString() << std::endl;
+                        #pragma omp master
+                        {
+			        std::cout << (*ls).toString() << std::endl;
+                        }
 		}
 		else{ 
 			std::cerr << "File not good \n"; 			
@@ -94,7 +100,10 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 				// TODO: memory leak
 				Csegment *cs = new Csegment(s,v,n,r,t,theParameters);
 				Segments.push_back(cs);
-				std::cout << (*cs).toString() << std::endl;
+                                #pragma omp master
+                                {
+				        std::cout << (*cs).toString() << std::endl;
+                                }
 			}
 			else if (type == "l") {
 								double 	t,v1,v2,v3;
@@ -110,7 +119,10 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 				// TODO: memory leak
 				Lsegment *ls = new Lsegment(s,v,t,theParameters);
 				Segments.push_back(ls);
-				std::cout << (*ls).toString() << std::endl;
+                                #pragma omp master
+                                {
+				        std::cout << (*ls).toString() << std::endl;
+                                }
 			}
 			else 
 				std::cerr << "File not good \n";	

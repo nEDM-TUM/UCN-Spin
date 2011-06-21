@@ -8,6 +8,7 @@
 #include <ctime>
 #include <limits>
 #include <unistd.h>
+#include <assert.h>
 
 #include "TFile.h"
 #include "TTree.h"
@@ -117,11 +118,13 @@ int main(int nargs, char** argv)
 		double dPdt[3] = {0.0};
 		double hdid = 0.0;
 		int savetime = 0;
-
+                
+/*
 		for(int z=0; z<J; z++)
 		{
 			TP[z] = 0.0;
 		}
+                */
 		Tubegeometry *geo = new Tubegeometry(randgen, "tube.txt", theParameters); 
 		Tubetracking *tracker = new Tubetracking(randgen, geo, theParameters); 	//Pointer to the random-generator
 
@@ -165,24 +168,23 @@ int main(int nargs, char** argv)
 				tracker->initialize();
 				#pragma omp critical
 				{
-					debug << "Got from initialize: x = " << tracker->fTrackpositions[0].toString() << endl;
-					debug << "Got from initialize: v = " << tracker->fTrackvelocities[0].toString() << endl;
+					//debug << "Got from initialize: x = " << tracker->fTrackpositions[0].toString() << endl;
+					//debug << "Got from initialize: v = " << tracker->fTrackvelocities[0].toString() << endl;
 
 					for (int i = 0; i < 3; i++) {
-						assert(tracker->fTrackpositions.size() == 1);
-						start_position[i] = tracker->fTrackpositions[0][i];
-						assert(tracker->fTrackvelocities.size() == 1);
-						start_velocity[i] = tracker->fTrackvelocities[0][i];
+						assert(tracker->positions.size() == 1);
+						start_position[i] = tracker->positions[0][i];
+						assert(tracker->axes.size() == 1);
+						start_velocity[i] = tracker->axes[0][i];
 					}
 
 					start_tree.Fill();
 				}
 				stepper->reset(firsthtry, P, dPdt, T);
 				savetime = 0;
-				j = 0;
 				int lifetime1 = theParameters.getDoubleParam("Lifetime");
 				tracker->savetrack = false;
-				while(tracker->reachedendoftube == false)
+				while((tracker->reachedendoftube == false) && T<lifetime1)
 				{
 
 					try
@@ -200,7 +202,7 @@ int main(int nargs, char** argv)
 					T = stepper->getT();
 					debug << "Stepper TIME: " << T << endl;
 					hdid = stepper->getHdid();
-					std::cout << "T = " << T << " hdid = " << hdid << std::endl;
+					//std::cout << "T = " << T << " hdid = " << hdid << std::endl;
 					debug << "hdid = " << hdid << endl;
 
 //					while(T >= (st = savetime*savetimediff))
@@ -222,9 +224,9 @@ int main(int nargs, char** argv)
 				{
 					// fill TTree
 					for (int j = 0; j < 3; j++) {
-							P_end[j] = stepper->dense_out(j,lifetime,hdid);
+							P_end[j] = stepper->dense_out(j,T,hdid);
 					}
-					t_end = lifetime;
+					t_end = T;
 					end_polarization.Fill();
 				}
 
@@ -249,7 +251,6 @@ int main(int nargs, char** argv)
 		delete derivatives; derivatives = 0;
 		delete tracker; tracker = 0;
 		delete bfield; bfield = 0;
-		delete c; c = 0;
 
 	}
 

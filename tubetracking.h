@@ -31,6 +31,12 @@ class Tubetracking : public Basetracking {
 		bool reachedendoftube;
 		bool savetrack;
 		std::fstream trackparticle;
+// In den Vektoren sollen die bisherigen ausgewürfelten Werte, die zu einer "guten"
+// Position geführt haben, gespeichert werden. 
+		std::vector<double> times;
+		//std::vector<double> roots;
+		std::vector<Threevector> positions;
+		std::vector<Threevector> axes;
 	
 	private:
 		double vdrift, mu, sigma, scatteringtime, tend;
@@ -38,12 +44,6 @@ class Tubetracking : public Basetracking {
 		bool wasinlastsegment;
 		Random *rand;
 		Tubegeometry* fTubegeometry;
-// In den Vektoren sollen die bisherigen ausgewürfelten Werte, die zu einer "guten"
-// Position geführt haben, gespeichert werden. 
-		std::vector<double> times;
-		//std::vector<double> roots;
-		std::vector<Threevector> positions;
-		std::vector<Threevector> axes;
 };
  
 #endif
