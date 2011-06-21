@@ -1,7 +1,7 @@
 LIBS=-lgsl -lgslcblas -lm
 CXXFLAGS=-ggdb
 
-all: cylinder roots polynom tube
+all: cylinder roots polynom
 
 cylinder: cylinder.cpp ../objs/cylinder.o ../objs/threevector.o ../objs/random.o ../objs/polynom.o ../objs/basetracking.o ../objs/equationtracker.o ../interpolationpolynomial.h
 	$(CXX) $(CXXFLAGS) $(LIBS) cylinder.cpp ../objs/cylinder.o ../objs/random.o  ../objs/polynom.o ../objs/basetracking.o ../objs/equationtracker.o ../objs/threevector.o -o cylinder

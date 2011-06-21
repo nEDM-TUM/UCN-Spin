@@ -1,0 +1,5 @@
+# Copy this file to config.mk and edit it according to your setup.
+
+# Directory of CERN ROOT installation
+ROOT_DIR=/opt/ROOT
+

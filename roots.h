@@ -15,7 +15,10 @@ namespace Roots {
 
 	const unsigned int MAX_ITERATIONS = 10000;
 
-	class NoRoot {};
+	class NoRoot : public Exception {
+		public:
+			NoRoot() : Exception("no root found") {};
+	};
 }
 
 /**
@@ -84,7 +87,7 @@ double Roots::safeNewton(C* const instance,const T &f, const T &d, double x1, do
 	while (fabs(y) > eps) {
 		// Protect against infinite loops
 		if(iteration++ > MAX_ITERATIONS)
-			throw EndlessLoop(); // TODO: review
+			throw EndlessLoop();
 
 		const double xn = x - (instance->*f)(x)/(instance->*d)(x);
 

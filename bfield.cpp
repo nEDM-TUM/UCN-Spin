@@ -9,7 +9,7 @@
 Bfield::Bfield(const Parameters &theParameters, Basetracking* const btr)
 : B0(0.0), B1(0.0), mu0(1.2566371e-6), R(0.0), E0(0.0), g(0.0), ghalf(0.0), B1_g(0.0),
   B1_g_half(0.0), gyroelect(0.0), omegaEDM(0.0), flipangle(0.0), 
-  omegalarmor(0.0), factor(-3.9293341e-34*1.5e18), B000(0.0), I(0.0), h2(0.0),
+  omegalarmor(0.0), factor(-3.9293341e-34*1.5e18), gyromag(0.0), B000(0.0), I(0.0), h2(0.0),
   tracking(btr)
 {
 	B0 = theParameters.getDoubleParam("B0");
@@ -20,13 +20,14 @@ Bfield::Bfield(const Parameters &theParameters, Basetracking* const btr)
 	centercoil1 = Threevector(-R/2., 0., 0.);
 	centercoil2 = Threevector(R/2., 0., 0.);
 	g = theParameters.getDoubleParam("B0Gradient");
+	gyromag = theParameters.getDoubleParam("GyromagneticRatio");
 	ghalf = g/2.0;
 	B1_g = theParameters.getDoubleParam("B1Gradient");
 	B1_g_half = B1_g/2.0;
 	gyroelect = theParameters.getDoubleParam("GyroelectricRatio");
 	omegaEDM = gyroelect*E0;
 	flipangle = theParameters.getDoubleParam("Flipangle")/180.0*M_PI;
-	omegalarmor = -PRECES_N*B0;
+	omegalarmor = -gyromag*B0;
 	xyz0[0] = theParameters.getDoubleParam("GradientOffsetX");
 	xyz0[2] = theParameters.getDoubleParam("GradientOffsetZ");
 	B000 = theParameters.getDoubleParam("SolenoidField");
@@ -56,6 +57,7 @@ Threevector Bfield::operator()(const double time) const
 
 Threevector Bfield::evalcoil(const Threevector &relposition) const
 {
+
 	Threevector posBfieldframe;
 	posBfieldframe = Threevector(relposition[2], relposition[1], relposition[0]);
 	double r = sqrt(posBfieldframe[0]*posBfieldframe[0]+posBfieldframe[1]*posBfieldframe[1]);
@@ -95,6 +97,7 @@ Threevector Bfield::eval(const double time) const
 	return field;
 	
 	//return Threevector(0.0, 0.0, 1.0e-6);
+
 }
 
 double Bfield::Br(const double r, const double z) const

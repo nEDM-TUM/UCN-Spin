@@ -1,7 +1,35 @@
+include config.mk
+
+ifdef ROOT_DIR
+ROOT_CONFIG=$(ROOT_DIR)/bin/root-config
+else
+ROOT_CONFIG=root-config
+endif
+
 CXX=g++
-#CXXFLAGS=-Wall -O3 -march=native -fopenmp -ggdb
-#CXXFLAGS=-Wall -Wno-unknown-pragmas -ggdb
-CXXFLAGS=-Wall -O3 -march=native -Wno-unknown-pragmas -ggdb -DNDEBUG
+
+CXXFLAGS=-Wall
+
+ifndef BUILD_SETTINGS
+	BUILD_SETTINGS = devel
+endif
+
+ifeq ($(BUILD_SETTINGS),release)
+	CXXFLAGS += -O3 -march=native -fopenmp -ggdb -DNDEBUG
+endif
+ifeq ($(BUILD_SETTINGS),debug)
+	CXXFLAGS += -O0 -ggdb -Wno-unknown-pragmas
+endif
+ifeq ($(BUILD_SETTINGS),devel)
+	CXXFLAGS += -O3 -Wno-unknown-pragmas -DNO_DEBUG_PRINTS
+endif
+
+ifdef PROFILE
+	CXXFLAGS += -pg
+endif
+
+CXXFLAGS+= $(shell $(ROOT_CONFIG) --cflags --ldflags --libs)
+
 LIBS=-lgsl -lgslcblas -lm
 OBJS=main.o bfield.o random.o dopr.o derivatives.o parameters.o threevector.o basetracking.o equationtracker.o polynom.o lsegment.o csegment.o tubegeometry.o tubetracking.o
 TAGFILES=$(shell find . -name "*.cpp" -or -name "*.h")

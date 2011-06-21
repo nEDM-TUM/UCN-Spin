@@ -3,11 +3,12 @@
 
 #include "basegeometry.h"
 #include "threevector.h"
+#include "parameters.h"
 
 class Cylinder : public Basegeometry
 {
 	public:
-		Cylinder(Random *ran, double radius, double height);
+		Cylinder(const Parameters& params, Random *ran);
 		
 		bool contains(const Threevector &x) const;
 		bool insideHeight(const Threevector &x) const;
@@ -42,6 +43,9 @@ class Cylinder : public Basegeometry
 		 */
 		bool fReflectTop;
 		bool fReflectBottom;
+
+		double fVelocitySigma; ///< sigma for maxwell distribution of velocity
+		double fCutoffSquare; ///< highest possible velocity
 };
 
 #endif // CYLINDER_H
