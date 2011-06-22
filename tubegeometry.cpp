@@ -106,7 +106,7 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
                                 }
 			}
 			else if (type == "l") {
-								double 	t,v1,v2,v3;
+				double 	t,v1,v2,v3;
 				Threevector s;
 				tube >> t >> v1 >> v2 >> v3;
 				std::getline (tube, dummy);

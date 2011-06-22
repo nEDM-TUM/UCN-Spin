@@ -24,16 +24,15 @@ Tubetracking::~Tubetracking(){
 }
 
 void Tubetracking::initialize(){
-        positions.clear();
-        axes.clear();
-        times.clear();
+        //positions.clear();
+        //axes.clear();
+        //times.clear();
 	Threevector v,x;
 	v = Threevector();
 	x = Threevector();
 	fTubegeometry->initialize(v,x); 
 	positions.push_back(x);
 	axes.push_back(v);
-	debug << axes.back().toString() << positions.back().toString() << std::endl;
 }
 // Prüft zunächst ob die gefragte Zeit schon ausgewürfelt wurde oder noch nicht. 
 // Falls nicht, werden so lange "gute" neue Positionen ausgewürfelt, bis die 
@@ -80,7 +79,7 @@ Threevector Tubetracking::getPosition(double time){
 			
 			positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
 			//axisnew = fTubegeometry->contains(positionnew, rootnew);
-			axisnew = fTubegeometry->contains(positionnew);
+			axisnew = fTubegeometry->contains(positionnew);		
 		}
 		
 		times.push_back(tnew);	
@@ -158,7 +157,7 @@ void Tubetracking::stepDone(double time){
 		axes.resize(N-i+1);
 		positions.resize(N-i+1);
 		Nstart = 0;
-		std::cout << "Position = " << positions[0].toString() << std::endl;
+		//std::cout << "Position = " << positions[0].toString() << std::endl;
 		//std::cout << "Achse = " << axes[0].toString() << std::endl;
 	}
 }

@@ -19,7 +19,7 @@ class Csegment : public Segment {
 		double secderivdist( double tau);
 		double rootNewton(const Threevector &x, double rootstartsegment);
 		double radius, radiustube, t_max;
-		Threevector start, b, a, centre;
+		Threevector start, normal, b, a, centre;
 		Threevector position; 
 };
 

@@ -6,7 +6,7 @@
 # include <string>
 
 Csegment::Csegment(Threevector s, Threevector v, Threevector n, double r, double t, Parameters& theParameters) :
-	radius(r), radiustube(theParameters.getDoubleParam("radiustube")), t_max(t), start(s), b(v.normalized()), a(b.cross(n.normalized())),
+	radius(r), radiustube(theParameters.getDoubleParam("radiustube")), t_max(t), start(s), normal(n), b(v.normalized()), a(b.cross(n.normalized())),
 	centre(start + (-radius)*a)
 {
 	position = Threevector (0.0, 0.0, 0.0);

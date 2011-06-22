@@ -1,0 +1,37 @@
+
+NumberOfParticles	100
+Lifetime			20
+ErrorGoal			1e-11
+GyromagneticRatio	30e+6
+EfieldMag			0
+B0Gradient			1e-7
+GradientOffsetX		0
+GradientOffsetZ		0
+B1Gradient			0
+EDM					0
+
+Flipangle			0
+Seed				123
+#GyroelectricRatio	EDM*0.01*elementarycharge/hbar ### TODO!
+CylinderRadius		3.0e-4
+
+CylinderHeight		0.12
+B0					1.0e-6
+B1					1.0e-9
+SolenoidField		0.01
+SolenoidHeight		.01
+SolenoidRadius		0.2
+SolenoidCurrent		100
+
+radiustube		0.003
+sigma			137.45
+vdrift 			0.01
+mu			8.58e-12
+
+SaveTimeDiff		0.0002
+GravitationConstant	9.81
+TrackerStepSize		0.05
+CollisionAccuracy	1e-7
+VelocitySigma		1
+VelocityCutoff		1e100
+Timeout				5
