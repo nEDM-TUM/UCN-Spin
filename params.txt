@@ -3,9 +3,6 @@ NumberOfParticles	100
 Lifetime			20
 ErrorGoal			1e-11
 GyromagneticRatio	30e+6
-NumberOfParticles	100
-Lifetime			1000
-ErrorGoal			1e-12
 EfieldMag			0
 B0Gradient			1e-7
 GradientOffsetX		0
