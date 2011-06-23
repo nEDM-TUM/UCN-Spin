@@ -43,6 +43,16 @@ Threevector operator+(const Threevector &left, const Threevector &right)
 	return a;
 }
 
+Threevector operator-(const Threevector &left, const Threevector &right)
+{
+	Threevector a;
+	for(int i=0; i<3; i++)
+	{
+		a.fVec[i] = left.fVec[i] - right.fVec[i];
+	}
+	return a;
+}
+
 double operator*(const Threevector &left, const Threevector &right)
 {
 	double a=0.0;
@@ -120,3 +130,18 @@ Threevector Threevector::cross (const Threevector &x) const {
 	c[2]=fVec[0]*x[1]-fVec[1]*x[0];
 	return c;
 }
+
+std::ostream& operator<<(std::ostream &o, const Threevector &v)
+{
+	o << v.toString();
+	return o;
+}
+
+std::istream& operator>>(std::istream &i, Threevector &v)
+{
+	for (int j = 0; j < 3; j++)
+		i >> v[j];
+	return i;
+}
+
+

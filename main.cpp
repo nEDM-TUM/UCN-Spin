@@ -13,7 +13,7 @@
 #include "TTree.h"
 
 #include "globals.h"
-#include "bfield.h"
+#include "superpositionfield.h"
 #include "random.h"
 #include "tracking.h"
 #include "dopr.h"
@@ -116,7 +116,7 @@ int main(int nargs, char** argv)
 		Cylinder *c = new Cylinder(theParameters, randgen);
 		GravitationTracker *tracker = new GravitationTracker(theParameters, randgen, c);
 
-		Bfield *bfield = new Bfield(theParameters,tracker);
+		Bfield *bfield = new SuperpositionField(tracker, std::string("fields.dat"));
 
 
 		Derivatives * derivatives = new Derivatives(theParameters, bfield);

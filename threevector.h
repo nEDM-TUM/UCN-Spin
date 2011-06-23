@@ -4,6 +4,7 @@
 #include "debug.h"
 #include <vector>
 #include <string>
+#include <iostream>
 
 class Threevector
 {
@@ -24,7 +25,7 @@ class Threevector
 			for (int i = 0; i < 3; i++)
 				fVec[i] *= a;
 			return *this;
-		}
+		};
 		Threevector &operator=(const Threevector &v) {
 			for (int i = 0; i < 3; i++)
 				fVec[i] = v.fVec[i];
@@ -34,8 +35,16 @@ class Threevector
 			for (int i = 0; i < 3; i++)
 				fVec[i] += v.fVec[i];
 			return *this;
-		}
+		};
+		Threevector operator-() const {
+			Threevector ret;
+			for (int i = 0; i < 3; i++)
+				ret[i] = -fVec[i];
+			return ret;
+		};
+
 		friend Threevector operator+(const Threevector &left, const Threevector &right);
+		friend Threevector operator-(const Threevector &left, const Threevector &right);
 		friend double operator*(const Threevector &left, const Threevector &right);
 		friend Threevector operator*(const double &left, const Threevector &right);
 		friend Threevector operator*(const Threevector &left, const double &right) {
@@ -51,5 +60,8 @@ class Threevector
 	protected:
 		double fVec[3];
 };
+
+std::ostream& operator<<(std::ostream &o, const Threevector &v);
+std::istream& operator>>(std::istream &i, Threevector &v);
 
 #endif

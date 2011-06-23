@@ -196,9 +196,43 @@ Threevector EquationTracker::getPosition(double time) {
 	return Threevector(px(time), py(time), pz(time));
 }
 
+/**
+ * This function lineary interpolates the velocity the particle has at the time
+ * given as a parameter.
+ */
 Threevector EquationTracker::getVelocity(double time) {
-	/// This function does not interpolate but just return the last velocity
-	return fTrackvelocities.back();
+	assert(fTrackvelocities.size() == fTrackpositions.size() && fTracktimes.size() == fTrackpositions.size());
+	unsigned int l = 0;
+	unsigned int u = fTracktimes.size() - 1;
+	assert(u >= 0);
+
+	if (u == 0) // only one entry yet
+		return fTrackvelocities[0];
+	assert(u > 0);
+
+	// Find time by bisection
+	while (u - l > 1) {
+		assert(u > l);
+		const unsigned int i = l + (u-l)/2;
+
+		if (fTracktimes[i] > time)
+			u = i;
+		else // (fTracktimes[i] <=)
+			l = i;
+	}
+	assert(u - l == 1);
+	assert(l >= 0 && u < fTracktimes.size());
+
+	// Interpolate
+	const Threevector dv = fTrackvelocities[u] - fTrackvelocities[l];
+	const double dt = fTracktimes[u] - fTracktimes[l];
+	assert(dt > 0);
+	const double t = time - fTracktimes[l];
+	assert(t > 0);
+	assert(t >= fTracktimes[l] && t <= fTracktimes[u]);
+	const Threevector v0 = fTrackvelocities[l];
+
+	return (t/dt)*dv + v0;
 }
 
 EquationTracker::~EquationTracker()

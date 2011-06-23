@@ -612,7 +612,6 @@ FILE_PATTERNS          = *.c \
                          *.cxx \
                          *.cpp \
                          *.c++ \
-                         *.d \
                          *.java \
                          *.ii \
                          *.ixx \
@@ -633,11 +632,12 @@ FILE_PATTERNS          = *.c \
                          *.m \
                          *.mm \
                          *.dox \
-                         *.py \
                          *.f90 \
                          *.f \
                          *.vhd \
                          *.vhdl
+#                         *.py \
+#                         *.d \
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories 
 # should be searched for input files as well. Possible values are YES and NO. 
