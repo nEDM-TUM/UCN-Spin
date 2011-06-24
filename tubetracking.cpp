@@ -157,7 +157,7 @@ void Tubetracking::stepDone(double time){
 		axes.resize(N-i+1);
 		positions.resize(N-i+1);
 		Nstart = 0;
-		//std::cout << "Position = " << positions[0].toString() << std::endl;
+		std::cout << "in stepdone: Position = " << positions[0].toString() << std::endl;
 		//std::cout << "Achse = " << axes[0].toString() << std::endl;
 	}
 }
