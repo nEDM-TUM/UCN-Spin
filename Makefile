@@ -10,7 +10,7 @@ CXX=g++
 CXXFLAGS=-Wall
 
 ifndef BUILD_SETTINGS
-	BUILD_SETTINGS = debug
+	BUILD_SETTINGS = release
 endif
 
 ifeq ($(BUILD_SETTINGS),release)
