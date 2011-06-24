@@ -228,8 +228,8 @@ Threevector EquationTracker::getVelocity(double time) {
 	const double dt = fTracktimes[u] - fTracktimes[l];
 	assert(dt > 0);
 	const double t = time - fTracktimes[l];
-	assert(t > 0);
-	assert(t >= fTracktimes[l] && t <= fTracktimes[u]);
+	assert(t >= 0);
+	assert(t <= fTracktimes[u] - fTracktimes[l]);
 	const Threevector v0 = fTrackvelocities[l];
 
 	return (t/dt)*dv + v0;

@@ -65,7 +65,8 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("GravitationConstant");
 	theParameters.expectDouble("CollisionAccuracy");
 	theParameters.expectInt("Timeout");
-	theParameters.expectDouble("VelocitySigma");
+	theParameters.expectDouble("Temperature");
+	theParameters.expectDouble("ParticleMass");
 	theParameters.expectDouble("VelocityCutoff");
 	theParameters.expectDouble("DiffusionProbability");
 

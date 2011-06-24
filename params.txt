@@ -22,7 +22,8 @@ SaveTimeDiff		0.0002
 GravitationConstant	9.81
 TrackerStepSize		0.05
 CollisionAccuracy	1e-7
-VelocitySigma		1
+Temperature			0.001
+ParticleMass		1.674927e-27
 VelocityCutoff		1e100
 Timeout				5
 DiffusionProbability	1

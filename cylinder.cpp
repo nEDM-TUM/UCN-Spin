@@ -2,6 +2,7 @@
 #include "roots.h"
 #include "debug.h"
 #include "parameters.h"
+#include "globals.h"
 #include <math.h>
 #include <iostream>
 #include <cassert>
@@ -19,7 +20,11 @@
  * @param height height of the cylinder
  */
 Cylinder::Cylinder(const Parameters &params, Random *ran)
-	: Basegeometry(ran), fRadius(params.getDoubleParam("CylinderRadius")), fRSquared(fRadius*fRadius), fHeight(params.getDoubleParam("CylinderHeight")), fReflectRadius(false), fReflectTop(false), fReflectBottom(false), fVelocitySigma(params.getDoubleParam("VelocitySigma")), fCutoffSquare(params.getDoubleParam("VelocityCutoff")*params.getDoubleParam("VelocityCutoff"))
+	: Basegeometry(ran), fRadius(params.getDoubleParam("CylinderRadius")),
+	fRSquared(fRadius*fRadius), fHeight(params.getDoubleParam("CylinderHeight")),
+	fReflectRadius(false), fReflectTop(false), fReflectBottom(false),
+	fVelocitySigma(sqrt(params.getDoubleParam("Temperature")*boltzmann/params.getDoubleParam("ParticleMass"))),
+	fCutoffSquare(params.getDoubleParam("VelocityCutoff")*params.getDoubleParam("VelocityCutoff"))
 {
 	assert(fRSquared == fRadius*fRadius);
 	debug << "New cylinder, r = " << fRadius << ", h = " << fHeight << ", r^2 = " << fRSquared << std::endl;
