@@ -1,5 +1,5 @@
 
-NumberOfParticles	1
+NumberOfParticles	100
 Lifetime			20
 ErrorGoal			1e-11
 GyromagneticRatio	30e+6
@@ -18,14 +18,14 @@ CylinderRadius		3.0e-4
 CylinderHeight		0.12
 B0					1.0e-6
 B1					1.0e-9
-SolenoidField		0.01
-SolenoidHeight		.01
-SolenoidRadius		0.2
-SolenoidCurrent		100
+SolenoidField		0.0192
+SolenoidHeight		.02
+SolenoidRadius		0.18
+SolenoidCurrent		0
 
 radiustube		0.003
 sigma			137.45
-vdrift 			5.0
+vdrift 			0.02
 mu			8.58e-12
 
 SaveTimeDiff		0.0002
