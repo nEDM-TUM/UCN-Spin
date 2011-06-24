@@ -40,7 +40,7 @@ double Roots::bisectStep(C* const instance,const T &f, double &x1, double &x2) {
 	const double xm = .5*(x1+x2);
 	const double ym = (instance->*f)(xm);
 
-	debug << "bisecting: (" << x1 << "," << y1 << ") -- (" << xm << "," << ym << ") -- (" << x2 << "," << y2 << ")" << std::endl;
+	//debug << "bisecting: (" << x1 << "," << y1 << ") -- (" << xm << "," << ym << ") -- (" << x2 << "," << y2 << ")" << std::endl;
 
 	if (x1 > x2)
 		throw "x1 > x2";
@@ -79,7 +79,7 @@ template <class T,class C>
 double Roots::safeNewton(C* const instance,const T &f, const T &d, double x1, double x2, double eps) {
 	if (fabs((instance->*f)(x1)) < eps)
 		return x1;
-	debug << "Doing initial bisection step:" << std::endl;
+	//debug << "Doing initial bisection step:" << std::endl;
 	double x = bisectStep(instance,f, x1, x2); // Do a bisection step first to check arguments for sanity
 	double y = (instance->*f)(x);
 	double last_y = INFINITY;
@@ -93,22 +93,22 @@ double Roots::safeNewton(C* const instance,const T &f, const T &d, double x1, do
 
 		const double xn = x - (instance->*f)(x)/(instance->*d)(x);
 
-		debug << "f(" << x << ") = " << y << ", last was: " << last_y << std::endl;
+		//debug << "f(" << x << ") = " << y << ", last was: " << last_y << std::endl;
 
 		// Test if result is ok
 		if (xn < x1 || xn > x2) {
 			// outside of original rage, bisect
-			debug << "Bisecting: " << xn << " out of range." << std::endl;
+			//debug << "Bisecting: " << xn << " out of range." << std::endl;
 			x = bisectStep(instance,f, x1, x2);
 		}
 		else if (fabs((instance->*f)(xn)) >= last_y) {
 			// function value got bigger, maybe oscillation or divergence
-			debug << "Bisecting: |f(" << xn << ")| >= " << last_y << std::endl;
+			//debug << "Bisecting: |f(" << xn << ")| >= " << last_y << std::endl;
 			x = bisectStep(instance,f, x1, x2);
 		}
 		else {
 			// newton seems to go into the right direction, go on
-			debug << "Accepting: " << x << " -> " << xn << std::endl;
+			//debug << "Accepting: " << x << " -> " << xn << std::endl;
 			x = xn;
 		}
 		
@@ -116,7 +116,7 @@ double Roots::safeNewton(C* const instance,const T &f, const T &d, double x1, do
 		y = (instance->*f)(x);
 	}
 
-	debug << "Reached accuracy of " << eps << ", f(" << x << ") = " << y << std::endl;
+	//debug << "Reached accuracy of " << eps << ", f(" << x << ") = " << y << std::endl;
 
 	return x;
 }

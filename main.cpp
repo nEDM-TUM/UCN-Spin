@@ -255,7 +255,7 @@ int main(int nargs, char** argv)
 	}
 
 	out.Write();
-		
+	std::cout << "Wrote output file, run succesful" << std::endl;	
 	return 0;
 }
 
