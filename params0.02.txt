@@ -1,5 +1,5 @@
 
-NumberOfParticles	2
+NumberOfParticles	100
 Lifetime			20
 ErrorGoal			1e-11
 GyromagneticRatio	30e+6
