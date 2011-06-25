@@ -138,6 +138,7 @@ void Tubetracking::stepDone(double time){
 		int N = times.size();
 		while (times[i] < time)
 			i = i + 1;
+		std::cout << "Anzahl der Schritte =" << i << std::endl;
 		if (savetrack == true){
 			if(trackparticle.is_open()) {
 				for (int j = 0; j < i; j++){
