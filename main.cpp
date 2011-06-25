@@ -203,7 +203,7 @@ int main(int nargs, char** argv)
 					debug << "Stepper TIME: " << T << endl;
 					hdid = stepper->getHdid();
 					//std::cout << "T = " << T << " hdid = " << hdid << std::endl;
-					debug << "hdid = " << hdid << endl;
+					std::cout << "hdid = " << hdid << std::endl;
 
 //					while(T >= (st = savetime*savetimediff))
 //						{

@@ -1,7 +1,7 @@
 
 NumberOfParticles	100
 Lifetime			20
-ErrorGoal			1e-11
+ErrorGoal			1e-9
 GyromagneticRatio	30e+6
 EfieldMag			0
 B0Gradient			1e-7
