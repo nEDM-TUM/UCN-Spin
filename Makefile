@@ -56,10 +56,14 @@ clean :
 	rm -f cylindric
 	make -C tests clean
 
+superclean: clean
+	rm -f objs/*.o
+	rm -f deps/*.d
+
 doc:
 	doxygen > /dev/null
 
 tags: $(TAGFILES)
 	ctags $(TAGFILES)
 
-.PHONY: clean doc all
+.PHONY: superclean clean doc all
