@@ -76,7 +76,7 @@ Threevector Tubetracking::getPosition(double time){
 			scatteringlength_2 = scatteringtime * fRandomgenerator->gaussian(sigma);
 			scatteringlength_3 = scatteringtime * fRandomgenerator->gaussian(sigma);
 			scatteringvector = Threevector (scatteringlength_1, scatteringlength_2, scatteringlength_3);
-			
+			std::cout << "Schrittweite = " << scatteringvector.mag() << std::endl;
 			positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
 			//axisnew = fTubegeometry->contains(positionnew, rootnew);
 			axisnew = fTubegeometry->contains(positionnew);		
@@ -138,7 +138,6 @@ void Tubetracking::stepDone(double time){
 		int N = times.size();
 		while (times[i] < time)
 			i = i + 1;
-		std::cout << "Anzahl der Schritte =" << i << std::endl;
 		if (savetrack == true){
 			if(trackparticle.is_open()) {
 				for (int j = 0; j < i; j++){
@@ -158,7 +157,7 @@ void Tubetracking::stepDone(double time){
 		axes.resize(N-i+1);
 		positions.resize(N-i+1);
 		Nstart = 0;
-		std::cout << "Position = " << positions[0].toString() << std::endl;
+		//std::cout << "Position = " << positions[0].toString() << std::endl;
 		//std::cout << "Achse = " << axes[0].toString() << std::endl;
 	}
 }
