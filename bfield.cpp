@@ -96,7 +96,7 @@ Threevector Bfield::eval(const double time) const
 	//field = evalcoil(position + (-1)*centercoil1) + evalcoil(position + (-1)*centercoil2); 
 	//return field;
 	
-	return Threevector(0.0, 0.0, 1.0e-6);
+	return Threevector(1.0e-6, 0.0, 0.0);
 
 }
 
