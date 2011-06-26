@@ -3,8 +3,8 @@ CXXFLAGS=-ggdb
 
 all: cylinder roots polynom
 
-cylinder: cylinder.cpp ../objs/cylinder.o ../objs/threevector.o ../objs/random.o ../objs/polynom.o ../objs/basetracking.o ../objs/equationtracker.o ../interpolationpolynomial.h
-	$(CXX) $(CXXFLAGS) $(LIBS) cylinder.cpp ../objs/cylinder.o ../objs/random.o  ../objs/polynom.o ../objs/basetracking.o ../objs/equationtracker.o ../objs/threevector.o -o cylinder
+cylinder: cylinder.cpp ../objs/cylinder.o ../objs/threevector.o ../objs/random.o ../objs/parameters.o ../objs/polynom.o ../objs/basetracking.o ../objs/fastcylindertracker.o ../interpolationpolynomial.h
+	$(CXX) $(CXXFLAGS) $(LIBS) cylinder.cpp ../objs/cylinder.o ../objs/random.o  ../objs/polynom.o ../objs/basetracking.o ../objs/fastcylindertracker.o ../objs/threevector.o ../objs/parameters.o -o cylinder
 
 roots: roots.cpp ../roots.h ../objs/polynom.o
 	$(CXX) $(CXXFLAGS) $(LIBS) roots.cpp ../objs/polynom.o -o roots

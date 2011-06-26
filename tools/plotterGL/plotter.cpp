@@ -9,8 +9,8 @@
 using namespace std;
 
 
-const float cylHeight = 2.0f;
-const float cylRadius = 5.0f;
+const float cylHeight = 0.12f;
+const float cylRadius = 0.235f;
 
 float Plotter::angle[2] = {0.0f, 0.0f};
 float Plotter::translate[3] = {0.0f, 0.0f, 0.0f};
