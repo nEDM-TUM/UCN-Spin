@@ -77,7 +77,7 @@ Threevector Tubetracking::getPosition(double time){
 			scatteringlength_3 = scatteringtime * fRandomgenerator->gaussian(sigma);
 			scatteringvector = Threevector (scatteringlength_1, scatteringlength_2, scatteringlength_3);
 			std::cout << (scatteringvector + vdrift * scatteringtime * axes.back().normalized()).mag() << std::endl;
-			positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
+		
 			//axisnew = fTubegeometry->contains(positionnew, rootnew);
 			axisnew = fTubegeometry->contains(positionnew);		
 		}
@@ -89,6 +89,7 @@ Threevector Tubetracking::getPosition(double time){
 		
 		if (fTubegeometry->lastsegmentcontains(positionnew) == true) { 
 			wasinlastsegment = true;
+			std::cout << "letzte ausgewürfelte Position = " << positions.back().toString() << std::endl;
 			tend = times.back();
 		}
 	}
