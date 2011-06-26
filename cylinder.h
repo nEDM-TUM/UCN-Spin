@@ -5,6 +5,8 @@
 #include "threevector.h"
 #include "parameters.h"
 
+class FastCylinderTracker;
+
 class Cylinder : public Basegeometry
 {
 	public:
@@ -23,10 +25,12 @@ class Cylinder : public Basegeometry
 		double findIntersection(double t0, double t1,
 				const Polynom &px, const Polynom &py, const Polynom &pz, double eps);
 
-	private:
 		void reflectHeight(Threevector &v);
 		void reflectRadius(Threevector &v, const Threevector &x);
 
+		friend class FastCylinderTracker;
+
+	private:
 		double fRadius; ///< radius of cylinder
 		double fRSquared; ///< squared radius of cylinder
 		double fHeight; ///< height of cylinder

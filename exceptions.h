@@ -15,4 +15,9 @@ class EndlessLoop : public Exception {
 		EndlessLoop() : Exception("endless loop") {};
 };
 
+class LeftVolume : public Exception {
+	public:
+		LeftVolume() : Exception("particle left volume") {};
+};
+
 #endif // _EXCEPTIONS_H

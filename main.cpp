@@ -8,6 +8,7 @@
 #include <ctime>
 #include <limits>
 #include <unistd.h>
+#include <cassert>
 
 #include "TFile.h"
 #include "TTree.h"
@@ -19,7 +20,8 @@
 #include "dopr.h"
 #include "derivatives.h"
 #include "parameters.h"
-#include "gravitationtracker.h"
+//#include "gravitationtracker.h"
+#include "fastcylindertracker.h"
 #include "cylinder.h"
 #include "debug.h"
 #include "exceptions.h"
@@ -115,7 +117,8 @@ int main(int nargs, char** argv)
 		int savetime = 0;
 
 		Cylinder *c = new Cylinder(theParameters, randgen);
-		GravitationTracker *tracker = new GravitationTracker(theParameters, randgen, c);
+		//GravitationTracker *tracker = new GravitationTracker(theParameters, randgen, c); // TODO
+		FastCylinderTracker *tracker = new FastCylinderTracker(theParameters, randgen, c);
 
 		Bfield *bfield = new SuperpositionField(tracker, std::string("fields.dat"));
 

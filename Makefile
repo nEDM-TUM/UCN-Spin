@@ -29,7 +29,7 @@ endif
 
 CXXFLAGS+= $(shell $(ROOT_CONFIG) --cflags --ldflags --libs)
 LIBS=-lgsl -lgslcblas -lm
-OBJS=main.o random.o dopr.o derivatives.o parameters.o cylinder.o threevector.o basetracking.o equationtracker.o polynom.o superpositionfield.o
+OBJS=main.o random.o dopr.o derivatives.o parameters.o cylinder.o threevector.o basetracking.o equationtracker.o polynom.o superpositionfield.o fastcylindertracker.o
 TAGFILES=$(shell find . -name "*.cpp" -or -name "*.h")
 
 all: cylindric tags
