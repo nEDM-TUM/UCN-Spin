@@ -57,8 +57,9 @@ double Roots::bisectStep(C* const instance,const T &f, double &x1, double &x2) {
 		x1 = xm;
 		x2 = xm;
 	}
-	else
+	else{
 		throw NoRoot();
+	}
 
 	return .5*(x1+x2);
 }

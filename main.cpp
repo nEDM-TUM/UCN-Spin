@@ -125,7 +125,7 @@ int main(int nargs, char** argv)
 			TP[z] = 0.0;
 		}
                 */
-		Tubegeometry *geo = new Tubegeometry(randgen, "tube.txt", theParameters); 
+		Tubegeometry *geo = new Tubegeometry(randgen, "tube.txt", "tubemathematica.txt", theParameters); 
 		Tubetracking *tracker = new Tubetracking(randgen, geo, theParameters); 	//Pointer to the random-generator
 
 
@@ -202,7 +202,7 @@ int main(int nargs, char** argv)
 					T = stepper->getT();
 					debug << "Stepper TIME: " << T << endl;
 					hdid = stepper->getHdid();
-					//std::cout << "T = " << T << " hdid = " << hdid << std::endl;
+					std::cout << "T = " << T << " hdid = " << hdid << std::endl;
 					debug << "hdid = " << hdid << endl;
 
 //					while(T >= (st = savetime*savetimediff))
@@ -233,6 +233,7 @@ int main(int nargs, char** argv)
 				#pragma omp critical
 				{
 					cout << "Particle " << (i+1) << ": " << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
+					cout << "Simulationtime = " << T << "s" << endl;
 				}
 
 			} // try

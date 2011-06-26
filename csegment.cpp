@@ -93,8 +93,9 @@ double Csegment::derivdist(double tau) {
 		k[i] = radius * (cos(tau * t_max)*a[i] + sin(tau * t_max)*b[i]);
 		l[i] = radius * (-sin(tau * t_max)*a[i] + cos(tau * t_max)*b[i]);
 	}
-	for (int i=0; i<3; i++) 
+	for (int i=0; i<3; i++) {
 		derivdistance = derivdistance + 2*(centre[i] + k[i] - position[i]) * l[i]; 
+	}
 	return derivdistance;
 }
 
@@ -115,6 +116,12 @@ double Csegment::secderivdist(double tau ) {
 
 std::string Csegment::toString() const {
 	std::ostringstream o;
-	o << "C-Segment: " << "Startpunkt = " << (*this).start.toString() << ";	Radius = " << radius << ";	Bogenlänge = " << t_max;
+	o << "C-Segment: " << "r(tau) = " << centre.toString() << " + " << radius << " * " << "cos(tau * " << t_max << ") * " << a.toString() << " + " << radius << " * " << "sin(tau * " << t_max << ")* " << b.toString();
+	return o.str();
+}
+
+std::string Csegment::toMathematica() const{
+	std::ostringstream o;
+	o << "{" << centre[0] << " + " << radius << " * Cos(x * " << t_max << ") * " << a[0] << " + " << radius << " * Sin(x * " << t_max << ") * " << b[0] << ", " << centre[1] << " + " << radius << " * Cos(x * " << t_max << ") * " << a[1] << " + " << radius << " * Sin(x * " << t_max << ") * " << b[1] << ", " << centre[2] << " + " << radius << " * Cos(x * " << t_max << ") * " << a[2] << " + " << radius << " * Sin(x * " << t_max << ") * " << b[2] << "}"; 
 	return o.str();
 }

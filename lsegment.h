@@ -13,6 +13,7 @@ class Lsegment : public Segment {
 		//Threevector segmentcontains(const Threevector &x, double &rootstartsegment);
 		Threevector segmentcontains(const Threevector &x);
 		std::string toString() const;
+		std::string toMathematica() const;
 	
 	private:
 		Threevector	start;

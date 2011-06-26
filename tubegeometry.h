@@ -12,7 +12,7 @@
 
 class Tubegeometry : public Basegeometry {
 	public:
-		Tubegeometry(Random*, std::string Tubefile, Parameters& theParameters);
+		Tubegeometry(Random*, std::string Tubefile, std::string Tubefilemathematica, Parameters& theParameters);
 // Vorsicht: Diese Funktion verändert die Threevectoren v und x. 
 		void initialize(Threevector &v, Threevector &x);
 		bool boundsCheck(const Threevector &x){

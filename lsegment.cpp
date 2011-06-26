@@ -58,6 +58,12 @@ Threevector Lsegment::segmentcontains(const Threevector &x) {
 
 std::string Lsegment::toString() const {
 	std::ostringstream o;
-	o << "L-Segment: " << "Startpunkt = " << (*this).start.toString()  << ";		Richtung = " << (*this).direction.toString() << ";	Länge = " << t_max;
+	o << "L-Segment: " << "r(tau) = " << start.toString() << " + " << "tau"  << " * "  << t_max  << " * " << direction.toString();
+	return o.str();
+}
+
+std::string Lsegment::toMathematica() const {
+	std::ostringstream o;
+	o << "{" << start[0] << " + " << "x * " << t_max << " * " << direction[0] << ", " << start[1] << " + " << "x * " << t_max << " * " << direction[1] << ", "  << start[2] << " + " << "x * " << t_max << " * " << direction[2] << "}";
 	return o.str();
 }

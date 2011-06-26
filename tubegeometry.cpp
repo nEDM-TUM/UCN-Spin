@@ -12,14 +12,16 @@ using namespace std;
 // enthält. Der Schlauch soll sich aus Kreisbogenstücken und geraden Stücken
 // zusammensetzen. Der Konstruktor erzeugt aus dem File einen Vektor mit Segmenten
 // des Schlauchs. Diese Segmente sind entweder Objekte der Klasse Csegment oder Lsegment.
-Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& theParameters)
+Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, std::string Tubefilemathematica,  Parameters& theParameters)
 	:Basegeometry(ran)
 {
-	ifstream tube;
+	ifstream tube; 
+	fstream tubemathematica;
 	std::string dummy;
 	tube.open(Tubefile.c_str());
+	tubemathematica.open(Tubefilemathematica.c_str());
 	int numberofsegments;
-	if(tube.is_open()) {
+	if(tube.is_open() && tubemathematica.is_open()) {
 		string type;
 		double s1,s2,s3,v1,v2,v3;
 		std::getline (tube,dummy);
@@ -33,6 +35,7 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 		std::getline (tube, dummy);
 		std::getline (tube, dummy);
 		tube >> type;
+	
 // Das erste Segment wird erzeugt (Sonderbehandlung für erstes Segment).
 // Wenn das 1. Segment ein Kreissegment ist wird noch der Winkel 't',
 // der Radius 'r' des Bogens und der Normalenvektor 'n' des Kreises ausgelesen
@@ -53,7 +56,9 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
                         {
 		        	std::cout << (*cs).toString() << std::endl;
                         }
+				tubemathematica << "Table" << Segments.size() << " = Table[" << (*cs).toMathematica() << ", {x, 0., 1, 0.1}]" << std::endl;
 		}
+		
 // Ist das erste Segment ein gerades Segment, wird die Länge 't' und nochmals die
 // Richtung 'v' (die mit der zuerst ausgelesenen Startrichtung übereinstimmen sollte)
 // ausgelesen und daraus ein gerades Segment Lsegment erzeugt.
@@ -74,6 +79,7 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
                         {
 			        std::cout << (*ls).toString() << std::endl;
                         }
+            tubemathematica << "Table" << Segments.size() << " = Table[" << (*ls).toMathematica() << ", {x, 0., 1, 0.1}]" << std::endl;
 		}
 		else{ 
 			std::cerr << "File not good \n"; 			
@@ -104,6 +110,7 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
                                 {
 				        std::cout << (*cs).toString() << std::endl;
                                 }
+                 tubemathematica << "Table" << Segments.size() << " = Table[" << (*cs).toMathematica() << ", {x, 0., 1, 0.1}]" << std::endl;
 			}
 			else if (type == "l") {
 				double 	t,v1,v2,v3;
@@ -123,6 +130,7 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
                                 {
 				        std::cout << (*ls).toString() << std::endl;
                                 }
+                tubemathematica << "Table" << Segments.size() << " = Table[" << (*ls).toMathematica() << ", {x, 0., 1, 0.1}]" << std::endl;
 			}
 			else 
 				std::cerr << "File not good \n";	
@@ -130,38 +138,49 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, Parameters& thePar
 	}
 	else 
 		std::cerr << "Could not open file \n" ;
-	tube.close(); 
+	tube.close();
+	tubemathematica.close(); 
 	radiustube = theParameters.getDoubleParam("radiustube");
-	std::cout << "Anzahl der Segmente: " << Segments.size()-1 << std::endl;
+	std::cout << "Anzahl der Segmente (inkl Schlusssegment): " << Segments.size() << std::endl;
 }
 
 void Tubegeometry::initialize(Threevector &v, Threevector &x){
-	Threevector standard;
-	standard = Threevector(0,-1,0);
-	debug << standard.toString() << std::endl;
-	debug << Segments[0]->axis(0).toString() << std::endl;
-	if (Segments[0]->axis(0).compare(standard)){
-		Threevector a, b;
+//	Threevector standard;
+//	standard = Threevector(0,-1,0);
+//	std::cout << "Segments[0]->axis[0] = " << (Segments[0]->axis(0)).toString() << std::endl;
+//	if (Segments[0]->axis(0).compare(standard)){
+//		Threevector a, b;
+//		double r, angle;
+//		a = Threevector (1,0,0);
+//		b = Threevector (0,0,1);
+//		r = fRandom->uniform() * radiustube; 
+//		angle = fRandom->uniform() * 360; 
+//		x = Segments[0]->startpoint() + r * cos(angle) * a + r * sin(angle) * b;
+//		v = Segments[0]->axis(0);
+//		debug << x.toString() << v.toString() << std::endl;
+//	}
+//	else {
+		Threevector a, b, c, d, e;
 		double r, angle;
-		a = Threevector (1,0,0);
-		b = Threevector (0,0,1);
-		r = fRandom->uniform() * radiustube; 
-		angle = fRandom->uniform() * 360; 
-		x = Segments[0]->startpoint() + r * cos(angle) * a + r * sin(angle) * b;
-		v = Segments[0]->axis(0);
-		debug << x.toString() << v.toString() << std::endl;
-	}
-	else {
-		Threevector a, b, d;
-		double r, angle;
-		d = Segments[0]->axis(0);
-		a = Threevector ((-1)*(d[1] + d[2])/d[0], 1, 1);
-		b = a.normalized().cross(d.normalized());
-		r = fRandom->uniform() * radiustube; 
-		angle = fRandom->uniform() * 360; 
-		x = Segments[0]->startpoint() + r * cos(angle) * a.normalized() + r * sin(angle) * b;
-		v = Segments[0]->axis(0);
-	}
+		e = Threevector (0., 0., 0.);
+		d = (Segments[0]->axis(0)).normalized();
+		c = Threevector (0., 0., 1.);
+		a = c.cross(d);
+		if (a.compare(e) == true){
+			c = Threevector (1., 0., 0.);
+			a = c.cross(d);
+			r = fRandom->uniform() * radiustube; 
+			angle = fRandom->uniform() * 360; 
+			x = Segments[0]->startpoint() + r * cos(angle) * a.normalized() + r * sin(angle) * b;
+		}			
+		else {
+			b = a.cross(e);
+			r = fRandom->uniform() * radiustube; 
+			angle = fRandom->uniform() * 360; 
+			x = Segments[0]->startpoint() + r * cos(angle) * a.normalized() + r * sin(angle) * b;
+		}
+	v = Segments[0]->axis(0);
+//	}	
 }
 // 'contains' prüft ob eine Position x im Schlauch enthalten ist oder nicht.
 // Wenn ja, gibt sie den axialen Vektor der Projektion der Position auf die Schlauchachse

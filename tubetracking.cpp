@@ -126,8 +126,8 @@ void Tubetracking::reset(){
 // Löscht die nicht mehr benötigten Daten aus den vier Vektoren. 
 void Tubetracking::stepDone(double time){
 	if (reachedendoftube == true) {
-		//std::cout << "Position = " << positions.back().toString() << std::endl;
-		//std::cout << "Achse = " << axes.back().toString() << std::endl;
+		std::cout << "Position = " << positions.back().toString() << std::endl;
+		std::cout << "Achse = " << axes.back().toString() << std::endl;
 		positions.clear();
 		axes.clear();
 //		roots.clear();
@@ -157,7 +157,7 @@ void Tubetracking::stepDone(double time){
 		axes.resize(N-i+1);
 		positions.resize(N-i+1);
 		Nstart = 0;
-		//std::cout << "Position = " << positions[0].toString() << std::endl;
-		//std::cout << "Achse = " << axes[0].toString() << std::endl;
+		std::cout << "Position = " << positions[0].toString() << std::endl;
+		std::cout << "Achse = " << axes[0].toString() << std::endl;
 	}
 }
