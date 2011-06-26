@@ -243,7 +243,7 @@ int main(int nargs, char** argv)
 					cout << "Exception for particle " << i << ": " << e.what() << endl;
 				}
 			}
-		reachedendoftube = false;
+		tracker->reachedendoftube = false;
 		
 		} // for
 		
