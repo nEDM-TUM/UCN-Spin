@@ -243,8 +243,8 @@ int main(int nargs, char** argv)
 					cout << "Exception for particle " << i << ": " << e.what() << endl;
 				}
 			}
-
-
+		reachedendoftube = false;
+		
 		} // for
 		
 		delete randgen; randgen = 0;
