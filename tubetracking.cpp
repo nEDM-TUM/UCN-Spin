@@ -23,6 +23,7 @@ Tubetracking::~Tubetracking(){
 }
 
 void Tubetracking::initialize(){
+	std::cout << "initialize aufgerufen" << std::endl;
     positions.clear();
     axes.clear();
     times.clear();
