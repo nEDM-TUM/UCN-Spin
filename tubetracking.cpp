@@ -13,7 +13,7 @@ Tubetracking::Tubetracking(Random *ran, Tubegeometry * geo, Parameters& theParam
 	scatteringtime = 0;
 	reachedendoftube = false;
 	Nstart = 0;
-	wasinlastsegment = 0;
+	wasinlastsegment = false;
 	tend = 0;
 	trackparticle.open("track.txt");
 }

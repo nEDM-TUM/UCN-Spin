@@ -256,7 +256,7 @@ void Dopr::step()
 	{
 		//i++;
 		dy(h);
-		debug << "dy(" << h << ")" << " complete" << std::endl;
+		//debug << "dy(" << h << ")" << " complete" << std::endl;
 		double err = error(h);
 		if(success(err,h))
 		{
@@ -287,7 +287,7 @@ void Dopr::step()
 	t += (hdid = h);
 	htry = hnext;
 	tracker->stepDone(t);
-	debug << endl;
+	//debug << endl;
 }
 
 void Dopr::dy(const double h) {
@@ -374,21 +374,21 @@ void Dopr::dy(const double h) {
 
 double Dopr::error(const double h)
 {
-	debug << "At start of error: h = " << h << endl;
+	//debug << "At start of error: h = " << h << endl;
 	double err=0.0, err2=0.0, sk=1.0, deno=1.0;
 	for(int i=0; i<n; i++)
 	{
 		sk = atol+rtol*max(fabs(y[i]),fabs(yout[i]));
-		debug << "sk = " << sk << endl;
+		//debug << "sk = " << sk << endl;
 		err2 += SQR(yerr[i]/sk);
-		debug << "yerr[" << i << "] = " << yerr[i] << endl;
-		debug << "err2 = " << err2 << endl;
+		//debug << "yerr[" << i << "] = " << yerr[i] << endl;
+		//debug << "err2 = " << err2 << endl;
 		err += SQR(yerr2[i]/sk);
-		debug << "yerr2[" << i << "] = " << yerr2[i] << endl;
-		debug << "err = " << err << endl;
+		//debug << "yerr2[" << i << "] = " << yerr2[i] << endl;
+		//debug << "err = " << err << endl;
 	}
 	deno = err+0.01*err2;
-	debug << "deno = " << deno << endl;
+	//debug << "deno = " << deno << endl;
 	if(deno <= 0.0)
 	{
 		deno = 1.0;
@@ -398,11 +398,11 @@ double Dopr::error(const double h)
 
 bool Dopr::success(const double err, double &h)
 {
-	debug << "At start of success: h = " << h << endl;
+	//debug << "At start of success: h = " << h << endl;
 	const double beta=0.0;
 	const double alpha=1.0/8.0-beta*0.2, safe=0.9, minscale=0.333, maxscale=6.0;
 	double scale=0.0;
-	debug << "In success: err = " << err << endl;
+	//debug << "In success: err = " << err << endl;
 	if (err <= 1.0)
 	{
 		if (err == 0.0)
@@ -431,19 +431,19 @@ bool Dopr::success(const double err, double &h)
 		}
 		errold=max(err,1.0e-4);
 		reject=false;
-		debug << "At end of success: h = " << h << endl;
+		//debug << "At end of success: h = " << h << endl;
 		return true;
 	}
 	else
 	{
 		scale=max(safe*pow(err,-alpha),minscale);
-		debug << "scale = " << scale << endl;
+		//debug << "scale = " << scale << endl;
 		h *= scale;
 		reject=true;
-		debug << "At end of success: h = " << h << endl;
+		//debug << "At end of success: h = " << h << endl;
 		return false;
 	}
-	debug << "At end of success: h = " << h << endl;
+	//debug << "At end of success: h = " << h << endl;
 }
 
 void Dopr::prepare_dense(const double h, double *dydxnew)

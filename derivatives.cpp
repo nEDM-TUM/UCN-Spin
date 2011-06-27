@@ -36,7 +36,7 @@ void Derivatives::operator()(const double t, const double y[], double derivs[])
 void Derivatives::eval(const double time, const double y[], double derivs[])
 {
 	Threevector B = field->eval(time);
-	debug << "In eval: B = " << B.toString() << endl;
+	//debug << "In eval: B = " << B.toString() << endl;
 	
 	/**
 	 * The first 3 components of @p derivs are the polarization vector
