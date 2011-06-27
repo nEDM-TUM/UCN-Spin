@@ -184,6 +184,7 @@ int main(int nargs, char** argv)
 				savetime = 0;
 				int lifetime1 = theParameters.getDoubleParam("Lifetime");
 				tracker->savetrack = false;
+				
 				while((tracker->reachedendoftube == false) && T<lifetime1)
 				{
 

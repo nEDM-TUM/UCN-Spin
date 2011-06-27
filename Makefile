@@ -10,11 +10,11 @@ CXX=g++
 CXXFLAGS=-Wall
 
 ifndef BUILD_SETTINGS
-	BUILD_SETTINGS = debug
+	BUILD_SETTINGS = release
 endif
 
 ifeq ($(BUILD_SETTINGS),release)
-	CXXFLAGS += -O3 -march=native -fopenmp -ggdb -DNDEBUG
+	CXXFLAGS += -O3 -march=native -ggdb -DNDEBUG
 endif
 ifeq ($(BUILD_SETTINGS),debug)
 	CXXFLAGS += -O0 -ggdb -Wno-unknown-pragmas
