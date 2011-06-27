@@ -6,7 +6,6 @@
 Tubetracking::Tubetracking(Random *ran, Tubegeometry * geo, Parameters& theParameters)
 :Basetracking(ran, geo), rand(ran), fTubegeometry(geo)
 {
-	times.push_back(0.0);
 	//roots.push_back(0.0);
 	vdrift = theParameters.getDoubleParam("vdrift");
 	mu = theParameters.getDoubleParam("mu");
@@ -24,15 +23,16 @@ Tubetracking::~Tubetracking(){
 }
 
 void Tubetracking::initialize(){
-        //positions.clear();
-        //axes.clear();
-        //times.clear();
+    positions.clear();
+    axes.clear();
+    times.clear();
 	Threevector v,x;
 	v = Threevector();
 	x = Threevector();
 	fTubegeometry->initialize(v,x); 
 	positions.push_back(x);
 	axes.push_back(v);
+	times.push_back(0.0);
 }
 // Prüft zunächst ob die gefragte Zeit schon ausgewürfelt wurde oder noch nicht. 
 // Falls nicht, werden so lange "gute" neue Positionen ausgewürfelt, bis die 
