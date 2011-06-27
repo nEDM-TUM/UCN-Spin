@@ -9,7 +9,7 @@
 
 FastCylinderTracker::FastCylinderTracker(const Parameters &params, Random* ran, Cylinder *geo) :
 	Basetracking(ran, geo), fGeometry(geo), H(params.getDoubleParam("CylinderHeight")),
-	R(params.getDoubleParam("CylinderRadius")), R2(R*R), g(-params.getDoubleParam("GravitationConstant")),
+	R(params.getDoubleParam("CylinderRadius")), R2(R*R), g(params.getDoubleParam("GravitationConstant")),
 	fLastCollisionSurface(None), fDiffuseProbability(params.getDoubleParam("DiffusionProbability")) {}
 
 FastCylinderTracker::~FastCylinderTracker()
@@ -51,7 +51,7 @@ Threevector FastCylinderTracker::getVelocity(double t)
 	const double t0 = fTracktimes[i];
 	assert(t >= t0);
 
-	return Threevector(v[0], v[1], v[2] + g*(t-t0));
+	return Threevector(v[0], v[1], v[2] - g*(t-t0));
 }
 
 void FastCylinderTracker::makeTrack(double t_start, double h)
@@ -137,7 +137,24 @@ void FastCylinderTracker::makeTrack(double t_start, double h)
 		}
 		else {
 			// diffuse scattering
-			fGeometry->diffuse(vel, pos);
+			Threevector n; // normal vector for diffusion
+			assert(n.magsquare() == 0);
+			switch (fLastCollisionSurface) {
+				case Top:
+					n[2] = 1.;
+					break;
+				case Bottom:
+					n[2] = -1.;
+					break;
+				case Radius:
+					n = pos;
+					n[2] = 0;
+					break;
+				case None:
+					assert(false);
+					break;
+			}
+			fGeometry->diffuseAtSurface(vel, n);
 		}
 
 		// save new trackpoint

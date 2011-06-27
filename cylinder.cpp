@@ -24,7 +24,8 @@ Cylinder::Cylinder(const Parameters &params, Random *ran)
 	fRSquared(fRadius*fRadius), fHeight(params.getDoubleParam("CylinderHeight")),
 	fReflectRadius(false), fReflectTop(false), fReflectBottom(false),
 	fVelocitySigma(sqrt(params.getDoubleParam("Temperature")*boltzmann/params.getDoubleParam("ParticleMass"))),
-	fCutoffSquare(params.getDoubleParam("VelocityCutoff")*params.getDoubleParam("VelocityCutoff"))
+	fCutoffSquare(params.getDoubleParam("VelocityCutoff")*params.getDoubleParam("VelocityCutoff")),
+	fMinDiffusionAngle(-sin(params.getDoubleParam("MinDiffusionAngle")/180.*M_PI))
 {
 	assert(fRSquared == fRadius*fRadius);
 	debug << "New cylinder, r = " << fRadius << ", h = " << fHeight << ", r^2 = " << fRSquared << std::endl;
@@ -144,21 +145,34 @@ void Cylinder::reflect(Threevector &v, const Threevector &x)
 }
 
 /**
- * Calculate the diffusion of v.
+ * Diffusion method for the EquationTracker which uses the
+ * saved state in fReflectRadius, fReflectBottom and fReflectTop.
  */
 void Cylinder::diffuse(Threevector &v, const Threevector &pos) {
 	/// Diffusion is only implemented at the side wall, in other
 	/// cases, reflection is used instead.
 	if (fReflectTop || fReflectBottom) {
 		reflect(v, pos);
-		return;
 	}
+	else {
+		assert(fReflectRadius);
+		Threevector n(pos);
+		n[2] = 0; // n points radially outside the cylinder now
+		diffuseAtSurface(v, n);
+		// reset reflection state
+		fReflectRadius = false;
+	}
+}
 
+/**
+ * Calculate the diffusion of @p v at the surface perpendicular to @p n.
+ *
+ * @param[in,out] v velocity of the particle, will be used and set to new value
+ * @param[in]     n normal vector that is perpendicular to the wall and points to the outside
+ */
+void Cylinder::diffuseAtSurface(Threevector &v, Threevector n) {
 	Threevector v_new; // New velocity
-	Threevector n(pos);
-	
-	assert(fReflectRadius);
-	n[2] = 0;
+	n.normalize();
 	
 	do {
 		#pragma omp critical
@@ -166,20 +180,17 @@ void Cylinder::diffuse(Threevector &v, const Threevector &pos) {
 			for (int i = 0; i < 3; i++)
 				v_new[i] = fRandom->gaussian(1);
 		} 
-	} while (v_new * n > 0);
+	} while (v_new.normalized() * n > fMinDiffusionAngle);
 	/// The scalar product of @p n and the new velocity is checked to find out
 	/// if the diffusion goes into the right direction.
 
-	debug << "diffuse: x = " << pos.toString() << ", n = " << n.toString() << ", v_new = " << v_new.toString() << std::endl;
+	debug << "diffuse at n = " << n << ", v_new = " << v_new << std::endl;
 
 	// factor which has to be multiplied to vx, vy, vz to conserve velocity
 	const double v_fact = sqrt(v.magsquare() / v_new.magsquare());
 
 	assert(fabs(v.magsquare() - (v_fact*v_new).magsquare()) < v.magsquare()*0.0001);
 	v = v_fact * v_new;
-
-	// reset reflection state
-	fReflectRadius = false;
 }
 
 void Cylinder::reflectHeight(Threevector &v) {

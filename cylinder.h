@@ -19,6 +19,7 @@ class Cylinder : public Basegeometry
 		bool boundsCheck(const Threevector &x);
 		void reflect(Threevector &v, const Threevector &x);
 		void diffuse(Threevector &v, const Threevector &x);
+		void diffuseAtSurface(Threevector &v, Threevector n);
 
 		void initialize(Threevector &v, Threevector &x);
 
@@ -51,6 +52,7 @@ class Cylinder : public Basegeometry
 
 		double fVelocitySigma; ///< sigma for maxwell distribution of velocity
 		double fCutoffSquare; ///< highest possible velocity
+		double fMinDiffusionAngle; //< minimal angle after diffusion versus surface
 };
 
 #endif // CYLINDER_H

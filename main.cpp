@@ -72,6 +72,8 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("ParticleMass");
 	theParameters.expectDouble("VelocityCutoff");
 	theParameters.expectDouble("DiffusionProbability");
+	theParameters.expectDouble("MinDiffusionAngle");
+
 
 	theParameters.readParameters(cin);
 
