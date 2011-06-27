@@ -28,7 +28,7 @@ void Tubetracking::initialize(){
     times.clear();
     wasinlastsegment = false;
     reachedendoftube = false;
-    tend = 0;log
+    tend = 0;
 	Threevector v,x;
 	v = Threevector();
 	x = Threevector();
