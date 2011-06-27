@@ -1,6 +1,8 @@
 #include <iostream>
+#include <cstring>
 #include "parameters.h"
 #include <utility> // make_pair
+#include <sstream>
 
 /**
  * @class Parameters
@@ -154,4 +156,29 @@ void Parameters::readParameters(std::istream &in) {
 		// ignore garbage at end of line
 		in.ignore(4192, '\n');
 	}
+}
+
+
+std::vector<Parameters::SerializedParam> Parameters::serialize() {
+	std::vector<Parameters::SerializedParam> out;
+	Parameters::SerializedParam p;
+	std::ostringstream o;
+
+	for (std::map<std::string,int>::iterator i = fInts.begin(); i != fInts.end(); i++) {
+		o.str("");
+		strncpy(p.name, i->first.c_str(), 50);
+		o << i->second;
+		strncpy(p.value, o.str().c_str(), 25);
+		out.push_back(p);
+	}
+
+	for (std::map<std::string,double>::iterator i = fDoubles.begin(); i != fDoubles.end(); i++) {
+		o.str("");
+		strncpy(p.name, i->first.c_str(), 50);
+		o << i->second;
+		strncpy(p.value, o.str().c_str(), 25);
+		out.push_back(p);
+	}
+
+	return out;
 }

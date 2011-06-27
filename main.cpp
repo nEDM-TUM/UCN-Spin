@@ -67,6 +67,7 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("GravitationConstant");
 	theParameters.expectDouble("CollisionAccuracy");
 	theParameters.expectInt("Timeout");
+	theParameters.expectInt("ParticleDataNum");
 	theParameters.expectDouble("Temperature");
 	theParameters.expectDouble("ParticleMass");
 	theParameters.expectDouble("VelocityCutoff");
@@ -77,8 +78,10 @@ int main(int nargs, char** argv)
 	// TODO: reorder this if possible
 	theParameters.add("GyroelectricRatio",theParameters.getDoubleParam("EDM")*0.01*elementarycharge/hbar);
 
-	const double savetimediff = theParameters.getDoubleParam("SaveTimeDiff");
 	const int N_particles = theParameters.getIntParam("NumberOfParticles");
+	const int save_every = N_particles / theParameters.getIntParam("ParticleDataNum") + 1;
+	const double savetimediff = theParameters.getDoubleParam("SaveTimeDiff");
+	const double lifetime = theParameters.getDoubleParam("Lifetime");
 
 	// Open output file
 	TFile out(generateFileName().c_str(), "new");
@@ -100,6 +103,20 @@ int main(int nargs, char** argv)
 	start_tree.Branch("velocity", start_velocity, "x:y:z");
 	start_tree.Branch("position", start_position, "x:y:z");
 
+	UInt_t particle_number; // 32 bit unsigned integer
+	float particle_time;
+	float particle_position[3];
+	float particle_velocity[3];
+	float particle_polarization[3];
+	float particle_field[3];
+	TTree particle_tree("particle_data", "Time resolved data for particles");
+	particle_tree.Branch("number", &particle_number, "n/i");
+	particle_tree.Branch("time", &particle_time, "t");
+	particle_tree.Branch("position", particle_position, "x:y:z");
+	particle_tree.Branch("velocity", particle_velocity, "x:y:z");
+	particle_tree.Branch("polarization", particle_polarization, "x:y:z");
+	particle_tree.Branch("bfield", particle_field, "x:y:z");
+
 	Random seed_generator(theParameters.getIntParam("Seed"));
 
 	#pragma omp parallel
@@ -114,7 +131,6 @@ int main(int nargs, char** argv)
 		double P[3] = {0.0,sin(-flipangle/180*M_PI),cos(-flipangle/180*M_PI)};	//the polarization-vector
 		double dPdt[3] = {0.0};
 		double hdid = 0.0;
-		int savetime = 0;
 
 		Cylinder *c = new Cylinder(theParameters, randgen);
 		//GravitationTracker *tracker = new GravitationTracker(theParameters, randgen, c); // TODO
@@ -140,6 +156,20 @@ int main(int nargs, char** argv)
 		#pragma omp for
 		for (int i = 0; i < N_particles; i++)
 		{
+			// save polarization during run because
+			// dense_out cannot be used later
+			float savetime = 0;
+			vector<float> temp_polarization_t;
+			vector<float> temp_polarization_x;
+			vector<float> temp_polarization_y;
+			vector<float> temp_polarization_z;
+			if (i % save_every == 0) {
+				temp_polarization_t.reserve(1.1*lifetime/savetimediff);
+				temp_polarization_x.reserve(1.1*lifetime/savetimediff);
+				temp_polarization_y.reserve(1.1*lifetime/savetimediff);
+				temp_polarization_z.reserve(1.1*lifetime/savetimediff);
+			}
+
 			try {
 				Timeout timeout(theParameters.getIntParam("Timeout"));
 
@@ -174,7 +204,6 @@ int main(int nargs, char** argv)
 				}
 				stepper->reset(firsthtry, P, dPdt, T);
 				savetime = 0;
-				int lifetime = theParameters.getDoubleParam("Lifetime");
 				debug << "Will run for " << lifetime << "seconds" << endl;
 				while(T <= lifetime)
 				{
@@ -197,18 +226,15 @@ int main(int nargs, char** argv)
 					hdid = stepper->getHdid();
 					debug << "hdid = " << hdid << endl;
 
-//					while(T >= (st = savetime*savetimediff))
-//						{
-//						Pol[0] = stepper->dense_out(0,st,hdid);
-//						Pol[1] = stepper->dense_out(1,st,hdid);
-//						Pol[2] = stepper->dense_out(2,st,hdid);
-//						tempTP[4*j] = st;
-//						tempTP[4*j+1] = Pol[0];
-//						tempTP[4*j+2] = Pol[1];
-//						tempTP[4*j+3] = Pol[2];
-//						savetime++;
-//						j++;
-//					}			
+					// save time resolved polarization to temporary storage
+					// until end of run.
+					while ((i % save_every == 0) && savetime <= T) {
+						temp_polarization_t.push_back(savetime);
+						temp_polarization_x.push_back(stepper->dense_out(0, savetime, hdid));
+						temp_polarization_y.push_back(stepper->dense_out(1, savetime, hdid));
+						temp_polarization_z.push_back(stepper->dense_out(2, savetime, hdid));
+						savetime += savetimediff;
+					}
 				} // while
 
 				// write end polarization
@@ -220,6 +246,38 @@ int main(int nargs, char** argv)
 					}
 					t_end = lifetime;
 					end_polarization.Fill();
+				}
+
+				// write time resolved data
+				if (i % save_every == 0) {
+					#pragma omp critical
+					{
+						assert(temp_polarization_x.size() == temp_polarization_y.size() && temp_polarization_y.size() == temp_polarization_z.size());
+						assert(temp_polarization_z.size() == temp_polarization_t.size());
+
+						particle_number = i; // i of particle loop
+						for (unsigned int j = 0; j < temp_polarization_t.size(); j++) {
+							particle_time = temp_polarization_t[j];
+							particle_polarization[0] = temp_polarization_x[j];
+							particle_polarization[1] = temp_polarization_y[j];
+							particle_polarization[2] = temp_polarization_z[j];
+							
+							const Threevector pos   = tracker->getPosition(particle_time);
+							const Threevector vel   = tracker->getVelocity(particle_time);
+							const Threevector field = bfield->eval(particle_time);
+							for (int k = 0; k < 3; k++) {
+								particle_position[k] = pos[k];
+								particle_velocity[k] = vel[k];
+								particle_field[k] = field[k];
+							}
+
+							particle_tree.Fill();
+						}
+						temp_polarization_t.clear();
+						temp_polarization_x.clear();
+						temp_polarization_y.clear();
+						temp_polarization_z.clear();
+					}
 				}
 
 				#pragma omp critical

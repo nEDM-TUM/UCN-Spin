@@ -4,11 +4,17 @@
 #include <set>
 #include <string>
 #include <iostream>
+#include <vector>
 
 class Parameters
 {
 	public:
 	
+	struct SerializedParam {
+		char name[50];
+		char value[25];
+	};
+
 	Parameters();
 	~Parameters();
 	void add(std::string name, double value);
@@ -21,6 +27,7 @@ class Parameters
 	int getIntParam(std::string name) const;
 	int getSize() const;
 	void readParameters(std::istream &in);
+	std::vector<SerializedParam> serialize();
 
 	private:
 	
