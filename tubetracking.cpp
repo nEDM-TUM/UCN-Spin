@@ -28,10 +28,10 @@ void Tubetracking::initialize(){
     times.clear();
     wasinlastsegment = false;
     reachedendoftube = false;
-    tend = 0;t
+    tend = 0;
 	Threevector v,x;
 	v = Threevector();
-	x = Threevector();
+	x = Threevector(); 
 	fTubegeometry->initialize(v,x); 
 	positions.push_back(x);
 	axes.push_back(v);
