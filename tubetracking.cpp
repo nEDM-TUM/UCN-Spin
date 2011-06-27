@@ -23,10 +23,12 @@ Tubetracking::~Tubetracking(){
 }
 
 void Tubetracking::initialize(){
-	std::cout << "initialize aufgerufen" << std::endl;
     positions.clear();
     axes.clear();
     times.clear();
+    wasinlastsegment = false;
+    reachedendoftube = false;
+    tend = 0;log
 	Threevector v,x;
 	v = Threevector();
 	x = Threevector();
