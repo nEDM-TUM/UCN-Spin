@@ -2,6 +2,7 @@
 #define _BASICFIELDS_H
 
 #include <string>
+#include <cmath>
 
 #include "bfield.h"
 #include "threevector.h"
@@ -50,6 +51,54 @@ class RelativisticField : public Bfield
 		};
 	private:
 		const Threevector E;
+};
+
+class GradientField : public Bfield
+{
+	public:
+		GradientField(Basetracking *t, const double gradient) :
+			Bfield(t), g(gradient) {};
+		Threevector eval(const double time) const {
+			const Threevector pos = fTracker->getPosition(time);
+			const double r = sqrt(pos[0]*pos[0]+pos[1]*pos[1]);
+			const double radial_part = r*g/2.;
+
+			return Threevector(radial_part, radial_part, g*pos[2]);
+		};
+	private:
+		const double g;
+};
+
+/**
+ * Laser field is a homogenous magnetif field inside a tube in
+ * x direction with radius r. Outside the tube, there is no field.
+ *
+ * @param[in] t      ponter to tracker instance
+ * @param[in] B      field inside the tube
+ * @param[in] height height of center of tube above z = 0
+ * @param[in] radius radius of the tube
+ *
+ * @return B if inside of tube, 0 else
+ */
+class LaserField : public Bfield
+{
+	public:
+		LaserField(Basetracking *t, const Threevector B, const double height, const double radius) :
+			Bfield(t), B(B), h(height), r2(radius*radius), ZERO(0,0,0) {};
+		Threevector eval(const double time) const {
+			const Threevector pos = fTracker->getPosition(time);
+			const double y = pos[1];
+			const double z = pos[2] - h;
+
+			if (y*y+z*z <= r2)
+				return B;
+			else
+				return ZERO;
+		};
+	private:
+		const Threevector B;
+		const double h, r2;
+		const Threevector ZERO;
 };
 
 #endif // _BASICFIELDS_H

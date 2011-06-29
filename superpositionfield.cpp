@@ -85,12 +85,36 @@ void SuperpositionField::readFields(std::string fname)
 
 			std::cout << "Added homogenous magnetic field B = " << B << " T" << std::endl;
 		}
+		else if (type == "L") {
+			/// L for "laser" is a homogenous magnetic field inside a tube (the laser beam).
+			/// It takes the field as three doubles, the height of the center of the tube and
+			/// the radius of the tube as parameters
+			Threevector B;
+			double h, r;
+			line >> B;
+			line >> h;
+			line >> r;
+
+			fFields.push_back(new LaserField(fTracker, B, h, r));
+
+			std::cout << "Added laser field B = " << B << " T" << " inside of cylinder with center at h = " << h
+			          << " m and radius of " << r << " m" << std::endl;
+		}
+		else if (type == "G") {
+			/// G is a gradient field and takes only the gradient in z direction
+			/// as parameter
+			double gradient;
+			line >> gradient;
+
+			fFields.push_back(new GradientField(fTracker, gradient));
+
+			std::cout << "Added gradient field B = (r*g/r, r*g/2, g*z) with g = " << gradient << std::endl;
+		}
 		else {
 			/// The program is aborted if an unknown entry is encountered.
 			std::cerr << "Can't parse line '" << sline << "' in " << fname << std::endl;
 			exit(1);
 		}
-
 	}
 }
 
