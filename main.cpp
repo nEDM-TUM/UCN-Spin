@@ -47,7 +47,6 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("GradientOffsetX");
 	theParameters.expectDouble("GradientOffsetZ");
 	theParameters.expectDouble("B1Gradient");
-	theParameters.expectDouble("EDM");
 	theParameters.expectDouble("Flipangle");
 	theParameters.expectInt("Seed");
 	theParameters.expectDouble("CylinderRadius");
@@ -76,9 +75,6 @@ int main(int nargs, char** argv)
 
 
 	theParameters.readParameters(cin);
-
-	// TODO: reorder this if possible
-	theParameters.add("GyroelectricRatio",theParameters.getDoubleParam("EDM")*0.01*elementarycharge/hbar);
 
 	const int N_particles = theParameters.getIntParam("NumberOfParticles");
 	const int save_every = N_particles / theParameters.getIntParam("ParticleDataNum") + 1;

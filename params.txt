@@ -7,7 +7,6 @@ B0Gradient			1e-7
 GradientOffsetX		0
 GradientOffsetZ		0
 B1Gradient			0
-EDM					0
 Flipangle			90
 Seed				43277216
 CylinderRadius		0.235
