@@ -93,7 +93,6 @@ Threevector Tubetracking::getPosition(double time){
 		if (fTubegeometry->lastsegmentcontains(positionnew) == true) { 
 			wasinlastsegment = true;
 			tend = times.back();
-			std::cout << "T_end = " << tend << std::endl;
 		}
 	}
 	
@@ -130,8 +129,8 @@ void Tubetracking::reset(){
 // Löscht die nicht mehr benötigten Daten aus den vier Vektoren. 
 void Tubetracking::stepDone(double time){
 	if (reachedendoftube == true) {
-		std::cout << "Position = " << positions.back().toString() << std::endl;
-		std::cout << "Achse = " << axes.back().toString() << std::endl;
+		std::cout << "position = " << positions.back().toString() << std::endl;
+		std::cout << "axis = " << axes.back().toString() << std::endl;
 		positions.clear();
 		axes.clear();
 //		roots.clear();

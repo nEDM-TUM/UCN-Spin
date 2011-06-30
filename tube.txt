@@ -3,6 +3,6 @@ Gesamtanzahl der Segmente (inklusive dem letzten "Stopsegment")
 Startpunkt 	Startrichtung
 0 0 0	0 1 0	
 Art 	Winkelanteil/Länge	Radius	Normalenvektor/Richtungsvektor
-c	0.698131		0.3	0 0 1
-c	0.785398		0.1	0 -1 0
-l	0.05				-1 0 -1
+c	1.5707					0.3		0 0 1
+c	1.5707					0.2		0 -1 0
+l	0.05							0 0 -1

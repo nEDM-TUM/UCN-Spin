@@ -234,7 +234,7 @@ int main(int nargs, char** argv)
 				#pragma omp critical
 				{
 					cout << "Particle " << (i+1) << ": " << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
-					cout << "Simulationtime = " << T << "s" << endl;
+					cout << "simulated time = " << T << "s" << endl;
 				}
 
 			} // try
