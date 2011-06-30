@@ -117,7 +117,7 @@ double Roots::safeNewton(C* const instance,const T &f, const T &d, double x1, do
 		y = (instance->*f)(x);
 	}
 
-	std::cout << "Reached accuracy of " << eps << ", f(" << x << ") = " << y << std::endl;
+	//debug << "Reached accuracy of " << eps << ", f(" << x << ") = " << y << std::endl;
 
 	return x;
 }

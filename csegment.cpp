@@ -10,6 +10,7 @@ Csegment::Csegment(Threevector s, Threevector v, Threevector n, double r, double
 	centre(start + (-radius)*a)
 {
 	position = Threevector (0.0, 0.0, 0.0);
+	std::cout << "a*b ="  << a*b << std::endl;
 }
 
 Threevector Csegment::getposition (double tau) { 
