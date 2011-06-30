@@ -20,9 +20,7 @@ Threevector Csegment::getposition (double tau) {
 
 // Gibt die Achsenrichtung des Schlauchs an einem Punkt auf der Achse wieder. 
 Threevector Csegment::axis(double tau) {
-	Threevector ax, ad, bd;
-	ad = a.normalized();
-	bd = b.normalized();
+	Threevector ax;
 	ax = (-1)*sin(tau * t_max)*a + cos(tau * t_max)*b;
 	return ax;
 }
@@ -43,9 +41,7 @@ Threevector Csegment::segmentcontains(const Threevector &x) {
 		return v;
 	}
 	tau_0 = Roots::safeNewton(this,&Csegment::derivdist, &Csegment::secderivdist, 0.0, 1.0, 0.000001);
-	if (tau_0 < 0.0)
-		return v;
-	else if (secderivdist(tau_0) < 0){
+	if (secderivdist(tau_0) < 0){
 		return v;
 	}
 	else {
