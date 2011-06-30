@@ -25,7 +25,7 @@ SolenoidCurrent		0
 
 radiustube		0.02
 sigma			137.45
-vdrift 			0.05
+vdrift 			0.5
 mu			8.58e-12
 
 SaveTimeDiff		0.0002
