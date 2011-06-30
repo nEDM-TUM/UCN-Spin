@@ -32,7 +32,7 @@ void Tubetracking::initialize(){
     Nstart = 0;
 	Threevector v,x;
 	v = Threevector();
-	x = Threevector(0., 0., 0.); 
+	x = Threevector(); 
 	fTubegeometry->initialize(v,x); 
 	positions.push_back(x);
 	axes.push_back(v);
@@ -68,8 +68,8 @@ Threevector Tubetracking::getPosition(double time){
 		scatteringlength_1 = scatteringtime * fRandomgenerator->gaussian(sigma); 
 		scatteringlength_2 = scatteringtime * fRandomgenerator->gaussian(sigma);
 		scatteringlength_3 = scatteringtime * fRandomgenerator->gaussian(sigma);
-		//scatteringvector = Threevector (scatteringlength_1, scatteringlength_2, scatteringlength_3);
-		scatteringvector = Threevector(0., 0., 0.);
+		scatteringvector = Threevector (scatteringlength_1, scatteringlength_2, scatteringlength_3);
+
 		positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
 		//axisnew = fTubegeometry->contains(positionnew, rootnew);
 		axisnew = fTubegeometry->contains(positionnew);
@@ -129,8 +129,8 @@ void Tubetracking::reset(){
 // Löscht die nicht mehr benötigten Daten aus den vier Vektoren. 
 void Tubetracking::stepDone(double time){
 	if (reachedendoftube == true) {
-		std::cout << "position = " << positions.back().toString() << std::endl;
-		std::cout << "axis = " << axes.back().toString() << std::endl;
+		std::cout << "Position = " << positions.back().toString() << std::endl;
+		std::cout << "Axis = " << axes.back().toString() << std::endl;
 		positions.clear();
 		axes.clear();
 //		roots.clear();
