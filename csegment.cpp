@@ -122,6 +122,6 @@ std::string Csegment::toString() const {
 
 std::string Csegment::toMathematica() const{
 	std::ostringstream o;
-	o << "{" << centre[0] << " + " << radius << " * Cos(x * " << t_max << ") * " << a[0] << " + " << radius << " * Sin(x * " << t_max << ") * " << b[0] << ", " << centre[1] << " + " << radius << " * Cos(x * " << t_max << ") * " << a[1] << " + " << radius << " * Sin(x * " << t_max << ") * " << b[1] << ", " << centre[2] << " + " << radius << " * Cos(x * " << t_max << ") * " << a[2] << " + " << radius << " * Sin(x * " << t_max << ") * " << b[2] << "}"; 
+	o << "{" << centre[0] << " + " << radius << " * Cos[x * " << t_max << "] * " << a[0] << " + " << radius << " * Sin[x * " << t_max << "] * " << b[0] << ", " << centre[1] << " + " << radius << " * Cos[x * " << t_max << "] * " << a[1] << " + " << radius << " * Sin[x * " << t_max << "] * " << b[1] << ", " << centre[2] << " + " << radius << " * Cos[x * " << t_max << "] * " << a[2] << " + " << radius << " * Sin[x * " << t_max << "] * " << b[2] << "}"; 
 	return o.str();
 }

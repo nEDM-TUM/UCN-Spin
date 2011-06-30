@@ -141,7 +141,9 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, std::string Tubefi
 	tube.close();
 	tubemathematica.close(); 
 	radiustube = theParameters.getDoubleParam("radiustube");
-	std::cout << "Anzahl der Segmente (inkl Schlusssegment): " << Segments.size() << std::endl;
+	 #pragma omp master {                        
+		std::cout << "Anzahl der Segmente (inkl Schlusssegment): " << Segments.size() << std::endl;
+	}
 }
 
 void Tubegeometry::initialize(Threevector &v, Threevector &x){

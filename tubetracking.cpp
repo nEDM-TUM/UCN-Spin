@@ -92,7 +92,7 @@ Threevector Tubetracking::getPosition(double time){
 		
 		if (fTubegeometry->lastsegmentcontains(positionnew) == true) { 
 			wasinlastsegment = true;
-			std::cout << "letzte ausgewürfelte Position = " << positions.back().toString() << std::endl;
+			std::cout << "T_end = " << tend << std::endl;
 			tend = times.back();
 		}
 	}
