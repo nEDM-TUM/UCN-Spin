@@ -92,14 +92,14 @@ double Csegment::derivdist(double tau) {
 		k[i] = radius * (cos(tau * t_max)*a[i] + sin(tau * t_max)*b[i]);
 		l[i] = radius * (-sin(tau * t_max)*a[i] + cos(tau * t_max)*b[i]);
 	}
-	for (int i=0; i<3; i++) {
-		derivdistance = derivdistance + 2*(centre[i] + k[i] - position[i]) * l[i]; 
+	for (int i = 0; i<3; i++) {
+		derivdistance = derivdistance + 2*(centre[i] + k[i] - position[i]) * l[i] * t_max; 
 	}
 	return derivdistance;
 }
 
 double Csegment::secderivdist(double tau ) {
-	double secderivdistance;
+	double secderivdistance = 0;
 	Threevector k, l;
 	k = Threevector();
 	l = Threevector();
@@ -107,9 +107,8 @@ double Csegment::secderivdist(double tau ) {
 		k[i] = radius * (cos(tau * t_max)*a[i] + sin(tau * t_max)*b[i]);
 		l[i] = radius * (-sin(tau * t_max)*a[i] + cos(tau * t_max)*b[i]);
 	}
-	secderivdistance = 0;
-	for (int i=0; i<3; i++) 
-		secderivdistance = secderivdistance + 2*(centre[i] + k[i] - position[i]) * (-k[i]) + 2*(l[i]*l[i]); 
+	for (int i  =0; i<3; i++) 
+		secderivdistance = secderivdistance + 2*(centre[i] + k[i] - position[i]) * (-k[i]) * t_max * t_max + 2*(l[i]*l[i]) * t_max * t_max; 
 	return secderivdistance;
 }
 
