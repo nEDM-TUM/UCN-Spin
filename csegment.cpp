@@ -40,7 +40,7 @@ Threevector Csegment::segmentcontains(const Threevector &x) {
 	if (derivdist(0.0)*derivdist(1.0) > 0.0){
 		return v;
 	}
-	tau_0 = Roots::safeNewton(this,&Csegment::derivdist, &Csegment::secderivdist, 0.0, 1.0, 0.000001);
+	tau_0 = Roots::safeNewton(this,&Csegment::derivdist, &Csegment::secderivdist, 0.0, 1.0, 0.0000001);
 	if (secderivdist(tau_0) < 0){
 		return v;
 	}
