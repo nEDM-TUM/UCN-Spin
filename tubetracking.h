@@ -40,7 +40,7 @@ class Tubetracking : public Basetracking {
 	
 	private:
 		double vdrift, mu, sigma, scatteringtime, tend;
-		int Nstart;
+		int Nstart, Nstepdone;
 		bool wasinlastsegment;
 		Random *rand;
 		Tubegeometry* fTubegeometry;

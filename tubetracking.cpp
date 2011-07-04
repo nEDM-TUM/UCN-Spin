@@ -15,6 +15,7 @@ Tubetracking::Tubetracking(Random *ran, Tubegeometry * geo, Parameters& theParam
 	Nstart = 0;
 	wasinlastsegment = false;
 	tend = 0;
+	Nstepdone = 0;
 	trackparticle.open("track.txt");
 }
 
@@ -30,6 +31,7 @@ void Tubetracking::initialize(){
     reachedendoftube = false;
     tend = 0;
     Nstart = 0;
+    Nstepdone = 0;
 	Threevector v,x;
 	v = Threevector();
 	x = Threevector(); 
@@ -128,6 +130,7 @@ void Tubetracking::reset(){
 
 // Löscht die nicht mehr benötigten Daten aus den vier Vektoren. 
 void Tubetracking::stepDone(double time){
+	Nstepdone = Nstepdone + 1;
 	if (reachedendoftube == true) {
 		std::cout << "Position = " << positions.back().toString() << std::endl;
 		std::cout << "Axis = " << axes.back().toString() << std::endl;
@@ -141,13 +144,11 @@ void Tubetracking::stepDone(double time){
 		int N = times.size();
 		while (times[i] < time)
 			i = i + 1;
-		if (savetrack == true){
+		if (savetrack == true && Nstepdone % 100 == 0){
 			if(trackparticle.is_open()) {
-				int j = 0;
-				while (j < i){
+				while (int j = 0; j < i; j++){
 					trackparticle << positions[j][0] << "	" << positions[j][1] << "	" << positions[j][2];
 					trackparticle << std::endl;
-					j = j + 50;
 				}
 			}
 		}
