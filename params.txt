@@ -23,9 +23,9 @@ SolenoidHeight		.02
 SolenoidRadius		0.18
 SolenoidCurrent		0
 
-radiustube		0.007
+radiustube		0.002
 sigma			137.45
-vdrift 			0.05
+vdrift 			0.02
 mu			8.58e-12
 
 SaveTimeDiff		0.0002
