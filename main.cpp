@@ -183,7 +183,7 @@ int main(int nargs, char** argv)
 				stepper->reset(firsthtry, P, dPdt, T);
 				savetime = 0;
 				int lifetime1 = theParameters.getDoubleParam("Lifetime");
-				tracker->savetrack = false;
+				tracker->savetrack = true;
 				
 				while((tracker->reachedendoftube == false) && T<lifetime1)
 				{
