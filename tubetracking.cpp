@@ -116,10 +116,10 @@ Threevector Tubetracking::getPosition(double time){
 }
 
 void Tubetracking::makeTrack(double t_start, double h){
-	//if (h > 1e-7) 
-	//	scatteringtime = 1e-7;
-	//else
-	scatteringtime = 1e-6;
+	if (h > 1e-7) 
+		scatteringtime = 1e-7;
+	else
+		scatteringtime = h;
 }
 
 void Tubetracking::reset(){
@@ -143,9 +143,11 @@ void Tubetracking::stepDone(double time){
 			i = i + 1;
 		if (savetrack == true){
 			if(trackparticle.is_open()) {
-				for (int j = 0; j < i; j++){
+				j = 0;
+				while (int j < i){
 					trackparticle << positions[j][0] << "	" << positions[j][1] << "	" << positions[j][2];
 					trackparticle << std::endl;
+					j = j + 50;
 				}
 			}
 		}
