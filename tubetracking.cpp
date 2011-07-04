@@ -117,9 +117,9 @@ Threevector Tubetracking::getPosition(double time){
 
 void Tubetracking::makeTrack(double t_start, double h){
 	//if (h > 1e-7) 
-		scatteringtime = 1e-7;
+	//	scatteringtime = 1e-7;
 	//else
-	scatteringtime = 5e-5;
+	scatteringtime = 1e-6;
 }
 
 void Tubetracking::reset(){

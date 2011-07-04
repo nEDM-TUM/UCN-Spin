@@ -86,7 +86,7 @@ Threevector Bfield::evaldipole(const Threevector &position, const Threevector &p
 
 Threevector Bfield::evalearthmagneticfield () const
 {
-	return Threevector(0., 0., 0.);
+	return Threevector(-30.0e-6, 3.0e-6, 17.0e-6);
 }
 
 Threevector Bfield::eval(const double time) const
