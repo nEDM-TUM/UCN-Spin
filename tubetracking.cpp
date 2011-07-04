@@ -146,7 +146,7 @@ void Tubetracking::stepDone(double time){
 			i = i + 1;
 		if (savetrack == true && Nstepdone % 100 == 0){
 			if(trackparticle.is_open()) {
-				while (int j = 0; j < i; j++){
+				for(int j = 0; j < i; j++){
 					trackparticle << positions[j][0] << "	" << positions[j][1] << "	" << positions[j][2];
 					trackparticle << std::endl;
 				}
