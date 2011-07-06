@@ -61,35 +61,31 @@ Threevector Tubetracking::getPosition(double time){
 	while (times.back() < time && wasinlastsegment == false) {
 		double tnew, sigma, scatteringlength_1, scatteringlength_2, scatteringlength_3;
 		Threevector positionnew, axisnew, control, scatteringvector;
-		tnew = times.back() + scatteringtime;
-		//rootnew = roots.back(); 
+		tnew = times.back() + scatteringtime; 
 		control = Threevector (0,0,0);
 		sigma = sqrt(2*diffusionconstant*scatteringtime);
 		
 		scatteringlength_1 = fRandomgenerator->gaussian(sigma); 
 		scatteringlength_2 = fRandomgenerator->gaussian(sigma);
 		scatteringlength_3 = fRandomgenerator->gaussian(sigma);
-		//scatteringvector = Threevector (scatteringlength_1, scatteringlength_2, scatteringlength_3);
-		scatteringvector = Threevector(0.,0.,0.);
+		scatteringvector = Threevector (scatteringlength_1, scatteringlength_2, scatteringlength_3);
+		
 		positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
-		//axisnew = fTubegeometry->contains(positionnew, rootnew);
 		axisnew = fTubegeometry->contains(positionnew);
 		
-		/*while (axisnew.compare(control) == true){
+		while (axisnew.compare(control) == true){
 			
 			scatteringlength_1 = scatteringtime * fRandomgenerator->gaussian(sigma); 
 			scatteringlength_2 = scatteringtime * fRandomgenerator->gaussian(sigma);
 			scatteringlength_3 = scatteringtime * fRandomgenerator->gaussian(sigma);
 			scatteringvector = Threevector (scatteringlength_1, scatteringlength_2, scatteringlength_3);
 			positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
-			//axisnew = fTubegeometry->contains(positionnew, rootnew);
 			axisnew = fTubegeometry->contains(positionnew);		
-		}*/
+		}
 		
 		times.push_back(tnew);	
 		positions.push_back(positionnew);
 		axes.push_back(axisnew);
-		//roots.push_back(rootnew);
 		
 		if (fTubegeometry->lastsegmentcontains(positionnew) == true) { 
 			wasinlastsegment = true;
