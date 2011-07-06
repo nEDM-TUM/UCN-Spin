@@ -73,7 +73,7 @@ Threevector Tubetracking::getPosition(double time){
 		scatteringvector = Threevector(0.,0.,0.);
 		positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
 		//axisnew = fTubegeometry->contains(positionnew, rootnew);
-		axisnew = fTubegeometry->contains(positionnew);
+		/*axisnew = fTubegeometry->contains(positionnew);
 		
 		while (axisnew.compare(control) == true){
 			
@@ -84,7 +84,7 @@ Threevector Tubetracking::getPosition(double time){
 			positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
 			//axisnew = fTubegeometry->contains(positionnew, rootnew);
 			axisnew = fTubegeometry->contains(positionnew);		
-		}
+		}*/
 		
 		times.push_back(tnew);	
 		positions.push_back(positionnew);
