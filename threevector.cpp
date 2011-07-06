@@ -82,7 +82,7 @@ bool operator!=(const Threevector &left, const Threevector &right)
 bool Threevector::compare(const Threevector &x){
 	Threevector y = *this;
 	for (int i = 0; i < 3; i++){
-		if (fabs(y[i]-x[i]) > 1e-5)
+		if (fabs(y[i]-x[i]) > 1e-10)
 			return false;
 	}
 	return true;
