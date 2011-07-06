@@ -34,6 +34,7 @@ void Tubetracking::initialize(){
 	v = Threevector();
 	x = Threevector(); 
 	fTubegeometry->initialize(v,x); 
+	x = Threevector(0.,0.,0.);
 	positions.push_back(x);
 	axes.push_back(v);
 	times.push_back(0.0);
