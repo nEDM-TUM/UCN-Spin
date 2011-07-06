@@ -39,8 +39,8 @@ class Tubetracking : public Basetracking {
 		std::vector<Threevector> axes;
 	
 	private:
-		double vdrift, mu, sigma, scatteringtime, tend;
-		int Nstart, Nstepdone;
+		double vdrift, diffusionconstant, scatteringtime, tend;
+		int Nstart;
 		bool wasinlastsegment;
 		Random *rand;
 		Tubegeometry* fTubegeometry;

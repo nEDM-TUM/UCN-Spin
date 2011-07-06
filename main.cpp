@@ -55,10 +55,9 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("CylinderHeight");
 	theParameters.expectDouble("B0");
 	theParameters.expectDouble("B1");
-	theParameters.expectDouble("mu");
 	theParameters.expectDouble("radiustube");
 	theParameters.expectDouble("vdrift");
-	theParameters.expectDouble("sigma");
+	theParameters.expectDouble("diffusionconstant");
 	theParameters.expectDouble("SolenoidField");
 	theParameters.expectDouble("SolenoidCurrent");
 	theParameters.expectDouble("SolenoidHeight");

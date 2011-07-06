@@ -1,5 +1,6 @@
 #include "tubetracking.h"
 #include "debug.h"
+#include <cmath>
 
 // Setzt den Zeitstartwert und die Projektion der Startposition auch die Schlauchachse 
 // auf 0. 
@@ -8,14 +9,12 @@ Tubetracking::Tubetracking(Random *ran, Tubegeometry * geo, Parameters& theParam
 {
 	//roots.push_back(0.0);
 	vdrift = theParameters.getDoubleParam("vdrift");
-	mu = theParameters.getDoubleParam("mu");
-	sigma = theParameters.getDoubleParam("sigma");
+	diffusionconstant = theParameters.getDoubleParam("diffusionconstant");
 	scatteringtime = 0;
 	reachedendoftube = false;
 	Nstart = 0;
 	wasinlastsegment = false;
 	tend = 0;
-	Nstepdone = 0;
 	trackparticle.open("track.txt");
 }
 
@@ -31,7 +30,6 @@ void Tubetracking::initialize(){
     reachedendoftube = false;
     tend = 0;
     Nstart = 0;
-    Nstepdone = 0;
 	Threevector v,x;
 	v = Threevector();
 	x = Threevector(); 
@@ -60,16 +58,16 @@ Threevector Tubetracking::getPosition(double time){
 	}
 	
 	while (times.back() < time && wasinlastsegment == false) {
-		double tnew, scatteringlength_1, scatteringlength_2, scatteringlength_3;
+		double tnew, sigma, scatteringlength_1, scatteringlength_2, scatteringlength_3;
 		Threevector positionnew, axisnew, control, scatteringvector;
-		//scatteringtime = fRandomgenerator->exponential(mu); 
 		tnew = times.back() + scatteringtime;
 		//rootnew = roots.back(); 
 		control = Threevector (0,0,0);
+		sigma = sqrt(2*diffusionconstant*scatteringtime);
 		
-		scatteringlength_1 = scatteringtime * fRandomgenerator->gaussian(sigma); 
-		scatteringlength_2 = scatteringtime * fRandomgenerator->gaussian(sigma);
-		scatteringlength_3 = scatteringtime * fRandomgenerator->gaussian(sigma);
+		scatteringlength_1 = fRandomgenerator->gaussian(sigma); 
+		scatteringlength_2 = fRandomgenerator->gaussian(sigma);
+		scatteringlength_3 = fRandomgenerator->gaussian(sigma);
 		scatteringvector = Threevector (scatteringlength_1, scatteringlength_2, scatteringlength_3);
 
 		positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
@@ -130,7 +128,6 @@ void Tubetracking::reset(){
 
 // Löscht die nicht mehr benötigten Daten aus den vier Vektoren. 
 void Tubetracking::stepDone(double time){
-	Nstepdone = Nstepdone + 1;
 	if (reachedendoftube == true) {
 		std::cout << "Position = " << positions.back().toString() << std::endl;
 		std::cout << "Axis = " << axes.back().toString() << std::endl;
@@ -144,7 +141,7 @@ void Tubetracking::stepDone(double time){
 		int N = times.size();
 		while (times[i] < time)
 			i = i + 1;
-		if (savetrack == true && Nstepdone % 100 == 0){
+		if (savetrack == true){
 			if(trackparticle.is_open()) {
 				for(int j = 0; j < i; j++){
 					trackparticle << positions[j][0] << "	" << positions[j][1] << "	" << positions[j][2];
