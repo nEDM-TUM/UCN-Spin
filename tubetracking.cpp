@@ -75,9 +75,9 @@ Threevector Tubetracking::getPosition(double time){
 		
 		while (axisnew.compare(control) == true){
 			
-			scatteringlength_1 = scatteringtime * fRandomgenerator->gaussian(sigma); 
-			scatteringlength_2 = scatteringtime * fRandomgenerator->gaussian(sigma);
-			scatteringlength_3 = scatteringtime * fRandomgenerator->gaussian(sigma);
+			scatteringlength_1 = fRandomgenerator->gaussian(sigma); 
+			scatteringlength_2 = fRandomgenerator->gaussian(sigma);
+			scatteringlength_3 = fRandomgenerator->gaussian(sigma);
 			scatteringvector = Threevector (scatteringlength_1, scatteringlength_2, scatteringlength_3);
 			positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
 			axisnew = fTubegeometry->contains(positionnew);		
