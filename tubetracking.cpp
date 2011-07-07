@@ -13,6 +13,7 @@ Tubetracking::Tubetracking(Random *ran, Tubegeometry * geo, Parameters& theParam
 	scatteringtime = 0;
 	reachedendoftube = false;
 	Nstart = 0;
+	Nwallcollision = 0;
 	wasinlastsegment = false;
 	tend = 0;
 	trackparticle.open("track.txt");
@@ -30,6 +31,7 @@ void Tubetracking::initialize(){
     reachedendoftube = false;
     tend = 0;
     Nstart = 0;
+    Nwallcollision = 0;
 	Threevector v,x;
 	v = Threevector();
 	x = Threevector(); 
@@ -72,7 +74,8 @@ Threevector Tubetracking::getPosition(double time){
 		
 		positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
 		axisnew = fTubegeometry->contains(positionnew);
-		
+		if (axisnew.compare(control) == true) 
+			Nwallcollision = Nwallcollision + 1;
 		while (axisnew.compare(control) == true){
 			
 			scatteringlength_1 = fRandomgenerator->gaussian(sigma); 

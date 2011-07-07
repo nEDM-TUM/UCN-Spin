@@ -1,5 +1,5 @@
 
-NumberOfParticles	200
+NumberOfParticles	100
 Lifetime			30
 ErrorGoal			1e-9
 GyromagneticRatio	30e+6
@@ -24,7 +24,6 @@ SolenoidRadius		0.18
 SolenoidCurrent		0
 
 radiustube		0.002
-sigma			137.45
 vdrift 			0.02
 diffusionconstant		1.375e-5
 

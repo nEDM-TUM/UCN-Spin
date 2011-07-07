@@ -93,8 +93,8 @@ Threevector Bfield::eval(const double time) const
 {
 	Threevector position = tracking->getPosition(time);
 	Threevector field;
-	//field = evalcoil(position + (-1)*centercoil1) + evalcoil(position + (-1)*centercoil2); 
-	field = evalearthmagneticfield();
+	field = evalcoil(position + (-1)*centercoil1) + evalcoil(position + (-1)*centercoil2); 
+	field = field + evalearthmagneticfield();
 	return field;
 }
 

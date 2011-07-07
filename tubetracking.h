@@ -30,6 +30,7 @@ class Tubetracking : public Basetracking {
 		
 		bool reachedendoftube;
 		bool savetrack;
+		int Nwallcollision;
 		std::fstream trackparticle;
 // In den Vektoren sollen die bisherigen ausgewürfelten Werte, die zu einer "guten"
 // Position geführt haben, gespeichert werden. 
