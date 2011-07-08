@@ -202,19 +202,7 @@ void Cylinder::reflectHeight(Threevector &v) {
 void Cylinder::reflectRadius(Threevector &v, const Threevector &x) {
 	debug << "!!! Reflecting x-y, r = " << sqrt(x[0]*x[0]+x[1]*x[1]) << std::endl;
 	double n[2]; ///< unitiy vector perpendicular to x[1,2]
-	double vn[2]; ///< direction vector of v in x-y-plane
-	double v_abs = 0; ///< length of v in x-y-plane
-	double sp = 0; ///< scalar product of vn and n
-
-	// fill v_old, v_abs and vn
-	for (int i = 0; i <= 2; i++) {
-		v_abs += v[i]*v[i];
-	}
-	v_abs = sqrt(v_abs);
-	if (v_abs == 0)
-		throw "Cylinder::reflectRadius called with v[0]^2 + v[1]^2 = 0";
-	vn[0] = v[0] / v_abs;
-	vn[1] = v[1] / v_abs;
+	double sp = 0; ///< scalar product of v and n
 
 	// fill n
 	double x_abs = sqrt(x[0]*x[0] + x[1]*x[1]);
@@ -225,12 +213,12 @@ void Cylinder::reflectRadius(Threevector &v, const Threevector &x) {
 
 	// Calculate sp
 	for (int i = 0; i <= 1; i++) {
-		sp += vn[i]*n[i];
+		sp += v[i]*n[i];
 	}
 
 	// set v to reflected value
 	for (int i = 0; i <= 1; i++) {
-		v[i] = -v[i] + 2*v_abs*n[i]*sp;
+		v[i] = -v[i] + 2*n[i]*sp;
 	}
 }
 
