@@ -2,19 +2,17 @@
 #include "debug.h"
 #include <cmath>
 
-// Setzt den Zeitstartwert und die Projektion der Startposition auch die Schlauchachse 
-// auf 0. 
+
 Tubetracking::Tubetracking(Random *ran, Tubegeometry * geo, Parameters& theParameters)
 :Basetracking(ran, geo), rand(ran), fTubegeometry(geo)
 {
-	//roots.push_back(0.0);
 	vdrift = theParameters.getDoubleParam("vdrift");
 	diffusionconstant = theParameters.getDoubleParam("diffusionconstant");
 	scatteringtime = 0;
-	reachedendoftube = false;
 	Nstart = 0;
-	Nwallcollision = 0;
+	Nwallcollisions = 0;
 	wasinlastsegment = false;
+	reachedendoftube = false;
 	tend = 0;
 	trackparticle.open("track.txt");
 }
@@ -31,7 +29,7 @@ void Tubetracking::initialize(){
     reachedendoftube = false;
     tend = 0;
     Nstart = 0;
-    Nwallcollision = 0;
+    Nwallcollisions = 0;
 	Threevector v,x;
 	v = Threevector();
 	x = Threevector(); 
@@ -41,18 +39,8 @@ void Tubetracking::initialize(){
 	axes.push_back(v);
 	times.push_back(0.0);
 }
-// Prüft zunächst ob die gefragte Zeit schon ausgewürfelt wurde oder noch nicht. 
-// Falls nicht, werden so lange "gute" neue Positionen ausgewürfelt, bis die 
-// Position zum gefragten Zeitpunkt berechnet werden kann. 
-// Zunächst wird eine Streuzeit 'scatteringtime' ausgewürfelt
-// 'rootnew' ist die Projektion der neuen Position auf die Schlauchachse. 'rootnew'
-// wird von der Funktion 'contains' verändert.
-// Zur Ermittlung der neuen Position wird zum gewürfelten Streuvektor 'scatteringvector'
-// noch die in der Zeit zurückgelegten Driftlänge in Richtung der vorherigen Achse 
-// addiert und mit 'contains' überprüft ob die neue Position innerhalb des Schlauchs 
-// liegt oder nicht. Wenn nicht wird für 'axis' der Nullvektor ausgegeben. 
-// Falls der neue Ort nicht im Schlauch liegt, wird so lange neu gewürfelt bis er drin ist.
-// Zum Schluss werden die neuen Daten in den vier Vektoren gespeichert.
+
+
 Threevector Tubetracking::getPosition(double time){
 	Threevector pos;	
 	
@@ -75,7 +63,7 @@ Threevector Tubetracking::getPosition(double time){
 		positionnew = positions.back() + scatteringvector + vdrift * scatteringtime * axes.back().normalized();
 		axisnew = fTubegeometry->contains(positionnew);
 		if (axisnew.compare(control) == true) 
-			Nwallcollision = Nwallcollision + 1;
+			Nwallcollisions = Nwallcollisions + 1;
 		while (axisnew.compare(control) == true){
 			
 			scatteringlength_1 = fRandomgenerator->gaussian(sigma); 
@@ -126,16 +114,12 @@ void Tubetracking::reset(){
 	Nstart = 0;
 }
 
-// Löscht die nicht mehr benötigten Daten aus den vier Vektoren. 
 void Tubetracking::stepDone(double time){
 	if (reachedendoftube == true) {
 		std::cout << "Position = " << positions.back().toString() << std::endl;
 		std::cout << "Axis = " << axes.back().toString() << std::endl;
-		positions.clear();
-		axes.clear();
-//		roots.clear();
-		times.clear();
 	}
+	
 	else {
 		int i = Nstart + 1;
 		int N = times.size();
@@ -151,16 +135,12 @@ void Tubetracking::stepDone(double time){
 		}
 		for (int j = 0; j < N-i+1; j++){
 			times[j] = times[j+i-1];
-			//roots[j] = roots[j+i-1];
 			axes[j] = axes[j+i-1];
 			positions[j] = positions[j+i-1];
 		}
 		times.resize(N-i+1);
-		//roots.resize(N-i+1);
 		axes.resize(N-i+1);
 		positions.resize(N-i+1);
 		Nstart = 0;
-		//std::cout << "Position = " << positions[0].toString() << std::endl;
-		//std::cout << "Achse = " << axes[0].toString() << std::endl;
 	}
 }

@@ -28,8 +28,6 @@ class Tubegeometry : public Basegeometry {
 		bool contains(const Threevector &x) const {
 			throw "not implemented";
 		};
-// Vorsicht: das Argument 'rootstart' wird während der Funktion verändert.
-		//virtual Threevector contains(const Threevector &x, double &rootstart);
 		virtual Threevector contains(const Threevector &x);
 		virtual bool lastsegmentcontains(const Threevector &x);
 	

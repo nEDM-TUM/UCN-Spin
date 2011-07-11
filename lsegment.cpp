@@ -18,25 +18,15 @@ Threevector Lsegment::getposition (double tau) {
 }
 
 Threevector Lsegment::axis(double tau) {
-	return axis();
-}
-
-Threevector Lsegment::axis () {
 	return direction;
 }
 
-Threevector Lsegment::startpoint() {
-	return start;
-}
 
-// 'rootstartsegment' wird während der Funktion verändert.
-//Threevector Lsegment::segmentcontains(const Threevector &x, double &rootstartsegment) {
 Threevector Lsegment::segmentcontains(const Threevector &x) {
 	double projection;
-	Lsegment L = *this;
 	Threevector radial, axial;
 	Threevector v(0,0,0);
-	projection = (x + (-1 * L.startpoint())) * direction;
+	projection = (x + (-1 * start)) * direction;
 	
 	if (projection < 0){
 		return v;
@@ -45,13 +35,12 @@ Threevector Lsegment::segmentcontains(const Threevector &x) {
 		return v;
 	}
 	else {
-		radial = x + (-1) * L.startpoint() + (-1) * (projection * direction);
+		radial = x + (-1) * start + (-1) * (projection * direction);
 		if (radial.magsquare() > radiustube * radiustube) {
 			return v; 
 		}
 		else {
-			//rootstartsegment = projection / t_max;
-			return L.axis().normalized();
+			return direction;
 		}
 	}
 }  
