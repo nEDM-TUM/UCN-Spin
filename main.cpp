@@ -85,9 +85,11 @@ int main(int nargs, char** argv)
 	// Trees for ROOT
 	double P_end[3]; // Polarization on end of simulation
 	double t_end; // time at end of simulation
+        int Nwallcollisions = 0;
 	TTree end_polarization("end_polarization", "Polarization at end of run");
 	end_polarization.Branch("polarization", P_end, "x/D:y:z");
 	end_polarization.Branch("time", &t_end, "t/D");
+        end_polarization.Branch("NumWallCollisions", &Nwallcollisions, "NCollisions/I");
 
 	double random_val;
 	TTree random_tree("random", "Random numbers from start of each run");
@@ -227,14 +229,11 @@ int main(int nargs, char** argv)
 							P_end[j] = stepper->dense_out(j,T,hdid);
 					}
 					t_end = T;
+                                        Nwallcollisions = tracker->Nwallcollisions;
 					end_polarization.Fill();
-				}
-
-				#pragma omp critical
-				{
 					cout << "Particle " << (i+1) << ": " << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
 					cout << "Simulated Time = " << T << "s" << endl;
-					cout << "Wallcollisions =" << tracker->Nwallcollisions << endl;
+					cout << "Wallcollisions =" << Nwallcollisions << endl;
 				}
 
 			} // try
