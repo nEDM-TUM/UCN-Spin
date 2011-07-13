@@ -22,6 +22,8 @@ Build instructions
   - Copy config.mk.template to config.mk and edit ROOT_DIR to match your setup.
     If the ROOT binaries are located in /opt/ROOT/bin, use:
       ROOT_DIR = /opt/ROOT
+  - If the root-config binary is inside your path, you shuld just comment out
+    or delete the ROOT_DIR line in config.mk
   - Run make
 
 
@@ -53,7 +55,18 @@ Running the simulation
   - The main executable ist ./cylindric. It reads parameters from standard
     input. To read the parameters from the file params.txt, use:
       ./cylindric < params.txt
-  - The output will be written to a ROOT file in the directory output
+    Additionally, a file named fields.dat is read for the magnetic and
+    electric fields. The format is documented inside superpositionfield.cpp.
+    For a homogenous magnetic field of 1uT  you would for example use:
+      H 0 0 1e-6
+  - The output will be written to a ROOT file in the directory output. The file
+    name contains the date and time of the run as well as the process ID.
+  - Note that there are multithreading issues at the moment, so you have to set
+    the number of threads to one when running the release version:
+      OMP_NUM_THREADS=1 ./cylindric < params.txt
+    The multithreading issuses are not fixed at the moment because run multiple
+    processes can be used just as well and the output files can be concatenated
+    using TChain from ROOT.
 
 --
 vim: et sts=4 ts=4
