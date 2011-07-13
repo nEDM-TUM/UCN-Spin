@@ -1,0 +1,17 @@
+GyromagneticRatio	50.265e+6
+NumberOfParticles	1000
+Lifetime			10
+ErrorGoal			1e-10
+Flipangle			90
+Seed				84081106
+CylinderRadius		0.235
+CylinderHeight		0.12
+SaveTimeDiff		0.01
+GravitationConstant	9.81
+Temperature			300
+ParticleMass		3.18e-25
+VelocityCutoff		1e100
+Timeout				300
+DiffusionProbability	1
+ParticleDataNum		2
+MinDiffusionAngle	1
