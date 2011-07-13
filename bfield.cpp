@@ -57,9 +57,8 @@ Threevector Bfield::operator()(const double time) const
 
 Threevector Bfield::evalcoil(const Threevector &relposition) const
 {
-
 	Threevector posBfieldframe;
-	posBfieldframe = Threevector(relposition[2], relposition[1], relposition[0]);
+	posBfieldframe = Threevector((-1)*relposition[2], relposition[1], relposition[0]);
 	double r = sqrt(posBfieldframe[0]*posBfieldframe[0]+posBfieldframe[1]*posBfieldframe[1]);
 	double xr = 0.0, yr = 0.0;
 	if(r > 0.0){
