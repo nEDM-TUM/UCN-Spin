@@ -249,8 +249,10 @@ void Dopr::step()
 {
 	double dydxnew[n];
 	double h = htry;
+	if (h > 0.05)
+		h = 0.05;
 	//cout << "htry = " << htry << endl;
-	tracker->makeTrack(t,htry);
+	tracker->makeTrack(t,h);
 	//int i=0;
 	for(;;)
 	{
