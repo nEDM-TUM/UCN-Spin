@@ -49,7 +49,6 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("GradientOffsetZ");
 	theParameters.expectDouble("B1Gradient");
 	theParameters.expectDouble("EDM");
-	theParameters.expectDouble("Flipangle");
 	theParameters.expectInt("Seed");
 	theParameters.expectDouble("CylinderRadius");
 	theParameters.expectDouble("CylinderHeight");
@@ -113,7 +112,7 @@ int main(int nargs, char** argv)
 		double T = 0.0;
 
 		double Told = 0.0;
-		double flipangle = theParameters.getDoubleParam("Flipangle");	
+		double flipangle = 0;	
 		double P[3] = {1.0,0.0,0.0};	//the polarization-vector
 
 		double dPdt[3] = {0.0};
@@ -163,9 +162,9 @@ int main(int nargs, char** argv)
 				}
 				T = 0.0;
 				int Nsteps = 0;
-				P[0] = 0.0;
-				P[1] = sin(-flipangle/180*M_PI);
-				P[2] = cos(-flipangle/180*M_PI);
+				P[0] = 1.0;
+				P[1] = 0.0;
+				P[2] = 0.0;
 				tracker->initialize();
 				#pragma omp critical
 				{

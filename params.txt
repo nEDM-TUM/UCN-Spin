@@ -10,7 +10,6 @@ GradientOffsetZ		0
 B1Gradient			0
 EDM					0
 
-Flipangle			0
 Seed				321
 #GyroelectricRatio	EDM*0.01*elementarycharge/hbar ### TODO!
 CylinderRadius		3.0e-4
