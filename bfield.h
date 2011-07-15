@@ -23,10 +23,11 @@ class Bfield
 		Threevector eval (const double time) const;
 
 	private:
-		double B0, B1, mu0, R, E0, g, ghalf, B1_g, B1_g_half, gyroelect, omegaEDM, flipangle, omegalarmor, factor, gyromag;
+		double mu0, R, gyromag, factor;
 		double xyz0[3];
-		double B000,I,h2;
+		double B000, h2;
 		Basetracking* const tracking;
-		Threevector centercoil1, centercoil2;
+		Threevector centercoil1, centercoil2, dipoleposition, dipole;
+		int earthmagneticfield, coilfield, dipolefield, constmagneticfield;
 };
 #endif

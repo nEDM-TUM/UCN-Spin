@@ -43,17 +43,7 @@ int main(int nargs, char** argv)
 	theParameters.expectInt("NumberOfParticles");
 	theParameters.expectDouble("Lifetime");
 	theParameters.expectDouble("ErrorGoal");
-	theParameters.expectDouble("EfieldMag");
-	theParameters.expectDouble("B0Gradient");
-	theParameters.expectDouble("GradientOffsetX");
-	theParameters.expectDouble("GradientOffsetZ");
-	theParameters.expectDouble("B1Gradient");
-	theParameters.expectDouble("EDM");
 	theParameters.expectInt("Seed");
-	theParameters.expectDouble("CylinderRadius");
-	theParameters.expectDouble("CylinderHeight");
-	theParameters.expectDouble("B0");
-	theParameters.expectDouble("B1");
 	theParameters.expectDouble("radiustube");
 	theParameters.expectDouble("vdrift");
 	theParameters.expectDouble("diffusionconstant");
@@ -62,20 +52,24 @@ int main(int nargs, char** argv)
 	theParameters.expectDouble("SolenoidHeight");
 	theParameters.expectDouble("SolenoidRadius");
 	theParameters.expectDouble("SaveTimeDiff");
-	theParameters.expectDouble("TrackerStepSize");
-	theParameters.expectDouble("GravitationConstant");
-	theParameters.expectDouble("CollisionAccuracy");
 	theParameters.expectInt("Timeout");
-	theParameters.expectDouble("VelocitySigma");
-	theParameters.expectDouble("VelocityCutoff");
-	theParameters.expectDouble("DiffusionProbability");
+	theParameters.expectDouble("Dipolpos0");
+	theParameters.expectDouble("Dipolpos1");
+	theParameters.expectDouble("Dipolpos2");
+	theParameters.expectDouble("Dipol0");
+	theParameters.expectDouble("Dipol1");
+	theParameters.expectDouble("Dipol2");
+	theParameters.expectInt("Earthmagneticfield");
+	theParameters.expectInt("Coilfield");
+	theParameters.expectInt("Dipolefield");
+	theParameters.expectInt("Constmagneticfield");
 
 	theParameters.readParameters(cin);
 
 	// TODO: reorder this if possible
-	theParameters.add("GyroelectricRatio",theParameters.getDoubleParam("EDM")*0.01*elementarycharge/hbar);
+//	theParameters.add("GyroelectricRatio",theParameters.getDoubleParam("EDM")*0.01*elementarycharge/hbar);
 
-	const double savetimediff = theParameters.getDoubleParam("SaveTimeDiff");
+//	const double savetimediff = theParameters.getDoubleParam("SaveTimeDiff");
 	const int N_particles = theParameters.getIntParam("NumberOfParticles");
 
 	// Open output file
@@ -88,7 +82,7 @@ int main(int nargs, char** argv)
 	TTree end_polarization("end_polarization", "Polarization at end of run");
 	end_polarization.Branch("polarization", P_end, "x/D:y:z");
 	end_polarization.Branch("time", &t_end, "t/D");
-        end_polarization.Branch("NumWallCollisions", &Nwallcollisions, "NCollisions/I");
+    end_polarization.Branch("NumWallCollisions", &Nwallcollisions, "NCollisions/I");
 
 	double random_val;
 	TTree random_tree("random", "Random numbers from start of each run");
@@ -111,8 +105,8 @@ int main(int nargs, char** argv)
 		}
 		double T = 0.0;
 
-		double Told = 0.0;
-		double flipangle = 0;	
+//		double Told = 0.0;
+//		double flipangle = 0;	
 		double P[3] = {1.0,0.0,0.0};	//the polarization-vector
 
 		double dPdt[3] = {0.0};
@@ -162,9 +156,9 @@ int main(int nargs, char** argv)
 				}
 				T = 0.0;
 				int Nsteps = 0;
-				P[0] = 1.0;
+				P[0] = 0.0;
 				P[1] = 0.0;
-				P[2] = 0.0;
+				P[2] = 1.0;
 				tracker->initialize();
 				#pragma omp critical
 				{
@@ -228,7 +222,7 @@ int main(int nargs, char** argv)
 							P_end[j] = stepper->dense_out(j,T,hdid);
 					}
 					t_end = T;
-                                        Nwallcollisions = tracker->Nwallcollisions;
+                    Nwallcollisions = tracker->Nwallcollisions;
 					end_polarization.Fill();
 					cout << "Particle " << (i+1) << ": " << Nsteps << " steps successful, " << stepper->getStepsnottaken() << " steps not taken!" << endl;
 					cout << "Simulated Time = " << T << "s" << endl;

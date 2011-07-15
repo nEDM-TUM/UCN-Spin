@@ -7,42 +7,34 @@
 #include "basetracking.h"
 
 Bfield::Bfield(const Parameters &theParameters, Basetracking* const btr)
-: B0(0.0), B1(0.0), mu0(1.2566371e-6), R(0.0), E0(0.0), g(0.0), ghalf(0.0), B1_g(0.0),
-  B1_g_half(0.0), gyroelect(0.0), omegaEDM(0.0), flipangle(0.0), 
-  omegalarmor(0.0), factor(-3.9293341e-34*1.5e18), gyromag(0.0), B000(0.0), I(0.0), h2(0.0),
+: mu0(1.2566371e-6), R(0.0), gyromag(0.0), factor(-3.9293341e-34*1.5e18),  B000(0.0), h2(0.0), 
   tracking(btr)
 {
-	B0 = theParameters.getDoubleParam("B0");
-	B1 = theParameters.getDoubleParam("B1");
-	E0 = theParameters.getDoubleParam("EfieldMag");
-	h2 = theParameters.getDoubleParam("SolenoidHeight") / 2.;
 	R = theParameters.getDoubleParam("SolenoidRadius");
 	centercoil1 = Threevector(-R/2., 0., 0.);
 	centercoil2 = Threevector(R/2., 0., 0.);
-	g = theParameters.getDoubleParam("B0Gradient");
 	gyromag = theParameters.getDoubleParam("GyromagneticRatio");
-	ghalf = g/2.0;
-	B1_g = theParameters.getDoubleParam("B1Gradient");
-	B1_g_half = B1_g/2.0;
-	gyroelect = theParameters.getDoubleParam("GyroelectricRatio");
-	omegaEDM = gyroelect*E0;
-	flipangle = theParameters.getDoubleParam("Flipangle")/180.0*M_PI;
-	omegalarmor = -gyromag*B0;
-	xyz0[0] = theParameters.getDoubleParam("GradientOffsetX");
-	xyz0[2] = theParameters.getDoubleParam("GradientOffsetZ");
 	B000 = theParameters.getDoubleParam("SolenoidField");
+	h2 = theParameters.getDoubleParam("SolenoidHeight") / 2.;
+	dipoleposition = Threevector(theParameters.getDoubleParam("Dipolpos0"), theParameters.getDoubleParam("Dipolpos1"), theParameters.getDoubleParam("Dipolpos2"));
+	dipole = Threevector(theParameters.getDoubleParam("Dipol0"), theParameters.getDoubleParam("Dipol1"), theParameters.getDoubleParam("Dipol2"));
+	earthmagneticfield = theParameters.getIntParam("Earthmagneticfield");
+	coilfield = theParameters.getIntParam("Coilfield");
+	dipolefield = theParameters.getIntParam("Dipolefield");
+	constmagneticfield = theParameters.getIntParam("Constmagneticfield");
+	
 	#pragma omp master
 	{
-		cout << "The B0-field = " << B0 << " T" << endl;
-		cout << "The B1-field = " << B1 << " T" << endl;
-		cout << "The B0-gradient = " << g << " T/m" << endl;
-		cout << "The B1-gradient = " << B1_g << " T/m" << endl;
-		cout << "The flowing current = " << I << " A" << endl;
+		cout << "Coilfield: " << coilfield << endl;
 		cout << "The Radius of the electrode-circle = " << R << " m" << endl;
 		cout << "The heigth of the electrodes = " << h2*2. << " m" << endl;
-		cout << "The electric field = " << E0 << " V/m" << endl;
-		cout << "The gyroelectric Ratio = " << gyroelect << " m/(V s)" << endl;
-		cout << "The flipangle = " << flipangle << " rad = " << flipangle/M_PI*180 << "deg" << endl;
+		cout << "Solenoidfield = " << B000 << " T" << endl;
+		cout << "Earthmagneticfield: " << earthmagneticfield << endl;
+		cout << "Dipolefield: " << dipolefield << endl;
+		cout << "Dipolposition = " << dipoleposition.toString() << endl;
+		cout << "Dipol = " << dipole.toString() << " Tm/[mu_0]" << endl;
+		cout << "Constmagneticfield: " << constmagneticfield << endl;
+
 	}
 }
 
@@ -55,20 +47,34 @@ Threevector Bfield::operator()(const double time) const
 	return eval(time);
 }
 
+Threevector Bfield::eval(const double time) const
+{
+	Threevector position = tracking->getPosition(time);
+	Threevector field;
+	field = Threevector (0.,0.,0.);
+	if (earthmagneticfield == 1)
+		field = field + evalearthmagneticfield();
+	if (coilfield == 1)
+		field = field + evalcoil(position + (-1)*centercoil1) + evalcoil(position + (-1)*centercoil2); 
+	if (dipolefield == 1)
+		field = field + evaldipole(position, dipoleposition, dipole);
+	if (constmagneticfield == 1)
+		field = field + Threevector(0., 0., 1e-6);
+	return Threevector(0., 0., 1e-6);
+}
+
 Threevector Bfield::evalcoil(const Threevector &relposition) const
 {
-	Threevector posBfieldframe;
-	posBfieldframe = Threevector((-1)*relposition[2], relposition[1], relposition[0]);
-	double r = sqrt(posBfieldframe[0]*posBfieldframe[0]+posBfieldframe[1]*posBfieldframe[1]);
+	double r = sqrt(relposition[0]*relposition[0]+relposition[1]*relposition[1]);
 	double xr = 0.0, yr = 0.0;
 	if(r > 0.0){
-		xr = posBfieldframe[0]/r;
-		yr = posBfieldframe[1]/r;
+		xr = relposition[0]/r;
+		yr = relposition[1]/r;
 	}
 	
-	double BR = Br(r,posBfieldframe[2]);
-	double BZ = Bz(r,posBfieldframe[2]);
-	return Threevector(BZ,BR*yr,BR*xr);
+	double BR = Br(r,relposition[2]);
+	double BZ = Bz(r,relposition[2]);
+	return Threevector(BR*xr, BR*yr, BZ);
 }
 
 Threevector Bfield::evaldipole(const Threevector &position, const Threevector &positiondipole, const Threevector &magneticdipole) const
@@ -85,16 +91,10 @@ Threevector Bfield::evaldipole(const Threevector &position, const Threevector &p
 
 Threevector Bfield::evalearthmagneticfield () const
 {
-	return Threevector(-30.0e-6, 3.0e-6, 17.0e-6);
+	return Threevector(-3.0e-6, 17.0e-6, 30.0e-6);
 }
 
-Threevector Bfield::eval(const double time) const
-{
-	Threevector position = tracking->getPosition(time);
-	Threevector field;
-	//field = evalcoil(position + (-1)*centercoil1) + evalcoil(position + (-1)*centercoil2); 
-	return Threevector(1e-6, 0., 0.);
-}
+
 
 double Bfield::Br(const double r, const double z) const
 {

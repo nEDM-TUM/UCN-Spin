@@ -1,35 +1,31 @@
+Seed			321
+Timeout			5
+ErrorGoal		1e-9
 
-NumberOfParticles	100
-Lifetime			30
-ErrorGoal			1e-9
 GyromagneticRatio	30e+6
-EfieldMag			0
-B0Gradient			1e-7
-GradientOffsetX		0
-GradientOffsetZ		0
-B1Gradient			0
-EDM					0
+NumberOfParticles	100
+Lifetime		30
+radiustube		0.002
+vdrift 			0.02
+diffusionconstant	1.375e-5
 
-Seed				321
-#GyroelectricRatio	EDM*0.01*elementarycharge/hbar ### TODO!
-CylinderRadius		3.0e-4
+Dipolefield		0
+Dipolpos0		0.
+Dipolpos1		0.
+Dipolpos2		0.	
+Dipol0			0.
+Dipol1			0.
+Dipol2			0.
 
-CylinderHeight		0.12
-B0					1.0e-6
-B1					1.0e-9
+Earthmagneticfield	0
+
+Coilfield		0
 SolenoidField		0.0192
 SolenoidHeight		.02
 SolenoidRadius		0.18
 SolenoidCurrent		0
 
-radiustube		0.002
-vdrift 			0.02
-diffusionconstant		1.375e-5
+Constmagneticfield  	1
 
-SaveTimeDiff		0.0002
-GravitationConstant	9.81
-TrackerStepSize		0.05
-CollisionAccuracy	1e-7
-VelocitySigma		1
-VelocityCutoff		1e100
-Timeout				5
+
+

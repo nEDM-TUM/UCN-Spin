@@ -117,7 +117,7 @@ Tubegeometry::Tubegeometry(Random *ran, std::string Tubefile, std::string Tubefi
 	radiustube = theParameters.getDoubleParam("radiustube");
 	 #pragma omp master
 	{                        
-		std::cout << "Anzahl der Segmente (inkl Schlusssegment): " << Segments.size() << std::endl;
+		std::cout << "Anzahl der Segmente (inkl Schluss-Segment): " << Segments.size() << std::endl;
 	}
 }
 
