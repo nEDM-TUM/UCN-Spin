@@ -10,17 +10,17 @@ vdrift 			0.02
 diffusionconstant	1.375e-5
 
 Dipolefield		0
-Dipolpos0		0.
-Dipolpos1		0.
-Dipolpos2		0.	
-Dipol0			0.
-Dipol1			0.
-Dipol2			0.
+Dipolepos0		0.
+Dipolepos1		0.
+Dipolepos2		0.	
+Dipole0			0.
+Dipole1			0.
+Dipole2			0.
 
 Earthmagneticfield	0
 
 Coilfield		0
-SolenoidField		0.0192
+SolenoidField		0.024
 SolenoidHeight		.02
 SolenoidRadius		0.18
 SolenoidCurrent		0

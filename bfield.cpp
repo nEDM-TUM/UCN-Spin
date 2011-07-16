@@ -11,13 +11,13 @@ Bfield::Bfield(const Parameters &theParameters, Basetracking* const btr)
   tracking(btr)
 {
 	R = theParameters.getDoubleParam("SolenoidRadius");
-	centercoil1 = Threevector(-R/2., 0., 0.);
-	centercoil2 = Threevector(R/2., 0., 0.);
+	centercoil1 = Threevector(0., 0., -R/2.);
+	centercoil2 = Threevector(0., 0., R/2);
 	gyromag = theParameters.getDoubleParam("GyromagneticRatio");
 	B000 = theParameters.getDoubleParam("SolenoidField");
 	h2 = theParameters.getDoubleParam("SolenoidHeight") / 2.;
-	dipoleposition = Threevector(theParameters.getDoubleParam("Dipolpos0"), theParameters.getDoubleParam("Dipolpos1"), theParameters.getDoubleParam("Dipolpos2"));
-	dipole = Threevector(theParameters.getDoubleParam("Dipol0"), theParameters.getDoubleParam("Dipol1"), theParameters.getDoubleParam("Dipol2"));
+	dipoleposition = Threevector(theParameters.getDoubleParam("Dipolepos0"), theParameters.getDoubleParam("Dipolepos1"), theParameters.getDoubleParam("Dipolepos2"));
+	dipole = Threevector(theParameters.getDoubleParam("Dipole0"), theParameters.getDoubleParam("Dipole1"), theParameters.getDoubleParam("Dipole2"));
 	earthmagneticfield = theParameters.getIntParam("Earthmagneticfield");
 	coilfield = theParameters.getIntParam("Coilfield");
 	dipolefield = theParameters.getIntParam("Dipolefield");
@@ -31,8 +31,8 @@ Bfield::Bfield(const Parameters &theParameters, Basetracking* const btr)
 		cout << "Solenoidfield = " << B000 << " T" << endl;
 		cout << "Earthmagneticfield: " << earthmagneticfield << endl;
 		cout << "Dipolefield: " << dipolefield << endl;
-		cout << "Dipolposition = " << dipoleposition.toString() << endl;
-		cout << "Dipol = " << dipole.toString() << " Tm³/[mu_0]" << endl;
+		cout << "Dipoleposition = " << dipoleposition.toString() << endl;
+		cout << "Dipole = " << dipole.toString() << " Tm³/[mu_0]" << endl;
 		cout << "Constmagneticfield: " << constmagneticfield << endl;
 
 	}
@@ -91,7 +91,7 @@ Threevector Bfield::evaldipole(const Threevector &position, const Threevector &p
 
 Threevector Bfield::evalearthmagneticfield () const
 {
-	return Threevector(-3.0e-6, 17.0e-6, 30.0e-6);
+	return Threevector(17e-6, -30e-6, 3e-6);
 }
 
 
