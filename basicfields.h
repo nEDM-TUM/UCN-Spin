@@ -70,7 +70,7 @@ class GradientField : public Bfield
 };
 
 /**
- * Laser field is a homogenous magnetif field inside a tube in
+ * LaserField is a homogenous magnetic field inside a tube in
  * x direction with radius r. Outside the tube, there is no field.
  *
  * @param[in] t      ponter to tracker instance
