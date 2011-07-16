@@ -32,7 +32,7 @@ Bfield::Bfield(const Parameters &theParameters, Basetracking* const btr)
 		cout << "Earthmagneticfield: " << earthmagneticfield << endl;
 		cout << "Dipolefield: " << dipolefield << endl;
 		cout << "Dipolposition = " << dipoleposition.toString() << endl;
-		cout << "Dipol = " << dipole.toString() << " Tm/[mu_0]" << endl;
+		cout << "Dipol = " << dipole.toString() << " Tm³/[mu_0]" << endl;
 		cout << "Constmagneticfield: " << constmagneticfield << endl;
 
 	}
