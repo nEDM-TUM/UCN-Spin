@@ -9,9 +9,13 @@
 #include <limits>
 #include <unistd.h>
 #include <cassert>
+#include <cmath>
 
+#include "TROOT.h"
+#include "TStyle.h"
 #include "TFile.h"
 #include "TTree.h"
+#include "TH1.h"
 
 #include "globals.h"
 #include "superpositionfield.h"
@@ -30,6 +34,7 @@
 using namespace std;
 
 string generateFileName(void);
+void setTitles(TH1 &h, const char *x_title, const char *y_title);
 
 int main(int nargs, char** argv)
 {
@@ -81,8 +86,14 @@ int main(int nargs, char** argv)
 	const double savetimediff = theParameters.getDoubleParam("SaveTimeDiff");
 	const double lifetime = theParameters.getDoubleParam("Lifetime");
 
+	double approx_b0; // approximate B0 for expected polarization at end of programm
+
 	// Open output file
 	TFile out(generateFileName().c_str(), "new");
+
+	// Set drawing style
+	gROOT->SetStyle("Plain");
+	gStyle->SetLabelSize(0.025, "xyz");
 
 	// Trees for ROOT
 	double P_end[3]; // Polarization on end of simulation
@@ -126,7 +137,7 @@ int main(int nargs, char** argv)
 		}
 		double T = 0.0;
 		double flipangle = theParameters.getDoubleParam("Flipangle");
-		double P[3] = {0.0,sin(-flipangle/180*M_PI),cos(-flipangle/180*M_PI)};	//the polarization-vector
+		double P[3] = {-sin(flipangle/180*M_PI), 0.0, cos(flipangle/180*M_PI)};
 		double dPdt[3] = {0.0};
 		double hdid = 0.0;
 
@@ -182,10 +193,11 @@ int main(int nargs, char** argv)
 				}
 				T = 0.0;
 				int Nsteps = 0;
-				P[0] = 0.0;
-				P[1] = sin(-flipangle/180*M_PI);
-				P[2] = cos(-flipangle/180*M_PI);
+				P[0] = -sin(flipangle/180*M_PI);
+				P[1] = 0.0;
+				P[2] = cos(flipangle/180*M_PI);
 				tracker->initialize();
+				approx_b0 += bfield->eval(0)[2];
 				#pragma omp critical
 				{
 					debug << "Got from initialize: x = " << tracker->fTrackpositions[0].toString() << endl;
@@ -303,10 +315,36 @@ int main(int nargs, char** argv)
 
 	}
 
+	cout << "Creating histograms..." << endl;
+
+	// Make some histograms
+	TH1D end_polarization_hist("end_polarization_hist", "Endpolarisation", 100, 0, 2*M_PI);
+	end_polarization.Draw("atan2(polarization.y,polarization.x)+pi>>end_polarization_hist", "", "goff,norm");
+	setTitles(end_polarization_hist, "Polarisation [rad]", "");
+
+	TH1D start_velocity_hist("start_velocity_hist", "Anfangsgeschwindigkeit", 100, 0, 1);
+	start_velocity_hist.SetBit(TH1::kCanRebin);
+	start_tree.Draw("sqrt(velocity.x^2+velocity.y^2+velocity.z^2)>>start_velocity_hist", "", "goff,norm");
+	setTitles(start_velocity_hist, "Anfangsgeschwindigkeit [m/s]", "");
+
 	out.Write();
+
+	approx_b0 /= N_particles;
+	cout << endl << "Run complete" << endl;
+	cout << "============" << endl;
+	cout << "End polarization: (" << end_polarization_hist.GetMean() << " +- " << end_polarization_hist.GetRMS() << ") rad" << endl;
+	cout << "Expected:         " << fmod(fmod(-theParameters.getDoubleParam("GyromagneticRatio")*lifetime*approx_b0, 2*M_PI) + 2*M_PI, 2*M_PI) << " rad (approximate value, based on B0 = " << approx_b0 << ")" << endl;
 		
 	return 0;
 }
+
+void setTitles(TH1 &h, const char *x_title, const char *y_title) {
+	h.GetXaxis()->SetTitle(x_title);
+	h.GetXaxis()->CenterTitle();
+	h.GetYaxis()->SetTitle(y_title);
+	h.GetYaxis()->CenterTitle();
+}
+
 
 string generateFileName(void) {
 	const size_t MAX_DATE_LEN = 100;
