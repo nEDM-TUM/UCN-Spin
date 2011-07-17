@@ -331,6 +331,8 @@ int main(int nargs, char** argv)
 
 	approx_b0 /= N_particles;
 	cout << endl << "Run complete" << endl;
+	cout << fixed;
+	cout.precision(15);
 	cout << "============" << endl;
 	cout << "End polarization: (" << end_polarization_hist.GetMean() << " +- " << end_polarization_hist.GetRMS() << ") rad" << endl;
 	cout << "Expected:         " << fmod(fmod(-theParameters.getDoubleParam("GyromagneticRatio")*lifetime*approx_b0, 2*M_PI) + 2*M_PI, 2*M_PI) << " rad (approximate value, based on B0 = " << approx_b0 << ")" << endl;
