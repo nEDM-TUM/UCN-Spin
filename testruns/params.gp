@@ -1,4 +1,4 @@
-GyromagneticRatio	50.265e+6
+GyromagneticRatio	4.8457916e7
 NumberOfParticles	1000
 Lifetime			10
 ErrorGoal			1e-10
