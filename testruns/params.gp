@@ -1,5 +1,5 @@
 GyromagneticRatio	4.8457916e7
-NumberOfParticles	1000
+NumberOfParticles	100000
 Lifetime			10
 ErrorGoal			1e-10
 Flipangle			90
