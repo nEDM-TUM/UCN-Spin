@@ -60,7 +60,7 @@ Threevector Bfield::eval(const double time) const
 		field = field + evaldipole(position, dipoleposition, dipole);
 	if (constmagneticfield == 1)
 		field = field + Threevector(0., 0., 1e-6);
-	return Threevector(0., 0., 1e-6);
+	return field;
 }
 
 Threevector Bfield::evalcoil(const Threevector &relposition) const
