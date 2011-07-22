@@ -47,29 +47,14 @@ int main(int nargs, char** argv)
 	theParameters.expectInt("NumberOfParticles");
 	theParameters.expectDouble("Lifetime");
 	theParameters.expectDouble("ErrorGoal");
-	theParameters.expectDouble("EfieldMag");
-	theParameters.expectDouble("B0Gradient");
-	theParameters.expectDouble("GradientOffsetX");
-	theParameters.expectDouble("GradientOffsetZ");
-	theParameters.expectDouble("B1Gradient");
 	theParameters.expectDouble("Flipangle");
 	theParameters.expectInt("Seed");
 	theParameters.expectDouble("CylinderRadius");
 	theParameters.expectDouble("CylinderHeight");
-	theParameters.expectDouble("B0");
-	theParameters.expectDouble("B1");
-	theParameters.expectDouble("mu");
-	theParameters.expectDouble("radiustube");
-	theParameters.expectDouble("vdrift");
-	theParameters.expectDouble("sigma");
-	theParameters.expectDouble("SolenoidField");
-	theParameters.expectDouble("SolenoidCurrent");
-	theParameters.expectDouble("SolenoidHeight");
-	theParameters.expectDouble("SolenoidRadius");
 	theParameters.expectDouble("SaveTimeDiff");
-	theParameters.expectDouble("TrackerStepSize");
+	//theParameters.expectDouble("TrackerStepSize");
 	theParameters.expectDouble("GravitationConstant");
-	theParameters.expectDouble("CollisionAccuracy");
+	//theParameters.expectDouble("CollisionAccuracy");
 	theParameters.expectInt("Timeout");
 	theParameters.expectInt("ParticleDataNum");
 	theParameters.expectDouble("Temperature");
@@ -86,7 +71,7 @@ int main(int nargs, char** argv)
 	const double savetimediff = theParameters.getDoubleParam("SaveTimeDiff");
 	const double lifetime = theParameters.getDoubleParam("Lifetime");
 
-	double approx_b0; // approximate B0 for expected polarization at end of programm
+	double approx_b0 = 0; // approximate B0 for expected polarization at end of programm
 
 	// Open output file
 	TFile out(generateFileName().c_str(), "new");
