@@ -15,7 +15,7 @@ class DipoleField : public Bfield
 			Bfield(t), m(m), dr(-pos) {};
 		Threevector eval(const double time) const {
 			/// r is set to the vector connecting the position of the dipole x0 with the
-			/// current position of the particle x.
+			/// current position of particle x.
 			/// \f[ \vec r = \vec x - \vec x_0 \f]
 			Threevector r = fTracker->getPosition(time) + dr;
 			const double r2 = r.magsquare();

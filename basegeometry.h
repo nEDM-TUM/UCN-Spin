@@ -28,9 +28,9 @@ class Basegeometry
 		virtual bool contains(const Threevector &x) const = 0;
 
 		/**
-		 * This method should check, if @p x is inside of the cylinder and
+		 * This method should check if @p x is inside of the cylinder and
 		 * set a reflection state. The reflection state is internal to the
-		 * geometry class and should state, at which surface a particle should
+		 * geometry class and should state at which surface a particle should
 		 * be reflected when reflect is called. For example, for a cylinder
 		 * the reflection state would contain if the particle is to be reflected
 		 * at the top/bottom surface (z-direction) or the round cylinder wall
@@ -47,7 +47,7 @@ class Basegeometry
 		 * which has to be set beforehand by boundsCheck. This method
 		 * must always be called after a prior call to boundsCheck has
 		 * returned <tt>true</tt>. The parameter @p x may be changed between
-		 * both the calls, the decision how to reflect must then be based on
+		 * the two calls, the decision how to reflect must then be based on
 		 * the internal reflection state and not on @p x. The reflection state
 		 * has to be reset after the reflection.
 		 *

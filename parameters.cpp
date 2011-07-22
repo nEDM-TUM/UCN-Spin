@@ -60,7 +60,7 @@ void Parameters::expectInt(std::string name) {
 }
 
 /**
- * Tell the parser thate we expect a parameter and give
+ * Tell the parser that we expect a parameter and give
  * default value.
  * @see #expectInt(std::string)
  */
@@ -79,7 +79,7 @@ void Parameters::expectDouble(std::string name) {
 }
 
 /**
- * Tell the parser thate we expect a parameter and give
+ * Tell the parser that we expect a parameter and give
  * default value.
  * @see #expectDouble(std::string)
  */

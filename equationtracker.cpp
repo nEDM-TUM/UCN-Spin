@@ -31,8 +31,7 @@ void EquationTracker::initialize() {
 }
 
 /**
- * Do one step of the Runge-Kutta algorithm by
- * integrating derivs.
+ * Do one step of the Runge-Kutta algorithm.
  *
  * @param[in]     h size of time step that should be taken
  * @param[in]     t current time
@@ -66,7 +65,7 @@ void EquationTracker::rkStep(const double &h, const double &t, Threevector &x, T
 }
 
 /**
- * Ensure that track was already generated.
+ * Generate track up to t_start + h
  */
 void EquationTracker::makeTrack(const double t_start, double h) {
 	debug << "makeTrack(" << t_start << ", " << h << ")" << std::endl;
@@ -116,7 +115,7 @@ void EquationTracker::makeTrack(const double t_start, double h) {
 			fTrackpositions.push_back(fPos);
 			fTrackvelocities.push_back(fVel);
 
-			// Randomly decide wether to diffuse or reflect
+			// Randomly decide whether to diffuse or reflect
 			double rand;
 			#pragma omp critical
 			{

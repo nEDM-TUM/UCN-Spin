@@ -67,7 +67,7 @@ void SuperpositionField::readFields(std::string fname)
 		}
 		else if (type == "E") {
 			/// E is a homogenous electric field that causes relativitic effects.
-			/// It takes three doubles as arguments with designate the field vector
+			/// It takes three doubles as arguments
 			Threevector E;
 			line >> E;
 

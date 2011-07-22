@@ -25,11 +25,6 @@ class FastCylinderTracker : public Basetracking
 		const double R2; //< squared radius of the cylinder
 		const double g;  //< acceleration due to gravitation
 
-		/**
-		 * time of last collision with the wall.
-		 * At the same time, this is the time until which the track
-		 * already has been built.
-		 */
 		Surface fLastCollisionSurface;
 		const double fDiffuseProbability;
 
