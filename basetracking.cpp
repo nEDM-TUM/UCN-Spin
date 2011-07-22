@@ -5,8 +5,8 @@
  * @class Basetracking
  * Abstract base class, derive from it to create an actual user tracking class.
  * Provides methods to initialize the starting point of a track portion,
- * to reset the tracking, if a timestep was not accepted and
- * to mark the track as finished and prepare for a new one.
+ * to reset the tracking if a timestep was not accepted and to mark the track
+ * as finished and prepare for a new one.
  */
 
 /**

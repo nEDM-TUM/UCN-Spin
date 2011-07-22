@@ -88,7 +88,7 @@ bool Cylinder::insideRadius(const Threevector &x) const
 }
 
 /**
- * Check if particle is inside of cylinder and set reflection
+ * Check if particle is inside the cylinder and set reflection
  * state accordingly. Always call reflect if this method has
  * returned true.
  *
@@ -145,8 +145,8 @@ void Cylinder::reflect(Threevector &v, const Threevector &x)
 }
 
 /**
- * Diffusion method for the EquationTracker which uses the
- * saved state in fReflectRadius, fReflectBottom and fReflectTop.
+ * Diffusion method for EquationTracker which uses the saved state in
+ * fReflectRadius, fReflectBottom and fReflectTop.
  */
 void Cylinder::diffuse(Threevector &v, const Threevector &pos) {
 	/// Diffusion is only implemented at the side wall, in other
@@ -157,7 +157,7 @@ void Cylinder::diffuse(Threevector &v, const Threevector &pos) {
 	else {
 		assert(fReflectRadius);
 		Threevector n(pos);
-		n[2] = 0; // n points radially outside the cylinder now
+		n[2] = 0; // n points radially out of the cylinder now
 		diffuseAtSurface(v, n);
 		// reset reflection state
 		fReflectRadius = false;

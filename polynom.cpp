@@ -11,7 +11,7 @@
  */
 
 /**
- * Create a Polynom object ready to take a Polynom of degree @p n without
+ * Create a Polynom object ready to take a polynomial of degree @p n without
  * needing a resize of the internal coefficient vector. The coefficients
  * will be set to zero.
  */
@@ -54,7 +54,7 @@ Polynom::Polynom(double a3, double a2, double a1, double a0) :
 }
 
 /**
- * Evaluate polynom at @p x using a horner schema.
+ * Evaluate polynomial at @p x using a horner schema.
  */
 double Polynom::operator()(double x) const {
 	debug << "Polynom: " << this->toString() << " called for x = " << x << std::endl;

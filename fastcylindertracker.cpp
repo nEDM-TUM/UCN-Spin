@@ -166,7 +166,7 @@ void FastCylinderTracker::makeTrack(double t_start, double h)
 
 /**
  * Find the soultions of \f$ ax^2 + bx + c = 0 \f$ and add them to the vector @p v.
- * The function will take care that only the absolutely greater value is added, if
+ * The function will take care that only the absolutely greater value is added if
  * the surface is the same as the surface of last reflection.
  *
  * @param [in] current the surface on which the reflection takes place

@@ -127,7 +127,7 @@ int main(int nargs, char** argv)
 		double hdid = 0.0;
 
 		Cylinder *c = new Cylinder(theParameters, randgen);
-		//GravitationTracker *tracker = new GravitationTracker(theParameters, randgen, c); // TODO
+		//GravitationTracker *tracker = new GravitationTracker(theParameters, randgen, c);
 		FastCylinderTracker *tracker = new FastCylinderTracker(theParameters, randgen, c);
 
 		Bfield *bfield = new SuperpositionField(tracker, std::string("fields.dat"));
